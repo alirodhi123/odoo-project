@@ -1,0 +1,49 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="productlayout_tree_view">
+            <field name="name">x.layout.product.tree</field>
+            <field name="model">x.layout.product</field>
+            <field name="arch" type="xml">
+                <tree string="Master Color">
+                    <field name="x_type"/>
+                    <field name="x_size"/>
+                    <field name="x_space"/>
+                    <field name="x_druk"/>
+                    <field name="x_number"/>
+                    <field name="x_std_afalan"/>
+                    <field name="x_jumlah"/>
+                     <!--<field name="x_jumlah"/>-->
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="productlayout_form_view">
+            <field name="name">x.layout.product.form</field>
+            <field name="model">x.layout.product</field>
+            <field name="arch" type="xml">
+                <form string="Master Color Form">
+                    <sheet>
+                        <group string="Informasi">
+                            <field name="x_type"/>
+                            <field name="x_size"/>
+                            <field name="x_space"/>
+                            <field name="x_druk"/>
+                            <field name="x_number"/>
+                            <field name="x_std_afalan"/>
+                            <field name="x_jumlah"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="productlayout_list_action">
+            <field name="name">ProductList</field>
+            <field name="res_model">x.layout.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!--<menuitem id="productlayout_menu" parent="master_pde_menu" name="Layout Product" action="productlayout_list_action"/>-->
+    </data>
+</odoo>

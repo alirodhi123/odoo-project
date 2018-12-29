@@ -1,0 +1,15 @@
+<odoo>
+    <data>
+         <!-- Menambahkan flagging ke dalam tree view stock.picking -->
+         <record model="ir.ui.view" id="stock_operations_tree_view">
+                <field name="name">stock.picking.tree</field>
+                <field name="model">stock.picking</field>
+                <field name="inherit_id" ref="stock.vpicktree"></field>
+                <field name="arch" type="xml">
+                    <tree>
+                      <field name="is_responsible" invisible="1"></field>
+                    </tree>
+                </field>
+        </record>
+    </data>
+</odoo>

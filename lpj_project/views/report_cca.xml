@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <report
+                id="report_cca"
+                model="project.task"
+                string="Report CCA"
+                report_type="qweb-pdf"
+                name="lpj_project.report_document_cca"
+                file="lpj_project.report_document_cca"
+                menu="True"
+        />
+
+        <record id="paperformat_cca" model="report.paperformat">
+            <field name="name">European A4 low margin</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">4</field>
+            <field name="margin_bottom">4</field>
+            <field name="margin_left">4</field>
+            <field name="margin_right">4</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field> <!-- Jika ingin header muncul ubah nilai - 0 -->
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="lpj_project.report_cca" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="lpj_project.paperformat_cca"/>
+        </record>
+
+        <template id="report_document_cca">
+            <t t-name="lpj_project.report_document_cca">
+                <t t-call="report.html_container">
+                    <t t-foreach="docs" t-as="o">
+                        <div class="page">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h4 class="text-center">CORRECTION AND CORRECTIVE ACTION</h4>
+                                    <h5 class="text-center">PERMINTAAN KOREKSI DAN TINDAKAN PERBAIKAN</h5>
+                                </div>
+                            </div>
+
+                            <!-- Row garis horizontal -->
+                            <div class="row zero_min_height">
+                                <div class="col-xs-12">
+                                    <div style="border-bottom: 1px solid black;"/>
+                                </div>
+                            </div>
+
+                            <!-- Row information -->
+                            <div class="row" style="margin-top: 50px;">
+                                <div class="col-xs-6">
+                                    <p><b>Requestor / Auditor</b></p>
+                                    <table>
+                                        <tr>
+                                            <td style="padding-right: 35px; padding-bottom:8px;">
+                                                <b>No Laporan</b>
+                                            </td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td>
+                                                <p><span t-field="o.x_name"></span></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-right: 35px; padding-bottom:8px;">
+                                                <b>Nama Laporan</b>
+                                            </td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td><p><span t-field="o.name"></span></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-right: 35px; padding-bottom:8px;">
+                                                <b>Project</b>
+                                            </td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td>
+                                                <p t-field="o.project_id"></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-right: 35px; padding-bottom:8px;">
+                                                <b>Nama</b>
+                                            </td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td>
+                                                <p t-field="o.create_uid"></p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <div class="col-xs-6">
+                                    <p>
+                                        <b>Requested party / Auditee</b>
+                                    </p>
+                                    <table>
+                                        <tr>
+                                            <td style="padding-right: 35px; padding-bottom:8px;">
+                                                <b>Nama</b>
+                                            </td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td>
+                                                <p>
+                                                    <span t-field="o.user_id"></span>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-right: 35px; padding-bottom:8px;">
+                                                <b>Deadline</b>
+                                            </td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td>
+                                                <p t-field="o.date_deadline"></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-right: 35px; padding-bottom:8px;">
+                                                <b>Tags Category</b>
+                                            </td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td>
+                                                <t t-foreach="o.tag_ids" t-as="tag">
+                                                    <ul>
+                                                        <li>
+                                                            <span t-field="tag.name"></span>
+                                                        </li>
+                                                    </ul>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div> <!-- Tutup row informasi -->
+
+                            <!-- Row deskripsi -->
+                            <div class="row" style="margin-top: 25px">
+                                <div class="col-xs-12">
+                                    <p>
+                                        <b>Deskripsi Hasil Temuan / Masalah / Komplain</b>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12">
+                                     <table class="table table-bordered" style="border: 1px solid black;">
+                                        <thead>
+                                            <tr style="background-color:lightgray;">
+                                                <th class="text-center" style="border: 1px solid black;">
+                                                    Deskripsi
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                         <tbody>
+                                             <tr>
+                                                <td style="border: 1px solid black; padding: 5px;">
+                                                    <p t-field="o.description"></p>
+                                                </td>
+                                            </tr>
+                                         </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Row Analisa akar masalah -->
+                            <div class="row" style="margin-top: 25px;">
+                                <div class="col-xs-12">
+                                    <p>
+                                        <b>Analisa Akar Masalah</b>
+                                    </p>
+                                    <table class="table table-bordered" style="border: 1px solid black;">
+                                        <thead>
+                                            <tr style="background-color:lightgray;">
+                                                <td class="text-center" style="border: 1px solid black; padding: 1px;">
+                                                    <strong>Category</strong>
+                                                </td>
+                                                <td class="text-center" style="border: 1px solid black; padding: 1px;">
+                                                    <strong>Akar Masalah</strong>
+                                                </td>
+                                                <td class="text-center" style="border: 1px solid black; padding: 1px;">
+                                                    <strong>Action</strong>
+                                                </td>
+                                                <td class="text-center" style="border: 1px solid black; padding: 1px;">
+                                                    <strong>Due Date</strong>
+                                                </td>
+                                                <td class="text-center" style="border: 1px solid black; padding: 1px;">
+                                                    <strong>Finish Date</strong>
+                                                </td>
+                                                <td class="text-center" style="border: 1px solid black; padding: 1px;">
+                                                    <strong>PIC</strong>
+                                                </td>
+                                                <td class="text-center" style="border: 1px solid black; padding: 1px;">
+                                                    <strong>Status</strong>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody style="margin-top: 15px; padding-top: 50px;">
+                                            <tr t-foreach="o.x_project_task_line" t-as="row">
+                                                <td class="text-center" style="border: 1px solid black; padding: 1px; vertical-align: middle;">
+                                                    <span t-field="row.x_category_problem"/>
+                                                </td>
+                                                <td style="border: 1px solid black; padding: 5px;">
+                                                    <p style="text-align: justify" t-field="row.x_akar_masalah"/>
+                                                </td>
+                                                <td style="border: 1px solid black; padding: 5px;">
+                                                    <p style="text-align: justify" t-field="row.x_task"/>
+                                                </td>
+                                                <td class="text-center" style="border: 1px solid black; padding: 1px; vertical-align: middle;">
+                                                    <span t-field="row.x_date_task"/>
+                                                </td>
+                                                <td class="text-center" style="border: 1px solid black; padding: 1px; vertical-align: middle;">
+                                                    <span t-field="row.x_date_finish"/>
+                                                </td>
+                                                <td class="text-center" style="border: 1px solid black; padding: 1px; vertical-align: middle;">
+                                                    <span t-field="row.x_users"/>
+                                                </td>
+                                                <td class="text-center" style="border: 1px solid black; padding: 1px; vertical-align: middle;">
+                                                    <span t-field="row.x_status"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div> <!-- Tutup Page -->
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

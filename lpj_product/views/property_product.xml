@@ -1,0 +1,197 @@
+<odoo>
+    <data>
+        <!--<record model="ir.ui.view" id="trial_view">-->
+        <!--<field name="name">product.template.trial.view</field>-->
+        <!--<field name="model">product.template</field>-->
+        <!--<field name="inherit_id" ref="product.product_template_only_form_view"/>-->
+        <!--<field name="arch" type="xml">-->
+        <!--<xpath expr="//field[@name='name']" position="after">-->
+        <!--<field name="x_is_trial" attrs="{'invisible': True}"/>-->
+        <!--<field name="x_pic_trial" style="background:Red;"-->
+        <!--attrs="{'invisible': ['|',('x_is_trial','!=',True),('x_internal','!=','STC')]}"/>-->
+        <!--<field name="x_internal" string="Internal name" attrs="{'invisible': True}"/>-->
+        <!--</xpath>-->
+        <!--<xpath expr="//field[@name='purchase_method']" position="after">-->
+        <!--<field name="x_status_input"/>-->
+        <!--<field name="x_input_deskripsi"/>-->
+        <!--</xpath>-->
+        <!--</field>-->
+        <!--</record>-->
+
+        <record id="dataform_product_template_form_view2" model="ir.ui.view">
+            <!--<field name="inherit_id" ref="product.product_template_form_view"/>-->
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="model">product.template</field>
+            <field name="arch" type="xml">
+                <field name="purchase_method" position="after">
+                    <field name="x_user_input"/>
+                    <field name="x_status_admin_input"/>
+                    <field name="x_input_deskripsi"/>
+                    <field name="x_user_validator"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="dataform_product_template_form_view" model="ir.ui.view">
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <!--<field name="inherit_id" ref="product.product_template_only_form_view"/>-->
+            <field name="model">product.template</field>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="x_is_trial" attrs="{'invisible': True}"/>
+                    <field name="x_pic_trial" style="background:Red;"
+                           attrs="{'invisible': ['|',('x_is_trial','!=',True),('x_internal','!=','STC')]}"/>
+                    <field name="x_internal" string="Internal name" attrs="{'invisible': True}"/>
+                    <field name="x_internal" string="Internal name" attrs="{'invisible': True}"/>
+                    <field name="x_internal" string="Internal name" attrs="{'invisible': True}"/>
+                </field>
+                <field name="categ_id" position="after">
+                    <field name="x_customer"/>
+                    <field name="x_length"/>
+                    <field name="x_width"/>
+                    <field name="x_gramature_product"/>
+                    <field name="x_thickness_product"/>
+                </field>
+                <page name="general_information" position="after">
+                    <page name="dataform" string="Data Form" attrs="{'invisible':[('sale_ok','!=',True)]}">
+                        <group>
+                            <group string="Printing">
+                                <field name="x_drawing"/>
+                                <field name="x_tds"/>
+                                <!--<field name="x_ink_coverage_pde">-->
+                                <!--<tree editable="bottom">-->
+                                <!--<field name="x_colors_id"/>-->
+                                <!--<field name="x_category_printing_id"/>-->
+                                <!--<field name="x_coverage"/>-->
+                                <!--</tree>-->
+                                <!--</field>-->
+                                <field name="x_special_color"/>
+                            </group>
+                            <group string="Diecut To Shape">
+                                <field name="x_diecut_shape_id"/>
+                                <field name="x_material_type_ids">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                        <field name="x_is_main"/>
+                                    </tree>
+                                </field>
+                                <field name="x_release"/>
+                                <field name="x_drawing_file" widget="image" readonly="True"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="x_hotprint_list_ids">
+                                    <tree editable="bottom">
+                                        <field name="x_category_finishing_process_id"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group>
+                                <field name="x_finishing_process_laminating"/>
+                                <field name="x_finishing_process_emboss"/>
+                                <!--<field name="x_finishing_process_foil"/>-->
+                                <field name="x_media_tempel"/>
+                            </group>
+                        </group>
+
+                        <group>
+                            <group>
+                                <field name="x_location_media_id">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group>
+                                <field name="x_varnish_list_ids">
+                                    <tree editable="bottom">
+                                        <field name="x_category_finishing_process_id"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="x_layout_product_ids">
+                                <tree editable="bottom">
+                                    <field name="x_type"/>
+                                    <field name="x_size"/>
+                                    <field name="x_space"/>
+                                    <field name="x_druk"/>
+                                    <field name="x_number"/>
+                                    <field name="x_std_afalan"/>
+                                    <field name="x_jumlah"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group>
+                            <field name="x_layout_plong_ids">
+                                <tree editable="bottom">
+                                    <field name="x_plong_type"/>
+                                    <field name="x_plong_size"/>
+                                    <field name="x_plong_space"/>
+                                    <field name="x_plong_druk"/>
+                                    <field name="x_plong_number"/>
+                                    <field name="x_plongstd_afalan"/>
+                                    <field name="x_plong_jumlah"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                    <page name="ribbon" string="Ribbon" attrs="{'invisible':[('sale_ok','!=',True)]}">
+                        <group>
+                            <group>
+                                <field name="x_ribbon"/>
+                                <field name="x_face_ink"/>
+                                <field name="x_id_core"/>
+                                <field name="x_od_core"/>
+                            </group>
+                            <group>
+                                <field name="x_core_type"/>
+                                <field name="x_notch"/>
+                                <field name="x_roll_perbox_ribbon"/>
+                                <field name="x_material_core"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page name="packinginfo" string="Packing Information" attrs="{'invisible':[('sale_ok','!=',True)]}">
+                        <group>
+                            <group>
+                                <field name="x_type_packing"/>
+                                <field name="x_pcs_units"/>
+                                <field name="x_units_packing" attrs="{'invisible':[('x_type_packing','!=','roll')]}"/>
+                                <field name="x_packing_box"/>
+                                <field name="x_inner_core" attrs="{'invisible':[('x_type_packing','!=','roll')]}"/>
+                                <field name="x_outer_core" attrs="{'invisible':[('x_type_packing','!=','roll')]}"/>
+                                <field name="x_hasil_bungkus"/>
+                            </group>
+                            <group>
+                                <field name="x_thicknes_core" attrs="{'invisible':[('x_type_packing','!=','roll')]}"/>
+                                <field name="x_roll_direction" attrs="{'invisible':[('x_type_packing','!=','roll')]}"/>
+                                <field name="x_roll_file" widget="image" readonly="True"
+                                       attrs="{'invisible':[('x_type_packing','!=','roll')]}"/>
+                            </group>
+                        </group>
+                    </page>
+                </page>
+            </field>
+        </record>
+
+        <!-- Hidden button on header product -->
+         <record model="ir.ui.view" id="product_template_form_view_procurement_button2">
+            <field name="name">product.template_procurement_form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <header position="replace">
+                        <header position="inside">
+                            <button name="%(stock.action_view_change_product_quantity)d" string="Update Qty On Hand" type="action" attrs="{'invisible': [('type', '!=', 'product')]}" groups="base.group_system"></button>
+                            <button string="Procurement Request" name="%(stock.act_make_procurement)d" type="action" attrs="{'invisible': [('type', '!=', 'product')]}" groups="base.group_system"></button>
+                        </header>
+                    </header>
+                </data>
+            </field>
+        </record>
+    </data>
+</odoo>

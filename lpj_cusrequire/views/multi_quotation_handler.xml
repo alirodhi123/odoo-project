@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_order_form_multi_quotation" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_confirm'][1]" position="replace">
+                    <button name="action_confirm" id="action_confirm"
+                        string="Confirm Sale" class="btn-primary" type="object"
+                        attrs="{'invisible': ['|',('state', 'not in', ['sent']),('is_multiquotation', '=', True)]}"/>
+                    <button name="action_multi_quotation_selector"
+                        string="Choose Best" type="object" class="btn-primary"
+                        attrs="{'invisible': ['|',('state', 'not in', ['sent']),('is_multiquotation', '!=', True)]}"/>
+                </xpath>
+                <xpath expr="//button[@name='action_confirm'][2]" position="replace">
+                    <button name="action_confirm"
+                        string="Confirm Sale" type="object"
+                        attrs="{'invisible': ['|',('state', 'not in', ['draft']),('is_multiquotation', '=', True)]}"/>
+                    <button name="action_multi_quotation_selector"
+                        string="Choose Best" type="object"
+                        attrs="{'invisible': ['|',('state', 'not in', ['draft']),('is_multiquotation', '!=', True)]}"/>
+                </xpath>
+
+                <xpath expr="//sheet/notebook/page[1]" position="after">
+                    <page string="Multiple Quotation Lines" attrs="{'invisible':['|', ('is_multiquotation','!=',True), ('state','not in',['draft','sent','cancel'])]}">
+                        <field name="multi_order_lines" mode="tree,form" context="{'default_company_id': company_id , 'default_partner_id': partner_id , 'default_pricelist_id': pricelist_id , 'default_multi_order_id': active_id}">
+                            <form string="Multiple Quotation Lines">
+                                <div class="oe_title">
+                                    <h1>
+                                        <field name="name" readonly="1"/>
+                                    </h1>
+                                </div>
+                                <group>
+                                    <group>
+                                        <field name="partner_id" domain="[('customer','=',True)]"
+                                               context="{'search_default_customer':1, 'show_address': 1}"
+                                               options='{"always_reload": True}'/>
+                                        <field name="multi_order_id" invisible="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="pricelist_id"/>
+                                        <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                                    </group>
+                                </group>
+                                <notebook>
+                                    <page string="Sales Order Lines">
+                                        <field name="multi_quotation_line" context="{'default_order_id': multi_order_id}">
+                                            <form string="Sales Order Lines">
+                                                <group>
+                                                    <group>
+                                                        <!--<field name="product_updatable" invisible="1"/>-->
+                                                        <!--<field name="product_id"-->
+                                                            <!--attrs="{'readonly': [('product_updatable', '=', False)]}"-->
+                                                            <!--force_save="1"-->
+                                                            <!--context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"-->
+                                                           <!--/>-->
+                                                        <field name="layout_category_id" groups="sale.group_sale_layout"/>
+
+                                                        <field name="product_uom_qty"
+                                                            string="Ordered Qty"
+                                                            context="{'partner_id':parent.multi_order_id.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
+                                                        />
+                                                        <field name="price_unit"/>
+                                                        <field name="product_uom"
+                                                            context="{'company_id': parent.company_id}"
+                                                            groups="product.group_uom" options='{"no_open": True}'/>
+                                                        <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                                        <field name="discount" groups="sale.group_discount_per_so_line"/>
+                                                        <field name="qty_delivered_updateable" invisible="1"/>
+                                                        <field name="state" invisible="1"/>
+                                                        <field name="order_id" invisible="1"/>
+                                                    </group>
+                                                    <group>
+                                                        <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"/>
+                                                        <field name="customer_lead"/>
+                                                         <field name="qty_to_invoice" invisible="1"/>
+                                                        <field name="invoice_status" invisible="1"/>
+                                                        <field name="currency_id" invisible="1"/>
+                                                    </group>
+                                                    <group>
+                                                        <field name="price_subtotal" widget="monetary" groups="sale.group_show_price_subtotal"/>
+                                                    </group>
+                                                    <group>
+
+                                                        <field name="price_total" widget="monetary" groups="sale.group_show_price_total"/>
+                                                    </group>
+                                                </group>
+                                                <group>
+                                                    <field name="name"/>
+                                                </group>
+                                            </form>
+                                            <tree string="Sales Order Lines" editable="bottom">
+                                                <field name="sequence" widget="handle"/>
+                                                <!--<field name="product_updatable" invisible="1"/>-->
+                                                <!--<field name="product_id"-->
+                                                    <!--attrs="{'readonly': [('product_updatable', '=', False)]}"-->
+                                                    <!--force_save="1"-->
+                                                    <!--context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"-->
+                                                   <!--/>-->
+                                                <field name="layout_category_id" groups="sale.group_sale_layout"/>
+                                                <field name="name"/>
+                                                <field name="product_uom_qty"
+                                                    string="Ordered Qty"
+                                                    context="{'partner_id':parent.multi_order_id.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
+                                                />
+                                                <field name="qty_to_invoice" invisible="1"/>
+                                                <field name="product_uom"
+                                                    context="{'company_id': parent.company_id}"
+                                                    groups="product.group_uom" options='{"no_open": True}'/>
+                                                <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                                <field name="price_unit"/>
+                                                <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"/>
+                                                <field name="discount" groups="sale.group_discount_per_so_line"/>
+                                                <field name="price_subtotal" widget="monetary" groups="sale.group_show_price_subtotal"/>
+                                                <field name="price_total" widget="monetary" groups="sale.group_show_price_total"/>
+                                                <field name="qty_delivered_updateable" invisible="1"/>
+                                                <field name="state" invisible="1"/>
+                                                <field name="order_id" invisible="1"/>
+                                                <field name="invoice_status" invisible="1"/>
+                                                <field name="customer_lead" invisible="1"/>
+                                                <field name="currency_id" invisible="1"/>
+                                            </tree>
+                                        </field>
+                                        <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                            <field name="amount_untaxed" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                            <field name="amount_tax" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                            <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                                <label for="amount_total" />
+                                            </div>
+                                            <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                        </group>
+                                        <field name="note" class="oe_inline" placeholder="Setup default terms and conditions in your sales settings ..."/>
+                                        <div class="oe_clear"/>
+                                    </page>
+                                </notebook>
+                            </form>
+                            <tree string="Sales Order Lines">
+                                <field name="name"/>
+                                <field name="product_count"/>
+                                <field name="amount_untaxed"/>
+                                <field name="amount_tax"/>
+                                <field name="amount_total"/>
+                                <field name="multi_order_id" invisible="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+                <xpath expr="//sheet/notebook/page[1]" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|',('is_multiquotation', '=', True)]}</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <div groups="multiple_quotation_handler.multiple_quotation_group" attrs="{'invisible':[('state','!=','draft')]}">
+                        <field name="is_multiquotation"/>
+                        <button name="action_multiquotation" class="oe_inline" type="object" string="Enable/Disable Multi-Quotation"/>
+                    </div>
+                    <div class="mt8" groups="multiple_quotation_handler.multiple_quotation_group">
+                        <field name="multiquotation_note" attrs="{'invisible':[('is_multiquotation','!=',True)]}"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,53 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="lot_workorder_form_view">
+            <field name="name">lot.workorder.form</field>
+            <field name="model">stock.production.lot</field>
+            <field name="inherit_id" ref="stock.view_production_lot_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_qty']" position="after">
+                   <field name="x_tampungan_qty" invisible = '1'/>
+                </xpath>
+                <notebook>
+                    <page string="Lot" id="lot_workorder">
+                        <field name="x_lotworkorder_id">
+                            <tree editable = "bottom">
+                                <field name = 'x_internal_lot'/>
+                                <field name = 'x_supplier_lot'/>
+                                <field name = 'x_qty_lot'/>
+                            </tree>
+                        </field>
+                    </page>
+		        </notebook>
+            </field>
+        </record>
+
+           <record model="ir.ui.view" id="detail_lotworkorder_tree">
+            <field name="name">detail.lotworkorder.tree</field>
+            <field name="model">x.lot.workorder</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="x_production_lot"/>
+                    <field name="x_internal_lot"/>
+                    <field name="x_supplier_lot"/>
+                    <field name="x_qty_lot"/>
+                </tree>
+            </field>
+        </record>
+
+
+         <record model="ir.actions.act_window"
+                id="lot_workorder_form">
+            <field name="name">Master Detail Lot</field>
+            <field name="res_model">x.lot.workorder</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="master_detail_lotworkorder" name="Master Detail Lot"
+                  parent="stock.menu_stock_inventory_control" sequence="100"
+                  action="lot_workorder_form"/>
+    </data>
+</odoo>
+
+

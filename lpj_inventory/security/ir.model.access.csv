@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_lpj_inventory_lpj_inventory,lpj_inventory.lpj_inventory,model_lpj_inventory_lpj_inventory,,1,0,0,0

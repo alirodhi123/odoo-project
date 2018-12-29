@@ -1,0 +1,79 @@
+<odoo>
+  <data>
+  	
+  	<!-- Membuat form wizard dari button Action -->
+	
+	<record model="ir.ui.view" id="wizard_form_view">
+		<field name="name">training.wizard.form</field>
+		<field name="model">training.wizard</field>
+		<field name="arch" type="xml">
+			<form string="Tambah Peserta">
+				<group>
+					<field name="session_id"/>
+					<field name="attendee_ids"/>
+				</group>
+				<footer>
+					<button name="tambah_peserta" type="object" string="Tambah" class="oe_highlight"/>
+					or
+					<button special="cancel" string="Batal"/>
+				</footer>
+			</form>
+		</field>
+	</record>
+	
+	
+	<!-- Membuat action baru -->
+	
+	<act_window id="launch_session_wizard"
+				name="Tambah Peserta"
+				src_model="training.sesi"
+				res_model="training.wizard"
+				view_mode="form"
+				target="new"
+				key2="client_action_multi"/>
+	
+					
+					
+					
+					
+					
+  	<!-- Membuat form wizard dari menu item -->
+	
+	<record model="ir.ui.view" id="wizard_form_view_menu">
+		<field name="name">training.wizard.menu.form</field>
+		<field name="model">training.wizard</field>
+		<field name="arch" type="xml">
+			<form string="Tambah Peserta">
+				<group>
+					<field name="session_ids" widget="many2many_tags"/>
+					<field name="attendee_ids"/>
+				</group>
+				<footer>
+					<button name="tambah_banyak_peserta" type="object" string="Tambah" class="oe_highlight"/>
+					or
+					<button special="cancel" string="Batal"/>
+				</footer>
+			</form>
+		</field>
+	</record>
+	
+	
+	<!-- Membuat action wizard dari menu item -->
+	
+	<act_window id="sesi_wizard_menu_action"
+				name="Tambah Peserta"
+				res_model="training.wizard"
+				view_mode="form"
+				view_id="wizard_form_view_menu"	
+				target="new"/>
+	
+
+	<!-- ### Membuat Sub Menu Wizard ### -->
+	
+	<menuitem id="wizard_menu" name="Tambah Peserta" parent="training_odoo_menu" action="sesi_wizard_menu_action"/>
+    
+									    	    
+  </data>
+</odoo>
+
+

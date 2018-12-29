@@ -1,0 +1,82 @@
+<odoo>
+    <data>
+        <!-- View Tree Approve Cus Req -->
+        <record model="ir.ui.view" id="drawing_tree_view">
+            <field name="name">drawing.tree</field>
+            <field name="model">x.drawing</field>
+            <field name="arch" type="xml">
+                <tree string="DrawingList">
+                    <field name="name"/>
+                    <!--<field name="x_name"/>-->
+                    <!--<field name="x_file" widget="image" class="oe_avatar" options="{'preview_image': 'image_small', 'size': [30, 30]}"/>-->
+                    <field name="x_file"/>
+                    <field name="x_file_template"/>
+                    <!--<field name="x_file_template" widget="image" options="{'preview_image': 'image_small', 'size': [30, 30]}"/>-->
+                    <field name="x_description"/>
+                </tree>
+            </field>
+        </record>
+        <!-- View Kanban Approve Cus Req -->
+
+        <!-- View Form Approve Cus Req -->
+        <record model="ir.ui.view" id="drawing_form_view">
+            <field name="name">drawing.form</field>
+            <field name="model">x.drawing</field>
+            <field name="arch" type="xml">
+                <form>
+                    <!--<header>-->
+                    <!--<button name="action_next" type="object" string="Confirm"-->
+                    <!--states="draft" class="oe_highlight" />-->
+
+                    <!--<field name="state" widget="statusbar" />-->
+                    <!--</header>-->
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <!--<div class="oe_title">-->
+                        <!--<h1>-->
+                        <!--<field name="name" readonly="1" />-->
+                        <!--</h1>-->
+                        <!--</div>-->
+                        <group>
+                            <!--<group>-->
+                            <!--<field name="partner_id" />-->
+                            <!--</group>-->
+                            <group>
+                                <!--<field name="x_name"/>-->
+                                <field name="x_file" widget="image"/>
+                                <field name="x_file_template" widget="image"/>
+                                <field name="x_description"/>
+                            </group>
+                        </group>
+
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window"
+                id="drawing_list_action">
+            <field name="name">Drawing</field>
+            <field name="res_model">x.drawing</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <!--<menuitem id="master_pde_menu"-->
+                  <!--parent="lpj_cusrequire.main_approval_odoo_menu" name="Master" sequence="10"/>-->
+
+        <!--<menuitem id="drawing_menu" name="Drawing"-->
+                  <!--parent="master_pde_menu" action="drawing_list_action"/>-->
+
+
+    </data>
+</odoo>

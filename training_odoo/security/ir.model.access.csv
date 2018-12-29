@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+kursus_user,kursus.user,model_training_kursus,group_training_user,1,1,1,1
+sesi_user,sesi.user,model_training_sesi,group_training_user,1,1,1,1
+kursus_create,kursus.create,model_training_kursus,group_training_create,1,0,1,0
+kursus_read,kursus.read,model_training_kursus,group_training_read,1,0,0,0
+kursus_update,kursus.update,model_training_kursus,group_training_update,1,1,0,0
+kursus_delete,kursus.delete,model_training_kursus,group_training_delete,1,0,0,1
+sesi_create,sesi.create,model_training_sesi,group_training_create,1,0,1,0
+sesi_read,sesi.read,model_training_sesi,group_training_read,1,0,0,0
+sesi_update,sesi.update,model_training_sesi,group_training_update,1,1,0,0
+sesi_delete,sesi.delete,model_training_sesi,group_training_delete,1,0,0,1

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    
+    <record model="ir.ui.view" id="view_plm_document">
+        <field name="name">plm.document</field>
+        <field name="model">plm.document</field>
+        <field name="priority" eval="1"/>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Document"  version="7.0">
+               <header>
+                    <button name="release" 
+                    		states="confirmed" 
+                    		string="Release Document" 
+                    		class="oe_highlight"  
+                    		attrs="{'invisible': ['|',('is_checkout','=',True)]}"
+                    	/>
+                    <button name="correct" 
+                    		states="confirmed" 
+                    		string="Correct Document" 
+                    	/> 
+                    <button name="confirm" 
+                    		states="draft" 
+                    		string="Confirm Document" 
+                    		class="oe_highlight"  
+                    		attrs="{'invisible': ['|',('is_checkout','=',True)]}"
+                    	/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,released" statusbar_colors='{"undermodify":"red","obsoleted":"red"}' readonly="1"/>
+               </header>
+               <sheet>
+	               
+	               <group name="DocData">
+		               <group name="main_doc_info">
+	 						<label for="name" class="oe_edit_only"/>	
+		               		<strong>
+		               			<field name="name" select="1" attrs="{'readonly':[('state','in',['released','obsoleted'])]}"/>
+		               		</strong>
+		               		<label for="revisionid" class="oe_edit_only"/>	
+		               		<strong>	
+					        	<field name="revisionid" readonly="True"/>
+					       	</strong>
+		                    <group string="Created and Modified" name="DocUser">
+			                    <field name="create_uid" 	readonly="1"/>
+	                            <field name="create_date" 	readonly="1"/>
+	                            <field name="write_uid" 	readonly="1"/>
+	                            <field name="write_date" 	readonly="1"/>	
+	                    	</group>
+                        	<group string="Check Out">
+                        		<field name="checkout_user"/>
+                        		<field name="is_checkout"/>
+                        	</group>
+			           </group>
+			           <group name="doc_preview">
+                		<field 
+                    		name="preview"
+                    		widget="image"
+                    		readonly="1"
+                    		nolabel="1"
+                    		img_height="350"
+                    		img_width="350"/>
+                		</group> 
+		            </group>		
+	                <notebook >
+	                <page string="Attachment">
+	                		<group  string="File Data" name="FileData" >
+		                        <group attrs="{'invisible':[('type','=','url')]}" name="group_datas" colspan="4" col="2">
+		                            <field name="datas" filename="datas_fname" 	attrs="{'readonly':[('state','in',['released','obsoleted'])]}"/>
+		                            <field name="datas_fname" select="1"		attrs="{'readonly':[('state','in',['released','obsoleted'])]}"/>
+		                            <field name="document_type"					attrs="{'readonly':[('state','in',['released','obsoleted'])]}"/>
+		                        </group>
+		                        <group name="group_url" colspan="4">
+		                            <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')],'readonly':[('state','in',['released','obsoleted'])]}"/>
+		                        	<field name="type" attrs="{'readonly':[('state','in',['released','obsoleted'])]}"/>
+		                        </group>
+	                        </group>
+							<group>
+	                            <group  string="Attached To" name="group_resurse">
+	                        		<newline/>
+	                       			<field name="res_id" 	readonly="True"/>
+	                                <field name="res_model" readonly="True" />
+	                            </group>
+	                            <group  string="Related To" name="related">
+		                            <newline/>
+	                                <field name="res_name" 	readonly="1"/>
+	                           	</group>
+                           	</group>	
+	                </page>
+	                <page string="Linked Parts" name="page_liked_parts">
+	                    <field colspan="4" name="linkedcomponents" nolabel="1"	attrs="{'readonly':[('state','in',['released','obsoleted'])]}"/>
+	                </page>
+	                <page string="Indexed Content" groups="base.group_extended" name="page_indexed_content">
+	                    <field name="index_content" colspan="4" nolabel="1"		attrs="{'readonly':[('state','in',['released','obsoleted'])]}"/>
+	                </page>
+	                <page string="Notes" name="page_notes">
+	                	<label for="description" class="oe_edit_only"/>	
+	                    <field colspan="4" name="description" nolabel="1"		attrs="{'readonly':[('state','in',['released','obsoleted'])]}"/>
+	                	<label for="desc_modify" class="oe_edit_only"/>	
+	                    <field colspan="4" name="desc_modify" nolabel="1"		attrs="{'readonly':[('state','in',['released','obsoleted'])], 'invisible': [('revisionid', '=', 0)]}"/>
+	                </page>
+	                </notebook>
+                </sheet>
+				<div class="oe_chatter">
+					<field name="message_follower_ids" widget="mail_followers" modifiers="{}"/>
+					<field name="message_ids" widget="mail_thread" modifiers="{}"/>
+				</div>
+            </form>
+        </field>
+    </record>
+
+   <record id="view_plm_document_plm_admin" model="ir.ui.view">
+            <field name="name">plm.document.plm.admin</field>
+            <field name="model">plm.document</field>
+            <field name="inherit_id" ref="plm.view_plm_document" />
+            <field name="groups_id" eval="[(6, 0, [ref('plm.group_plm_admin')])]" />                
+            <field name="arch" type="xml">                                   
+                <field name="name" position="attributes">
+                   <attribute name="readonly">0</attribute>                   
+                </field>                             
+            </field>
+	</record> 
+
+    <record model="ir.ui.view" id="plm_document_tree">
+        <field name="name">plm.document</field>
+        <field name="model">plm.document</field>
+        <field name="type">tree</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+			<tree string="Documents">
+                <field name="name" 			select="True"/>
+                <field name="revisionid" 	select="True"/>
+                <field name="state" 		select="True"/>
+                <field name="datas_fname" 	select="True"/>
+                <field name="checkout_user" colspan="2"/>
+                <field name="create_uid" 	select="True"/>
+                <field name="create_date" 	select="True"/>
+                <field name="write_uid" 	select="True"/>
+                <field name="write_date" 	select="True"/>
+         	</tree>
+         </field>
+    </record>
+
+    <record model="ir.ui.view" id="plm_document_search">
+		<field name="name">plm.document</field>
+		<field name="model">plm.document</field>
+		<field name="type">search</field>
+		<field name="priority" eval="1"/>
+		<field name="arch" type="xml">
+			<search string="Documents">
+				<filter string="  Last Month  " separator="1"
+				        domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31,months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
+				        help="Created last month"/>
+				<filter string="  Last Week  " separator="1"
+				        domain="[('create_date','&lt;=', (datetime.date.today()-datetime.timedelta(weeks=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-datetime.timedelta(weeks=2)).strftime('%%Y-%%m-%%d'))]"
+				        help="Created last week"/>
+				<filter string="  Latest 7 Days  " separator="1"
+				        domain="[('create_date','&lt;=', (datetime.date.today()).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-datetime.timedelta(weeks=1)).strftime('%%Y-%%m-%%d'))]"
+				        help="Created latest 7 Days"/>
+				<filter string="  Yesterday  " separator="1"
+				 		domain="[('create_date','&lt;=', (datetime.date.today()-datetime.timedelta(days=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-datetime.timedelta(days=1)).strftime('%%Y-%%m-%%d'))]"
+				 		help="Created yesterday"/>
+				<filter string="  Today  " separator="1"
+				 		domain="[('create_date','&lt;=', (datetime.date.today()).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()).strftime('%%Y-%%m-%%d'))]"
+				 		help="Created today"/>
+           		<separator orientation="vertical"/>
+                <field name="name"/>
+                <field name="datas_fname"/>
+                <field name="create_uid">
+                    <filter domain="[('create_uid','=',uid)]" help="Filter on documents created by me"/>
+                </field>
+                <field name="write_uid">
+                    <filter domain="[('write_uid','=',uid)]" help="Filter on documents changed by me"/>
+                </field>
+           		<separator orientation="vertical"/>
+				<field name="state">
+					<filter string="Confirmed" domain="[('state', '=', 'confirmed')]"/>
+					<filter string="Released" domain="[('state', 'in', ['released','undermodify'])]"/>
+					<filter string="Latest" name="latest" domain="[('state', 'not in', ['obsoleted','undermodify'])]"/>
+				</field>
+                <group expand="0" string="Group By...">
+                    <filter string="Created by" domain="[]" context="{'group_by':'create_uid'}"/>
+                    <filter string="Changed by" domain="[]" context="{'group_by':'write_uid'}"/>
+                    <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Created by Month" help="Creation Month" domain="[]" context="{'group_by':'create_date'}"/>
+                    <filter string="Changed by Month" help="Creation Month" domain="[]" context="{'group_by':'write_date'}"/>
+                </group>
+			</search>
+		</field>
+    </record> 
+
+ 	<record id="document_kanban_view" model="ir.ui.view">
+            <field name="name">Product.template.product.kanban</field>
+            <field name="model">plm.document</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="revisionid"/>
+                    <field name="description"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div >
+                                    <img t-att-src="kanban_image('plm.document', 'preview', record.id.value)" height="95%" width="95%"/>
+                                </div>
+								<div class="oe_kanban_details">
+									<strong>
+                                        <field name="name"/>
+                                   	</strong>
+                                   	<strong> 
+                                   		- <field name="revisionid"/> 
+                                   	</strong>
+                                   <strong> 
+                                   		<field name="state"/>
+                                   	</strong>	
+                                   	<div name="tags"/> 
+                                   	<field name="description"/> 
+								</div>
+							</div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+    
+    <record model="ir.actions.act_window" id="plm_action_document_form">
+    	<field name="name">Documents</field>
+     	<field name="res_model">plm.document</field>
+        <field name="view_type">form</field>
+       	<field name="view_mode">tree,form,kanban</field> 
+        <field name="context">{"search_default_latest":1}</field>      
+    </record>
+
+    <record model="ir.ui.view" id="view_plm_document_form_client">
+        <field name="name">plm_document_form_client</field>
+        <field name="model">plm.document</field>
+        <field name="priority" eval="2"/>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Document"  version="7.0">
+               <sheet>
+				  <group>
+	               <field name="name" select="1" attrs="{'readonly':[('state','in',['released','obsoleted'])]}"/>
+		           <field name="revisionid" readonly="True"/>
+				   <field name="document_type" attrs="{'readonly':[('state','in',['released','obsoleted'])]}"/>
+				   <field name="datas_fname" readonly='True'/>
+                   <field name="description" attrs="{'readonly':[('state','in',['released','obsoleted'])]}" colspan="4" />
+                   <field name="desc_modify" attrs="{'readonly':[('state','in',['released','obsoleted'])], 'invisible': [('revisionid', '=', 0)]}" colspan="4" />
+                  </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</data>
+</openerp>

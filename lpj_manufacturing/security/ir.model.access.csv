@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_lpj_manufacturing_lpj_manufacturing,lpj_manufacturing.lpj_manufacturing,model_lpj_manufacturing_lpj_manufacturing,,1,0,0,0

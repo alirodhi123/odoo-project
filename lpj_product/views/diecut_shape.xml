@@ -1,0 +1,38 @@
+<odoo>
+  <data>
+   	<record model="ir.ui.view" id="diecutshape_tree_view">
+        <field name="name">x.diecut.shape.tree</field>
+        <field name="model">x.diecut.shape</field>
+        <field name="arch" type="xml">
+            <tree string="Diecut Shape" >
+                <field name="name"/>
+                <field name="description"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="diecutshape_form_view">
+        <field name="name">x.diecut.shape.form</field>
+        <field name="model">x.diecut.shape</field>
+        <field name="arch"  type="xml">
+            <form string="Sesi Form">
+                <sheet>
+                    <group string="Informasi">
+                        <field name="name"/>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record> 
+    
+    <record model="ir.actions.act_window" id="diecutshape_list_action">
+        <field name="name">DiecutShape</field>
+        <field name="res_model">x.diecut.shape</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+     <!--<menuitem id="diecutshape_menu" parent="master_pde_menu" name="Diecut Shape" action="diecutshape_list_action"/>-->
+  </data>
+</odoo>

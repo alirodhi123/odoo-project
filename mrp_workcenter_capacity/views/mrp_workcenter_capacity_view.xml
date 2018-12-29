@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="mrp_workcenter_view" model="ir.ui.view">
+        <field name="name">mrp.workcenter.form</field>
+        <field name="model">mrp.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+            <field name="arch" type="xml">
+                <group name="capacity" position="after">
+                    <group>
+                        <field name="nr_days" />
+                        <field name="nr_hours" widget="float_time" />
+                        <field name="nr_shift" />
+                        <field name="wc_capacity" widget="float_time" />
+                    </group>
+                </group>
+            </field>
+    </record>
+</odoo>

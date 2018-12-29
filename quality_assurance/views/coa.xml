@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="kursus_tree_view">
+          <field name="name">x.coa.tree</field>
+          <field name="model">x.coa</field>
+          <field name="arch" type="xml">
+              <tree string="Certificate of Analysis List">
+                <field name="x_stock_id"></field>
+                <field name="x_customer"></field>
+                <field name="x_nama_barang"></field>
+                <field name="x_schedule_date"></field>
+                <field name="x_jumlah"></field>
+              </tree>
+          </field>
+        </record>
+
+        <!-- Form COA -->
+        <record model="ir.ui.view" id="coa_form_view">
+            <field name="name">x.coa.form</field>
+            <field name="model">x.coa</field>
+            <field name="arch" type="xml">
+                <form string = "Create COA">
+                    <sheet>
+                         <div class="oe_title">
+                            <h2><field name="name" placeholder="Name" readonly="1"/></h2>
+                         </div>
+                        <group>
+                            <group>
+                                <field name="x_stock_id"></field>
+                                <field name="x_customer"></field>
+                                <field name="x_nama_barang"></field>
+                                <field name="x_tanggal_pemeriksaan"></field>
+                                <field name="x_tanggal_kirim"></field>
+                            </group>
+                            <group>
+                                <field name="x_po_customer"></field>
+                                <field name="x_no_sjk"></field>
+                                <field name="x_schedule_date"></field>
+                                <field name="x_jumlah"></field>
+                                <field name="stock_id" invisible="1"></field>
+                            </group>
+                        </group>
+
+                        <!-- Notes -->
+                        <notebook>
+                            <page string="Notes">
+                                <group>
+                                    <group>
+                                        <field name="x_gramature"></field>
+                                       <field name="x_thickness"></field>
+                                       <field name="x_apperance"></field>
+                                       <field name="x_colour"></field>
+                                       <field name="x_diecut"></field>
+                                       <field name="x_glueing"></field>
+                                       <field name="x_lenght"></field>
+                                       <field name="x_width"></field>
+                                       <field name="x_shelflife"></field>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Lot Number">
+                                <field name="coa_line_ids">
+                                    <tree editable="bottom">
+                                        <field name="lot_id"></field>
+                                        <field name="qty"></field>
+                                    </tree>
+                                </field>
+
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="act_coa_project_task_all" model="ir.actions.act_window">
+            <field name="name">COA</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">x.coa</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="coa_form_view"></field>
+        </record>
+
+
+        <!--
+            STOCK.PICKING
+        -->
+
+        <!-- Inherit tree view stock picking, add button -->
+        <record model="ir.ui.view" id="view_purchase_requisition_tree_inherit">
+           <field name="name">coa.tree.inherit</field>
+           <field name="model">stock.picking</field>
+           <field name="inherit_id" ref="stock.view_picking_form"/>
+           <field name="arch" type="xml">
+               <xpath expr="//field[@name='pack_operation_product_ids']/tree/field[@name='qty_done']"
+                   position="after">
+                    <button class="oe_highlight"
+                            name="open_second_class"
+                            string="Create COA"
+                            type="object"
+                            help="calls python function"
+                            groups="quality_assurance.group_quality_manager,quality_assurance.group_quality_user"/>
+               </xpath>
+           </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="coa_action_master">
+          <field name="name">Master COA</field>
+          <field name="res_model">x.coa</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Create a new COA</p>
+          </field>
+        </record>
+
+        <!-- Aksi menu COA -->
+        <record model="ir.actions.act_window" id="coa_action">
+          <field name="name">Create COA</field>
+          <field name="res_model">stock.picking</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Create a new COA</p>
+          </field>
+        </record>
+
+        <!-- Menu COA -->
+        <menuitem id="menu_coa" name="COA" parent="menu_quality_root" sequence="111"/>
+        <!-- Sub menu COA -->
+        <menuitem id="menu_coa_sub" name="Create COA" parent="menu_coa" action="coa_action" sequence="112"/>
+        <!-- Sub menu COA Master-->
+        <menuitem id="menu_coa_sub_2" name="Master COA" parent="menu_coa" action="coa_action_master" sequence="113"/>
+
+    </data>
+</odoo>
+
+

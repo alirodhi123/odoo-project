@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <report id="report_all_product_product_pdf"
+                string="Print Bom All Levels PDF Drawings"
+                model="product.product"
+                name="all.product.product.pdf"
+                report_type="sxw"
+                file=""
+                header="False"
+                />
+    </data>
+    <data>
+        <report id="report_one_product_product_pdf"
+                string="Print Bom One Level PDF Drawings"
+                model="product.product"
+                name="one.product.product.pdf"
+                report_type="sxw"
+                file=""
+                header="False"
+                />
+    </data>
+    <data>
+        <report id="report_product_product_pdf"
+                string="Print Attached PDF Drawings"
+                model="product.product"
+                name="product.product.pdf"
+                report_type="sxw"
+                file=""
+                header="False"
+                />
+    </data>
+    <data>
+        <report id="report_product_product_pdf_latest"
+                string="Print All Production PDF Drawings" 
+                model="product.product"
+                name="product.product.pdf.latest"
+                report_type="sxw"
+                file=""
+                header="False"
+                />
+    </data>   
+   
+
+</openerp>

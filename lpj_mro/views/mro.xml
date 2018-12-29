@@ -1,0 +1,27 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="mro.endatc">
+            <field name="name">mro.endate</field>
+            <field name="model">mro.order</field>
+            <field name="inherit_id" ref="mro.mro_order_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_execution'][not(ancestor::field)]" position="after">
+                    <field name="x_tgl_slsai"/>
+                </xpath>
+                <notebook>
+                    <page string="Downtime" id="downtime_mro">
+                        <field name="x_mro_downtime">
+                            <tree editable = "bottom">
+                                <field name="name" />
+                                <field name="x_down_start"/>
+                                <field name="x_down_end"/>
+                            </tree>
+                        </field>
+                    </page>
+		        </notebook>
+            </field>
+        </record>
+    </data>
+</odoo>
+
+

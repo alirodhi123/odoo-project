@@ -1,0 +1,40 @@
+<odoo>
+  <data>
+
+    <!-- Sub menu invoice -->
+    <menuitem name="Sales to Invoice" id="sub_menu_invoice"
+              parent="account.menu_finance_receivables"
+              sequence="0"
+              action="sale.action_orders_to_invoice"></menuitem>
+
+    <!-- Sub menu sales order -->
+    <menuitem name="Sales Order" id="sub_menu_sales_order"
+              parent="account.menu_finance_receivables"
+              sequence="111"
+              action="sale.action_orders"></menuitem>
+
+    <!-- Sub menu kuitansi -->
+    <menuitem name="Kuitansi" id="sub_menu_kuitansi"
+              parent="account.menu_finance_receivables"
+              sequence="112"
+              action="kuitansi_list_action"></menuitem>
+
+    <!-- Sub menu Due date pembayaran -->
+    <menuitem name="Due Date Pembayaran" id="sub_menu_pembayaran"
+              parent="account.menu_finance_receivables"
+              sequence="113"
+              action="due_date_pembayaran_action"></menuitem>
+
+    <!-- Sub menu down payment -->
+    <!--<menuitem name="Down Payment" id="sub_menu_dp"-->
+              <!--parent="account.menu_finance_receivables"-->
+              <!--sequence="112"-->
+              <!--action="action_orders_to_dp"></menuitem>-->
+
+    <!-- Remove menu from module sales/invoicing -->
+    <delete model="ir.ui.menu" id="sale.menu_sale_invoicing"/>
+    <delete model="ir.ui.menu" id="sale.menu_sale_order_invoice"/>
+    <delete model="ir.ui.menu" id="sale.menu_sale_order_upselling"/>
+
+  </data>
+</odoo>

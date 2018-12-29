@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record model="ir.ui.view" id="mrp_production_workcenter_form_view_inherit">
+        <field name="name">mrp.production.work.order.form</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workcenter_form_view_inherit"/>
+            <field name="arch" type="xml">
+                <field name="production_id" position="after">
+                    <field name="wo_capacity" widget="float_time" />
+            </field>
+        </field>
+    </record>
+</odoo>

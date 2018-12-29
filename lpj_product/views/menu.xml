@@ -1,0 +1,69 @@
+<odoo>
+    <data>
+
+        <menuitem id="master_pde_menu"
+	          parent="lpj_cusrequire.main_approval_odoo_menu"
+                  name="Master Data" sequence="6"/>
+
+        <menuitem id="configuration_pde_menu"
+		  parent="lpj_cusrequire.main_approval_odoo_menu"
+                  name="Configuration" sequence="7"/>
+
+
+        <record model="ir.actions.act_window" id="products">
+            <field name="name">Product</field>
+            <field name="res_model">product.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
+        </record>
+
+        <menuitem id="product_menu"
+                  action="products" parent="master_pde_menu" name="Product" />
+
+        <menuitem id="bom_menu"
+                  action="mrp.mrp_bom_form_action" parent="master_pde_menu" name="Bill of Materials"/>
+
+        <menuitem id="routing_menu"
+                  action="mrp.mrp_routing_action" parent="master_pde_menu" name="Routings" />
+
+        <menuitem id="workcenter_menu"
+                  action="mrp.mrp_workcenter_action" parent="master_pde_menu" name="Work Centers"/>
+
+
+
+
+        <menuitem id="dataform_menu"
+                  parent="configuration_pde_menu" name="Property" sequence="7"/>
+
+        <menuitem id="Catfinishingprocess_menu" parent="dataform_menu" name="Cat Finishing Process"
+                  action="catfinishingprocess_list_action"/>
+
+        <menuitem id="Catfinishingproduct_menu" parent="dataform_menu" name="Cat Finishing Product"
+                  action="catfinishingproduct_list_action"/>
+
+        <menuitem id="diecutshape_menu" parent="dataform_menu"
+                  name="Diecut Shape" action="diecutshape_list_action"/>
+
+        <menuitem id="drawing_menu" name="Drawing"
+                  parent="dataform_menu" action="drawing_list_action"/>
+
+        <menuitem id="hotprint_menu" parent="dataform_menu" name="HotPrint List"
+                  action="hotprint_list_action"/>
+
+        <menuitem id="inkcoverage_menu" parent="dataform_menu"
+                  name="Ink Coverage" action="inkcoverage_list_action"/>
+
+        <menuitem id="productlayout_menu" parent="dataform_menu" name="Layout Product"
+                  action="productlayout_list_action"/>
+
+        <menuitem id="packing_roll_menu" parent="dataform_menu" name="Packing Roll Direction"
+                  action="packing_roll_list_action"/>
+
+        <menuitem id="tds_menu" name="TDS"
+                  parent="dataform_menu" action="tds_list_action"/>
+
+        <menuitem id="varnish_menu" parent="dataform_menu" name="Varnish List"
+                  action="varnish_list_action"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <data>
+         <report
+            id="report_kuitansi"
+            model="x.kuitansi"
+            string="Kuitansi"
+            report_type="qweb-pdf"
+            name="lpj_accounting.report_document_kuitansi"
+            file="lpj_accounting.report_document_kuitansi"
+            menu="True"
+        />
+
+        <template id="report_document_kuitansi">
+            <t t-name="lpj_accounting.report_document_kuitansi">
+                <t t-call="report.external_layout">
+                    <t t-foreach="docs" t-as="o">
+                        <div class="page">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h2 class="text-center" style="margin-top: 155px;" t-if="o.name"><span t-field="o.name"></span></h2>
+                                    <h3 class="text-center" style="margin-top: 80px;">Kwitansi Jual</h3>
+                                    <b><p class="text-center" t-if="o.name"><span t-field="o.name"></span></p></b>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top:15px">
+                                <div class="col-xs-6">
+                                   <strong>Diterima dari:</strong>
+
+                                    <!-- Memanggil object res.partner melalui field customer -->
+                                   <div><p t-field="o.customer"></p></div>
+                                </div>
+
+                                <div class="col-xs-6">
+                                    <table>
+                                        <tr>
+                                            <td style="padding-right: 35px; padding-bottom:8px;"><b>Terbilang</b></td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td><p t-field="o.amount_to_text"></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-right: 35px; padding-bottom:8px;"><b>Untuk Pembayaran</b></td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td><p>0100-004-187764626</p></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-right: 35px; padding-bottom:8px;"><b>SJ Keluar</b></td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td><p t-field="o.x_no_sjk"></p></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Row table -->
+                            <div class="row" style="margin-top:30px;">
+                                <div class="col-xs-12">
+                                    <h4>Detail Harga</h4>
+                                    <table class="table table-condensed">
+                                        <thead>
+                                            <tr>
+                                                <th>No Invoice</th>
+                                                <th class="text-right">Harga</th>
+                                                <th class="text-right">PPN</th>
+                                                <th class="text-right">Jumlah</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-foreach="o.kuitansi_line_ids" t-as="row">
+                                                <td><p t-field="row.x_invoice"></p></td>
+                                                <td class="text-right"><p t-field="row.x_amount_untaxed"></p></td>
+                                                <td class="text-right"><p t-field="row.x_taxes"></p></td>
+                                                <td class="text-right"><p t-field="row.x_amount_total"></p></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Row deskripsi total -->
+                            <div class="row">
+                                <div class="col-xs-4 pull-right">
+                                    <table class="table table-condensed">
+                                        <tr class="border-black">
+                                            <td><strong>Sub Total</strong></td>
+                                            <td class="text-right">
+                                                <span t-field="o.x_untaxed_amount_foot" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>PPN (10%)</td>
+                                            <td class="text-right">
+                                                <span t-field="o.x_amount_tax_foot" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="border-black">
+                                            <td><strong>Total</strong></td>
+                                            <td class="text-right">
+                                                <span t-field="o.x_amount_total_foot" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <br/><br/>
+
+                            <!-- Row alamat transfer dan ttd -->
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <strong style="padding-bottom: 5px">Alamat Transfer:</strong>
+                                    <table>
+                                        <tr>
+                                            <td style="padding-right: 35px; padding-bottom:5px; padding-top: 5px;"><b>Bank</b></td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td><p>Bank BCA</p></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-right: 35px; padding-bottom:5px;"><b>A/C</b></td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td><p>788.093.2688</p></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-right: 35px; padding-bottom:5px;"><b>A.N</b></td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td><p>PT LAPRINT JAYA</p></td>
+                                        </tr>
+                                    </table>
+
+                                  <br/><br/>
+
+                                  <p><i>NB : Pembayaran dengan CHEQUE dicantumkan <br/> a.n PT LAPRINT JAYA <br/>
+                                     Kwitansi ini baru berlaku setelah CHEQUE yang diterima cair</i>
+                                  </p>
+                                </div>
+
+                                <div class="col-xs-4 col-xs-offset-2">
+                                    <table>
+                                        <tr>
+                                           <td class="text-center" style="padding-bottom:100px"><p>Sidoarjo, 10 September 2018</p></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center"><p><b>Yanto Sutjiono</b></p></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

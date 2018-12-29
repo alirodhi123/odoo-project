@@ -1,0 +1,62 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="mrp_production_quantity_view">
+            <field name="name">mrp.production.quantity</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+
+                    <xpath expr="//field[@name='product_id'][not(ancestor::field)]" position="before">
+                        <field name="x_type_mo"/>
+                        <field name="order" attrs="{'invisible': [('x_type_mo', '!=', 'stc')]}"/>
+                        <field name="orderline" domain="[('order_id','=', order), ('x_flag_mo','=', False)]" attrs="{'invisible': [('x_type_mo', '!=', 'stc')]}"/>
+                        <!--<field name="x_flag"/>-->
+                        <!--<field name = "x_sale_order"/>-->
+                        <!--<field name="x_sale_order_line" domain="[('x_order_id','=', x_sale_order)]"/>-->
+                        <!--<field name = "x_product_temp"/>-->
+                        <!--&lt;!&ndash;<field name = "x_toleransi_pengiriman"/>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<field name = "order_id"/>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<field name = "customer"/>&ndash;&gt;-->
+                    </xpath>
+                    <xpath expr="//field[@name='bom_id'][not(ancestor::field)]" position="before">
+                        <field name="x_toleransi" />
+                        <field name="x_quantity_max"/>
+                        <field name="x_qty_so" invisible = '1'/>
+                        <field name="x_qty_so_toleransi" invisible = '1'/>
+                        <field name="x_due_kirim"/>
+
+                        <!--<field name = "order_line" attrs="{'invisible': True}"/>-->
+                    </xpath>
+                    <xpath expr="//field[@name='origin'][not(ancestor::field)]" position="before">
+                        <field name="x_keterangan"></field>
+                        <field name="x_width" invisible="1"></field>
+                        <field name="x_product_uom_qty" invisible="1"></field>
+                    </xpath>
+
+
+                 <notebook>
+                    <page string="Detail Lot" id="lot_barang">
+                        <group>
+                            <group string="Print Lot Barang">
+                                <field name="x_type_print"/>
+                                <field name="jml_lot" attrs="{'invisible': [('x_type_print', '=', 'specific')]}"/>
+                                <field name="x_kode_awal" attrs="{'invisible': [('x_type_print', '=', 'all')]}"/>
+                                <field name="x_kode_akhir" attrs="{'invisible': [('x_type_print', '=', 'all')]}"/>
+                                <field name="jml_print"/>
+                                <field name="customer_code"/>
+                                <field name="categ_id"/>
+                                <button name="action_next" type="object" string="Print All" class="oe_highlight"/>
+                                <!--<button name="action_" type="object" string="Print Specific code" class="oe_highlight" attrs="{'invisible': [('x_type_print', '=', 'all')]}"/>-->
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+
+            </field>
+        </record>
+
+
+    </data>
+</odoo>
+
+

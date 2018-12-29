@@ -1,0 +1,34 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="mrp_production_tree_view">
+            <field name="name">mrp.production.tree</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_tree_view"></field>
+            <field name="arch" type="xml">
+                <tree>
+                    <button class="oe_highlight"
+                            name="open_second_class"
+                            string="Create PR"
+                            type="object"
+                            help="calls python function"
+                            target="new"
+                            attrs="{'invisible': ['|', ('is_responsible', '=', True),('state', 'not in', ('confirmed', 'planned', 'progress'))]}">
+                    </button>
+                    <field name="is_responsible" invisible="1"></field>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action BUTTON create PR -->
+        <record id="act_kuitansi_project_task_all" model="ir.actions.act_window">
+            <field name="name">PR</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_purchase_request_form"></field>
+        </record>
+
+    </data>
+</odoo>

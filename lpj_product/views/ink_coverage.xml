@@ -1,0 +1,42 @@
+<odoo>
+  <data>
+   	<record model="ir.ui.view" id="inkcoverage_tree_view">
+        <field name="name">x.ink.coverage.tree</field>
+        <field name="model">x.ink.coverage</field>
+        <field name="arch" type="xml">
+            <tree string="Master Color" >
+                <field name="x_colors_id"/>
+                 <field name="x_category_printing_id"/>
+                 <field name="x_coverage"/>
+                 <field name="description"/> 
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="inkcoverage_form_view">
+        <field name="name">x.ink.coverage.form</field>
+        <field name="model">x.ink.coverage</field>
+        <field name="arch"  type="xml">
+            <form string="Master Color Form">
+                <sheet>
+                    <group string="Informasi">
+                        <field name="x_colors_id"/>
+                        <field name="x_category_printing_id"/>
+                        <field name="x_coverage"/>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record> 
+    
+    <record model="ir.actions.act_window" id="inkcoverage_list_action">
+        <field name="name">InkCoverage</field>
+        <field name="res_model">x.ink.coverage</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!--<menuitem id="inkcoverage_menu" parent="master_pde_menu" name="Ink Coverage" action="inkcoverage_list_action"/>-->
+  </data>
+</odoo>

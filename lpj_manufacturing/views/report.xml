@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <data>
+
+        <report
+            id="report_order_kerja"
+            model="mrp.production"
+            string="Order Kerja"
+            report_type="qweb-pdf"
+            name="lpj_manufacturing.report_mrporder_new"
+            file="lpj_manufacturing.report_mrporder_new"
+            menu="True"
+        />
+
+        <record id="paperformat_order_kerja" model="report.paperformat">
+            <field name="name">European A4 low margin</field>
+            <field name="default" eval="True" />
+            <field name="format">A5</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">4</field>
+            <field name="margin_bottom">4</field>
+            <field name="margin_left">4</field>
+            <field name="margin_right">4</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field> <!-- Jika ingin header muncul ubah nilai - 0 -->
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="lpj_manufacturing.report_order_kerja" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="lpj_manufacturing.paperformat_order_kerja" />
+        </record>
+
+        <template id="report_mrporder_new">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page">
+                        <div class="oe_structure"/>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <h3 class="text-center">ORDER KERJA</h3>
+                            </div>
+                            <div class="col-xs-6">
+                                <h4 class="text-center"><span t-field="o.name"/></h4>
+                            </div>
+                        </div>
+
+                        <div class="row zero_min_height">
+                            <div class="col-xs-12">
+                                <div style="border-bottom: 1px solid black;"/>
+                            </div>
+                        </div>
+
+                        <!-- Baris pertama -->
+                        <div class="row mt32 mb32">
+                            <div class="col-xs-5">
+                                <strong>Customer:</strong><br/>
+                                <span t-field="o.order.partner_id"/>
+                            </div>
+                            <div class="col-xs-5">
+                                <strong>Product:</strong><br/>
+                                <span t-field="o.product_id"/>
+                            </div>
+                            <!--<div class="col-xs-3">-->
+                                <!--<strong>Printing date:</strong><br/>-->
+                                <!--<span t-esc="time.strftime('%Y-%m-%d')"-->
+                                      <!--t-options='{"widget": "date"}'/>-->
+                            <!--</div>-->
+                            <div class="col-xs-2">
+                                <strong>Scheduled Date:</strong><br/>
+                                <span t-field="o.date_planned_start" t-field-options='{"format": "d/MM/y"}'/><span t-if="o.date_planned_finished"> - <br/><span t-field="o.date_planned_finished" t-field-options='{"format": "d/MM/y"}'/></span>
+                            </div>
+                        </div>
+
+                        <!-- Baris kedua -->
+                        <!--<div class="row mt32 mb32">-->
+                            <!--<div class="col-xs-2">-->
+                                <!--<strong>No SO:</strong><br/>-->
+                                <!--<p t-if="o.order"><span t-field="o.order"></span></p>-->
+                            <!--</div>-->
+                            <!--<div class="col-xs-2">-->
+                                <!--<strong>No PO:</strong><br/>-->
+                                <!--<p t-if="o.order.x_po_cust"><span t-field="o.order.x_po_cust"></span></p>-->
+                            <!--</div>-->
+                            <!--<div class="col-xs-2">-->
+                                <!--<strong>Customer:</strong><br/>-->
+                                <!--<p t-if="o.order.partner_id"><span t-field="o.order.partner_id"></span></p>-->
+                            <!--</div>-->
+                            <!--<div class="col-xs-2">-->
+                                <!--<strong>Quantity:</strong><br/>-->
+                                <!--<span t-field="o.product_qty"/>-->
+                                <!--<span t-field="o.product_uom_id.name" groups="product.group_uom"/>-->
+                            <!--</div>-->
+                            <!--<div class="col-xs-2">-->
+                                <!--<strong>Lenght (mm):</strong><br/>-->
+                                <!--<span t-field="o.product_tmpl_id.x_length"/>-->
+                                <!--&lt;!&ndash;<span t-field="o.product_uom_id.name" groups="product.group_uom"/>&ndash;&gt;-->
+                            <!--</div>-->
+                            <!--<div class="col-xs-2">-->
+                                <!--<strong>Width (mm):</strong><br/>-->
+                                <!--<span t-field="o.product_tmpl_id.x_width"/>-->
+                                <!--&lt;!&ndash;<span t-field="o.product_uom_id.name" groups="product.group_uom"/>&ndash;&gt;-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+                        <!-- Row Detail bahan -->
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <strong>Informasi</strong>
+                                <table style="border: 1px solid black; width: 450px;">
+                                    <tr>
+                                        <td class="text-center" style="border: 1px solid black; padding: 1px; width: 225px;"><strong>No PO</strong></td>
+                                        <td class="text-center" style="border: 1px solid black; padding: 1px; width: 225px;"><strong>No SO</strong></td>
+                                        <td class="text-center" style="border: 1px solid black; padding: 1px; width: 225px;"><strong>Qty SO Toleransi</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center" style="border: 1px solid black; padding: 1px; width: 225px; vertical-align: middle;"><span t-field="o.order.x_po_cust"></span></td>
+                                        <td class="text-center" style="border: 1px solid black; padding: 1px; width: 225px; vertical-align: middle;"><span t-field="o.order"></span></td>
+                                        <td class="text-center" style="border: 1px solid black; padding: 1px; width: 225px; vertical-align: middle;">
+                                             <span t-field="o.x_qty_so_toleransi"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class="col-xs-6">
+                                <strong>Detail Bahan</strong>
+                                <table style="border: 1px solid black; width: 450px;">
+                                    <tr>
+                                        <td class="text-center" style="border: 1px solid black; padding: 1px; width: 225px;"><strong>Min</strong></td>
+                                        <td class="text-center" style="border: 1px solid black; padding: 1px; width: 225px;"><strong>Max</strong></td>
+                                        <td class="text-center" style="border: 1px solid black; padding: 1px; width: 225px;"><strong>Toleransi(m)</strong></td>
+                                        <td class="text-center" style="border: 1px solid black; padding: 1px; width: 225px;"><strong>Lenght(m)</strong></td>
+                                        <td class="text-center" style="border: 1px solid black; padding: 1px; width: 225px;"><strong>width(mm)</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center" style="border: 1px solid black; padding: 1px; width: 225px;">
+                                            <span t-field="o.product_qty"/>
+                                            <span t-field="o.product_uom_id.name" groups="product.group_uom"/>
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; padding: 1px; width: 225px;"><span t-field="o.x_qty_so_toleransi"/></td>
+                                        <td class="text-center" style="border: 1px solid black; padding: 1px; width: 225px;"><span t-field="o.x_keb_config"/></td>
+                                        <td class="text-center" style="border: 1px solid black; padding: 1px; width: 225px;"><span t-field="o.x_product_uom_qty"/></td>
+                                        <td class="text-center" style="border: 1px solid black; padding: 1px; width: 225px;"><span t-field="o.x_width"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Row work order dan detail bahan-->
+                        <div class="row">
+                            <div class="col-xs-8">
+                                <h5><b>Packing Information</b></h5>
+                                <table style="border: 1px solid black;">
+                                    <tr>
+                                        <th class="text-center" style="border: 1px solid black; width: 50px;">Type Pack</th>
+                                        <th class="text-center" style="border: 1px solid black; width: 50px;">Pcs per Roll/Sheet/Fold</th>
+                                        <th class="text-center" style="border: 1px solid black; width: 50px;">Inner Core(mm)</th>
+                                        <th class="text-center" style="border: 1px solid black; width: 50px;">Outer(mm)</th>
+                                        <th class="text-center" style="border: 1px solid black; width: 50px;">Thickness Core(mm)</th>
+                                        <th class="text-center" style="border: 1px solid black; width: 50px;">Hasil</th>
+                                        <th class="text-center" style="border: 1px solid black; width: 50px;">Roll Direction</th>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center" style="border: 1px solid black; width: 50px; vertical-align: middle;"><p t-field="o.product_tmpl_id.x_type_packing"></p></td>
+                                        <td class="text-center" style="border: 1px solid black; width: 50px; vertical-align: middle;"><p t-field="o.product_tmpl_id.x_pcs_units"></p></td>
+                                        <td class="text-center" style="border: 1px solid black; width: 50px; vertical-align: middle;"><p t-field="o.product_tmpl_id.x_inner_core"></p></td>
+                                        <td class="text-center" style="border: 1px solid black; width: 50px; vertical-align: middle;"><p t-field="o.product_tmpl_id.x_outer_core"></p></td>
+                                        <td class="text-center" style="border: 1px solid black; width: 50px; vertical-align: middle;"><p t-field="o.product_tmpl_id.x_thicknes_core"></p></td>
+                                        <td class="text-center" style="border: 1px solid black; width: 50px; vertical-align: middle;"><p t-field="o.product_tmpl_id.x_hasil_bungkus"></p></td>
+                                        <td style="border: 1px solid black; width: 70px; padding: 2px">
+                                            <span style="width: 70px;" t-field="o.product_tmpl_id.x_roll_file" t-field-options='{"widget": "image"}'></span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class="col-xs-4" style="margin-left: -100px; margin-top: 15px;">
+                                <strong>Work Orders</strong>
+                                <div t-if="o.workorder_ids">
+                                    <table style="border: 1px solid black; width: 390px;">
+                                        <tr>
+                                            <td class="text-center" style="border: 1px solid black; padding: 1px;"><strong>Routing Process</strong></td>
+                                            <td class="text-center" style="border: 1px solid black; padding: 1px;"><strong>WorkCenter</strong></td>
+                                            <td class="text-center" style="border: 1px solid black; padding: 1px;"><strong>Duration(mnt)</strong></td>
+                                        </tr>
+                                        <tr t-foreach="o.workorder_ids" t-as="line2">
+                                            <td class="text-center" style="border: 1px solid black; padding: 1px;"><span t-field="line2.name"/></td>
+                                            <td class="text-center" style="border: 1px solid black; padding: 1px;"><span t-field="line2.workcenter_id.name"/></td>
+                                            <td class="text-center" style="border: 1px solid black; padding: 1px;"><span t-field="line2.duration_expected"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                         <!-- Row Layout product -->
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <strong>Layout Product</strong>
+                                <t t-foreach="o.product_tmpl_id" t-as="line">
+                                    <table style="border: 1px solid black;">
+                                        <tr>
+                                            <th class="text-center" style="border: 1px solid black; width: 128px; padding: 1px;">Type</th>
+                                            <th class="text-center" style="border: 1px solid black; width: 128px; padding: 1px;">Ukuran</th>
+                                            <th class="text-center" style="border: 1px solid black; width: 128px; padding: 1px;">Space</th>
+                                            <th class="text-center" style="border: 1px solid black; width: 128px; padding: 1px;">Jarak Druk</th>
+                                            <th class="text-center" style="border: 1px solid black; width: 128px; padding: 1px;">Number</th>
+                                            <th class="text-center" style="border: 1px solid black; width: 128px; padding: 1px;">Std Afalan</th>
+                                            <th class="text-center" style="border: 1px solid black; width: 156px; padding: 1px;">Ref. Lebaran Bahan</th>
+                                        </tr>
+                                        <tr t-foreach="line.x_layout_product_ids" t-as="row">
+                                            <td class="text-center" style="border: 1px solid black; width: 128px;"><span t-field="row.x_type"></span></td>
+                                            <td class="text-center" style="border: 1px solid black; width: 128px;"><span t-field="row.x_size"></span></td>
+                                            <td class="text-center" style="border: 1px solid black; width: 128px;"><span t-field="row.x_space"></span></td>
+                                            <td class="text-center" style="border: 1px solid black; width: 128px;"><span t-field="row.x_druk"></span></td>
+                                            <td class="text-center" style="border: 1px solid black; width: 128px;"><span t-field="row.x_number"></span></td>
+                                            <td class="text-center" style="border: 1px solid black; width: 128px;"><span t-field="row.x_std_afalan"></span></td>
+                                            <td class="text-center" style="border: 1px solid black; width: 156px;"><span t-field="row.x_jumlah"></span></td>
+                                        </tr>
+                                    </table>
+                                </t>
+                            </div>
+
+                            <div class="col-xs-6">
+                                <strong>Layout Second Pass</strong>
+                                <div t-if="o.product_tmpl_id.x_layout_plong_ids">
+                                    <t t-foreach="o.product_tmpl_id" t-as="line">
+                                        <table style="border: 1px solid black;">
+                                            <tr>
+                                                <th class="text-center" style="border: 1px solid black; width: 128px; padding: 1px;">Type</th>
+                                                <th class="text-center" style="border: 1px solid black; width: 128px; padding: 1px;">Ukuran</th>
+                                                <th class="text-center" style="border: 1px solid black; width: 128px; padding: 1px;">Space</th>
+                                                <th class="text-center" style="border: 1px solid black; width: 128px; padding: 1px;">Jarak Druk</th>
+                                                <th class="text-center" style="border: 1px solid black; width: 128px; padding: 1px;">Number</th>
+                                                <th class="text-center" style="border: 1px solid black; width: 128px; padding: 1px;">Std Afalan</th>
+                                                <th class="text-center" style="border: 1px solid black; width: 156px; padding: 1px;">Ref. Lebaran Bahan</th>
+                                            </tr>
+                                            <tr t-foreach="line.x_layout_plong_ids" t-as="row">
+                                                <td class="text-center" style="border: 1px solid black; width: 128px;"><span t-field="row.x_plong_type"></span></td>
+                                                <td class="text-center" style="border: 1px solid black; width: 128px;"><span t-field="row.x_plong_size"></span></td>
+                                                <td class="text-center" style="border: 1px solid black; width: 128px;"><span t-field="row.x_plong_space"></span></td>
+                                                <td class="text-center" style="border: 1px solid black; width: 128px;"><span t-field="row.x_plong_druk"></span></td>
+                                                <td class="text-center" style="border: 1px solid black; width: 128px;"><span t-field="row.x_plong_number"></span></td>
+                                                <td class="text-center" style="border: 1px solid black; width: 128px;"><span t-field="row.x_plongstd_afalan"></span></td>
+                                                <td class="text-center" style="border: 1px solid black; width: 156px;"><span t-field="row.x_plong_jumlah"></span></td>
+                                            </tr>
+                                        </table>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row Keterangan -->
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div t-if="o.x_keterangan">
+                                    <h5><b>KETERANGAN</b></h5>
+                                    <p t-field="o.x_keterangan"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--<div class="footer_custom">-->
+                            <!--<div class="row">-->
+                                <!--<div class="col-xs-6">-->
+                                    <!--<h5><b>KETERANGAN</b></h5>-->
+                                    <!--<table>-->
+                                        <!--<p t-field="o.x_keterangan"></p>-->
+                                    <!--</table>-->
+                                <!--</div>-->
+
+                                <!--<div class="col-xs-5 col-xs-offset-1">-->
+                                    <!--<table style="width: 300px; margin-left: 65px;">-->
+                                        <!--<tr>-->
+                                            <!--<td><h5><b>VERIFIKASI</b></h5></td>-->
+                                        <!--</tr>-->
+                                        <!--<tr>-->
+                                            <!--<th style="text-align: center; width: 100px; border: 1px solid black;">ACC</th>-->
+                                            <!--<th style="text-align: center; width: 100px; border: 1px solid black;">Menyerahkan</th>-->
+                                            <!--<th style="text-align: center; width: 100px; border: 1px solid black;">Menerima</th>-->
+                                        <!--</tr>-->
+                                        <!--<tr>-->
+                                            <!--<th style="padding-top:60px; text-align: center; width: 100px; border: 1px solid black;">PPIC</th>-->
+                                            <!--<th style="padding-top:60px; text-align: center; width: 100px; border: 1px solid black;">PRODUKSI</th>-->
+                                            <!--<th style="padding-top:60px; text-align: center; width: 100px; border: 1px solid black;">GUDANG</th>-->
+                                        <!--</tr>-->
+                                    <!--</table>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+                        <!-- Page Break -->
+                        <p style="page-break-after:always;">   </p>
+
+                        <h3 t-if="o.move_raw_ids">Bill Of Material</h3>
+
+                        <table class="table table-condensed" t-if="o.move_raw_ids">
+                            <thead>
+                                <tr>
+                                    <th><strong>Product</strong></th>
+                                    <th class="text-right"><strong>Quantity</strong></th>
+                                    <th class="text-center" groups="stock.group_stock_multi_locations">
+                                        <strong>Source Location</strong>
+                                    </th>
+                                    <th class="text-center" groups="stock.group_stock_multi_locations">
+                                        <strong>Destination Location</strong>
+                                    </th>
+                                    <!--<th class="text-center">-->
+                                        <!--<strong>Barcode</strong>-->
+                                    <!--</th>-->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-if="o.move_raw_ids">
+                                    <tr>
+                                        <td colspan="4"><strong>Products to Consume</strong></td>
+                                    </tr>
+                                    <tr t-foreach="o.move_raw_ids" t-as="line">
+                                        <td>
+                                            <span t-field="line.product_id"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="line.product_uom_qty"/>
+                                            <span t-field="line.product_uom.name" groups="product.group_uom"/>
+                                        </td>
+                                        <td class="text-center" groups="stock.group_stock_multi_locations">
+                                            <span t-field="line.location_id.name"/>
+                                        </td>
+                                        <td class="text-center" groups="stock.group_stock_multi_locations">
+                                            <span t-field="line.location_dest_id.name"/>
+                                        </td>
+                                        <!--<td class="text-center">-->
+                                            <!--<span t-if="line.product_id.barcode">-->
+                                                <!--<img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', line.product_id.barcode, 600, 100)" style="width:300px;height:50px"/>-->
+                                            <!--</span>-->
+                                        <!--</td>-->
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <!-- Row verifikasi -->
+                        <div class="footer_custom_new">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <table style="width: 450px; border: 1px solid black;">
+                                        <!-- NOTE CUSTOMER -->
+
+                                    </table>
+                                </div>
+
+                                <div class="col-xs-5 col-xs-offset-1">
+                                    <table style="width: 300px; margin-left: 65px;">
+                                        <tr>
+                                            <td><h5><b>VERIFIKASI</b></h5></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="text-align: center; width: 100px; border: 1px solid black;">ACC</th>
+                                            <th style="text-align: center; width: 100px; border: 1px solid black;">Menyerahkan</th>
+                                            <th style="text-align: center; width: 100px; border: 1px solid black;">Menerima</th>
+                                        </tr>
+                                        <tr>
+                                            <th style="padding-top:60px; text-align: center; width: 100px; border: 1px solid black;">PPIC</th>
+                                            <th style="padding-top:60px; text-align: center; width: 100px; border: 1px solid black;">GUDANG</th>
+                                            <th style="padding-top:60px; text-align: center; width: 100px; border: 1px solid black;">PRODUKSI</th>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="oe_structure"/>
+                    </div>
+
+                     <!--<div class="footer">-->
+                        <!--<div class="row">-->
+                            <!--<div class="col-xs-12">-->
+                                <!--<p style="float: right; margin-right: 10px;">FIELD DOCUMENT</p>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                     <!--</div>-->
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

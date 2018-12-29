@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <openerp>
+     <data noupdate="1">
+
+        <record id="seq_form_serial_no" model="ir.sequence">
+          <field name="name">Sequence for new product</field>
+          <field name="code">seq.prd</field>
+          <field name="prefix"></field>
+          <field name="padding">5</field>
+          <field name="company_id" eval="False"/>
+         </record>
+
+          <record id="seq_form_serial_no_mtr" model="ir.sequence">
+          <field name="name">Sequence for new product mtr</field>
+          <field name="code">seq.mtr</field>
+          <field name="prefix"></field>
+          <field name="padding">5</field>
+          <field name="company_id" eval="False"/>
+         </record>
+
+         <record id="seq_form_serial_no_exp" model="ir.sequence">
+          <field name="name">Sequence for new product expenses</field>
+          <field name="code">seq.exp</field>
+          <field name="prefix"></field>
+          <field name="padding">5</field>
+          <field name="company_id" eval="False"/>
+         </record>
+
+         <record id="seq_form_serial_no_all" model="ir.sequence">
+          <field name="name">Sequence for new product all</field>
+          <field name="code">seq.all</field>
+          <field name="prefix"></field>
+          <field name="padding">5</field>
+          <field name="company_id" eval="False"/>
+         </record>
+     </data>
+  </openerp>

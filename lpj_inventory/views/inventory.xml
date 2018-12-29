@@ -1,0 +1,24 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="sj_supplier_view">
+            <field name="name">stock.picking.sjsupplier</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                   <field name="x_sj_supplier"/>
+                    <field name="x_tgl_sj_supp"/>
+                    <field name="x_tgl_kedatangan_bahan"/>
+                </xpath>
+
+                <!-- Stock pack operation -->
+                <field name="qty_done" position="after">
+                   <field name="keterangan"></field>
+               </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>
+
+

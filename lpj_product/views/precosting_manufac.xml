@@ -1,0 +1,75 @@
+<odoo>
+  <data>
+
+  	<!-- Menambahkan field pada view form partner -->
+  	<!--<record model="ir.ui.view" id="sale_form_view">-->
+	<!--<field name="name">sale.order.instruktur</field>-->
+	<!--<field name="model">sale.order</field>-->
+	<!--<field name="inherit_id" ref="sale.view_order_form"/>-->
+	<!--<field name="arch" type="xml">-->
+		<!--<notebook position="inside">-->
+			<!--<page string="Sessions">-->
+				<!--<group>-->
+					<!--<field name="instructor"/>-->
+				<!--</group>-->
+			<!--</page>-->
+		<!--</notebook>-->
+	<!--</field>-->
+	<!--</record>-->
+
+	<record model="ir.ui.view" id="precost_view">
+	<field name="name">product.template.precost</field>
+	<field name="model">product.template</field>
+	<field name="inherit_id" ref="product.product_template_only_form_view"/>
+	<field name="arch" type="xml">
+		<notebook>
+			<page string="Calculation" id="precost_product">
+				<group>
+					<group string="Label Material">
+						<field name="x_owt" string="Operator Waste Target (%)" />
+						<field name="x_product_area" string="Product Area (mm/pcs)" />
+						<field name="x_config_wastepcs" string='Config Waste per Pcs (mm/pcs)'/>
+						<field name="x_owtp" string="Operator Waste per Pcs (mm/Pcs)" />
+				   		<field name="x_tot_config_waste" string='Total Waste (mm/pcs)'/>
+				  		<field name="x_tot_area" string='Total Manufacturing Area (mm/pcs)'/>
+					</group>
+					<group string="Ink Usage">
+						<field name="x_ink_usage_safac" string="Ink Usage Safety Factor" />
+						<field name="x_ink_usage_density" string="Ink Usage Density (gr/Pcs)" />
+						<field name="x_fixed_ink_sw" string="Fixed Ink Setup Waste (gr)" />
+						<field name="x_spec_color" string="Special Color Density (gr/Pcs)" />
+						<field name="x_varnish_color" string= "Varnish Color Density (gr/Pcs)" />
+					</group>
+				</group>
+			</page>
+		</notebook>
+
+
+		<!--<xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='product_id']" position="before">-->
+                <!--<field name="test" string="tes custom" />-->
+        <!--</xpath>-->
+		<!--<xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='product_id']" position="replace">-->
+                <!--<field name="product_id" string="Product" />-->
+        <!--</xpath>-->
+		<!--<xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='product']" position="after">-->
+                <!--<field name="kode_SQ" string="SQ Code" />-->
+        <!--</xpath>-->
+		<!--<xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='product_uom_qty']" position="replace">-->
+                <!--<field name="product_uom_qty" string="Ordered Qty" />-->
+        <!--</xpath>-->
+		<!--<xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='product_uom_qty']" position="replace">-->
+                <!--<field name="product_uom_qty" string="Ordered Qty" />-->
+        <!--</xpath>-->
+		<!--<xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='price_subtotal']" position="replace">-->
+                <!--<field name="price_subtotal" string="Subtotal" />-->
+        <!--</xpath>-->
+		<!--<xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='price_unit']" position="replace">-->
+                <!--<field name="price_unit" string="Unit Price" />-->
+        <!--</xpath>-->
+	</field>
+	</record>
+
+  </data>
+</odoo>
+
+

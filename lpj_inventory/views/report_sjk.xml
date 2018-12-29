@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <data>
+
+        <report
+            string="Delivery Slip"
+            id="action_report_delivery"
+            model="stock.picking"
+            report_type="qweb-pdf"
+            name="lpj_inventory.report_deliveryslip"
+            file="lpj_inventory.report_deliveryslip"
+        />
+
+        <!--<report-->
+            <!--id="report_surat_jalan"-->
+            <!--model="stock.picking"-->
+            <!--string="Surat Jalan"-->
+            <!--report_type="qweb-pdf"-->
+            <!--name="lpj_inventory.report_deliveryslip"-->
+            <!--file="lpj_inventory.report_deliveryslip"-->
+            <!--menu="True"-->
+        <!--/>-->
+
+        <record id="paperformat_surat_jalan" model="report.paperformat">
+            <field name="name">European A4 low margin</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">4</field>
+            <field name="margin_bottom">4</field>
+            <field name="margin_left">4</field>
+            <field name="margin_right">4</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field> <!-- Jika ingin header muncul ubah nilai - 0 -->
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="lpj_inventory.action_report_delivery" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="lpj_inventory.paperformat_surat_jalan" />
+        </record>
+
+        <template id="report_delivery_document">
+            <t t-call="report.html_container">
+                <t t-call="report.html_container">
+                    <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})" />
+                    <div class="page">
+                        <!-- Row logo laprint -->
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <img t-if="res_company.logo" t-att-src="'data:image/png;base64,%s' %res_company.logo" style="width: 168%"/>
+                            </div>
+                        </div>
+                        <br></br>
+
+                        <!-- Untuk garis horizontal-->
+                        <div class="row zero_min_height">
+                            <div class="col-xs-12">
+                                <div style="border-bottom: 1px solid black;"/>
+                            </div>
+                        </div>
+
+                        <!-- Judul -->
+                        <div class="row">
+                            <div class="col-xs-12 text-center">
+                                <h4>Surat Jalan Penjualan</h4>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-6" style="margin-top: 7px">
+                                <table>
+                                    <tr>
+                                        <td style="padding-right: 35px; padding-bottom:8px;"><b>No SJ</b></td>
+                                        <td style="padding-right: 10px">:</td>
+                                        <td><p t-if="o.name"><span t-field="o.name"></span></p></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-right: 35px; padding-bottom:8px;"><b>Tanggal</b></td>
+                                        <td style="padding-right: 10px">:</td>
+                                        <td><p t-if="o.min_date"><span t-field="o.min_date" t-field-options='{"format": "d/MM/y"}'></span></p></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-right: 35px; padding-bottom:8px;"><b>PO Customer</b></td>
+                                        <td style="padding-right: 10px">:</td>
+                                        <td><p t-if="o.sale_id.x_po_cust"><span t-field="o.sale_id.x_po_cust"></span></p></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-xs-6" name="customer_address">
+                                <div>
+                                    <span><strong>Customer Address:</strong></span>
+                                </div>
+                                <div t-if="o.move_lines and o.move_lines[0].partner_id and not o.partner_id" name="partner_header">
+                                    <div t-field="o.move_lines[0].partner_id"
+                                       t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                                </div>
+
+                                <div t-if="o.partner_id" name="partner_header">
+                                    <div t-field="o.partner_id"
+                                       t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                                </div>
+                            </div>
+                        </div> <!-- Tutup Row Alamat -->
+
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <!-- Jika Initial Demand -->
+                               <table class="table table-condensed mt48" t-if="not o.pack_operation_ids">
+                                    <thead>
+                                        <tr>
+                                            <th><strong>Product</strong></th>
+                                            <th><strong>Total Qty</strong></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="o.move_lines" t-as="move">
+                                            <td><span t-field="move.product_id"/></td>
+                                            <td>
+                                                <span t-field="move.product_uom_qty"/>
+                                                <span t-field="move.product_uom"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <!-- Jika Operation -->
+                                <table class="table table-condensed mt48" t-if="o.pack_operation_product_ids">
+                                        <thead>
+                                            <tr>
+                                                <th><strong>Product</strong></th>
+                                                <th><strong>Total Qty</strong></th>
+                                                <th><strong>Keterangan</strong></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-foreach="o.pack_operation_ids" t-as="pack_operation">
+                                                <td><span t-field="pack_operation.product_id"></span></td>
+                                                <td>
+                                                    <span t-field="pack_operation.qty_done"></span>
+                                                    <span t-field="pack_operation.product_uom_id"></span>
+                                                </td>
+                                                <td><span t-field="pack_operation.keterangan"></span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                <p t-if="o.backorder_id">
+                                    This shipment is a backorder of <t t-esc="o.backorder_id.name"/>.
+                                </p>
+                                <p>
+                                    <t t-if="o.search([('backorder_id', '=', o.id), ('state', 'not in', ['cancel', 'done'])])">
+                                        All items couldn't be shipped, the remaining ones will be shipped as soon as they become available.
+                                    </t>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Row TTD -->
+                        <div class="row">
+                            <table>
+                                <div>
+                                    <div style="float: left; margin-left: 15px;">
+                                        <h5 class="text-center"><b>Penerima</b></h5>
+                                        <br></br>
+                                        <br></br>
+                                        <p class="text-center">........................</p>
+                                    </div>
+                                    <div style="float: left; margin-left: 35%;">
+                                        <h5 class="text-center"><b>Driver</b></h5>
+                                        <br></br>
+                                        <br></br>
+                                        <p class="text-center">........................</p>
+                                    </div>
+                                    <div style="float: Right; margin-right: 15px;">
+                                        <h5 class="text-center"><b>Pengirim</b></h5>
+                                        <br></br>
+                                        <br></br>
+                                        <p class="text-center">........................</p>
+                                    </div>
+                                </div>
+                            </table>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h5>Catatan : Complain barang hanya bisa diterima waktu 7 hari setelah pengiriman</h5>
+                            </div>
+                        </div>
+                        <br/>
+
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="text-center" style="border-top: 1px solid black;">
+                                    <ul t-if="not res_company.custom_footer" style="list-style: none; margin: 0 auto;">
+                                        <t t-set="res_company" t-value="res_company.sudo()"/>
+                                        <li t-if="res_company.street">Office: <span t-field="res_company.street"/></li>
+                                        <li t-if="res_company.phone">Phone: <span t-field="res_company.phone"/><span>, 99038051, 99038051, 99038064</span> </li>
+                                        <li t-if="res_company.fax">Fax: <span t-field="res_company.fax"/></li>
+                                        <li t-if="res_company.email">Email: <span t-field="res_company.email"/></li>
+                                        <li t-if="res_company.website">Website: <span t-field="res_company.website"></span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- Tutup page -->
+                </t>
+             </t>
+        </template>
+
+        <template id="report_deliveryslip">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="lpj_inventory.report_delivery_document" t-lang="o.partner_id.lang"/>
+            </t>
+        </template>
+
+    </data>
+</odoo>

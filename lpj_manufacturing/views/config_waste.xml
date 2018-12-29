@@ -1,0 +1,126 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="mrp_production_waste_view">
+            <field name="name">mrp.production.waste</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+                <field name="origin" position="after">
+                    <group>
+
+                            <field name="x_mesin"/>
+                            <!--<field name="x_std_fixed"/>-->
+                            <field name="x_std_fixed" invisible = '1'/>
+                            <field name="x_std_var" invisible = '1'/>
+                            <field name="x_std_trial" invisible = '1'/>
+                            <field name="x_trial_produksi"/>
+
+                            <field name="x_config_factor"/>
+                            <field name="x_lb_config" invisible = '1'/>
+                            <field name="x_keb_config" invisible= '1'/>
+                            <field name="x_waste_prod"/>
+                            <field name="x_confirm_waste"/>
+                            <field name="x_uom_qty" invisible = '1'/>
+                            <!--<field name="x_coba"/>-->
+                            <button name="call_move_raw" type="object" string="Calculate" class="oe_highlight"/>
+
+                        <!--<field name="x_total_waste"/>-->
+                    </group>
+                </field>
+
+            </field>
+        </record>
+
+        <!--tree master config waste TREE-->
+        <record model="ir.ui.view" id="master_waste_tree_view">
+            <field name="name">mrp.master.waste.tree</field>
+            <field name="model">x.standart.waste.produksi</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="x_mesin"/>
+                    <field name="x_fixed_m"/>
+                    <field name="x_variable"/>
+                    <field name="x_trial"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--form master config waste FORM-->
+        <record model="ir.ui.view" id="master_waste_form_view">
+            <field name="name">mrp.master.waste.form</field>
+            <field name="model">x.standart.waste.produksi</field>
+            <field name="arch" type="xml">
+                <form string="Master Configurasi Waste Form">
+                    <group>
+                        <group>
+                            <field name="x_mesin"/>
+                            <field name="x_fixed_m"/>
+                            <field name="x_variable"/>
+                            <field name="x_trial"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!--tree master config waste TREE-->
+        <record model="ir.ui.view" id="factor_waste_tree_view">
+            <field name="name">mrp.factor.waste.tree</field>
+            <field name="model">x.config.factor.waste</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="x_waste_configuration"/>
+                    <field name="x_lebar_configurasi"/>
+                    <field name="x_panjang_configurasi"/>
+                    <field name="x_toleransi_produksi"/>
+                </tree>
+            </field>
+        </record>
+        <!--form factor config waste FORM-->
+        <record model="ir.ui.view" id="factor_waste_form_view">
+            <field name="name">mrp.factor.waste.form</field>
+            <field name="model">x.config.factor.waste</field>
+            <field name="arch" type="xml">
+                <form string="Factor Configurasi Waste Form">
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="x_waste_configuration"/>
+                            <field name="x_lebar_configurasi"/>
+                            <field name="x_panjang_configurasi"/>
+                            <field name="x_toleransi_produksi"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!--ACTION-->
+        <record model="ir.actions.act_window"
+                id="master_waste_action">
+            <field name="name">Master Waste</field>
+            <field name="res_model">x.standart.waste.produksi</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record model="ir.actions.act_window"
+                id="factor_waste_action">
+            <field name="name">Master Factor Waste</field>
+            <field name="res_model">x.config.factor.waste</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="master_waste_menu" name="Config Waste Mesin"
+                  parent="mrp.menu_mrp_configuration" sequence="100"
+                  action="master_waste_action"/>
+
+        <menuitem id="factor_waste_menu" name="Factor Waste Config"
+                  parent="mrp.menu_mrp_configuration" sequence="100"
+                  action="factor_waste_action"/>
+
+
+    </data>
+</odoo>
+
+

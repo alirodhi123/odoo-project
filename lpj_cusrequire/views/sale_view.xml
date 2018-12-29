@@ -1,0 +1,52 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="sale_order_form_inh_visible">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <!-- Field price unit-->
+                <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='price_unit']" position="replace">
+                    <field name="price_unit"
+                           groups="sales_team.group_sale_manager,
+                                   sales_team.group_sale_salesman,
+                                   account.group_account_manager,
+                                   account.group_account_user"/>
+                </xpath>
+
+                <!-- Field Sub total-->
+                <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='price_subtotal']" position="replace">
+                    <field name="price_subtotal"
+                           groups="sales_team.group_sale_manager,
+                                   sales_team.group_sale_salesman,
+                                   account.group_account_manager,
+                                   account.group_account_user"/>
+                </xpath>
+
+                <!-- Field Amount untaxed -->
+                <xpath expr="//field[@name='amount_untaxed']" position="replace">
+                    <field name="amount_untaxed"
+                           groups="sales_team.group_sale_manager,
+                                   sales_team.group_sale_salesman,
+                                   account.group_account_manager,
+                                   account.group_account_user"/>
+                </xpath>
+
+                <!-- Field Tax -->
+                <xpath expr="//field[@name='amount_tax']" position="replace">
+                    <field name="amount_tax"
+                           groups="sales_team.group_sale_manager,
+                                   sales_team.group_sale_salesman,
+                                   account.group_account_manager,
+                                   account.group_account_user"/>
+                </xpath>
+
+                <!-- Note -->
+                <xpath expr="//field[@name='note']" position="replace">
+                    <field name="note" groups="sales_team.group_sale_manager,sales_team.group_sale_salesman"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

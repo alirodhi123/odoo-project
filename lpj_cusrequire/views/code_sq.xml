@@ -1,0 +1,22 @@
+<odoo>
+	<data>
+		<record id="seq_cus_requirement" model="ir.sequence">
+			<field name="name">CR code generate</field>
+			<field name="code">cr.code.generate2</field>
+			<field name="prefix">CR/%(y)s/%(mounth)s/</field>
+			<field name="padding">5</field>
+		</record>
+		
+		
+		<record id="purchase_sequence_form" model="ir.ui.view">
+            <field name="name">x.cusrequirement.form.inherit</field>
+            <field name="model">x.cusrequirement</field>
+            <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_form"/>
+            <field name="arch" type="xml">
+                <field name='name' position='after'>
+                    <field name="sequence_type"/>
+               </field>
+            </field>
+        </record>
+	</data>
+</odoo>

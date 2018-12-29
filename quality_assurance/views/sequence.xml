@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <odoo>
+     <data noupdate="1">
+        <record id="seq_form_coa" model="ir.sequence">
+          <field name="name">Sequence for new coa</field>
+          <field name="code">sequence.coa</field>
+          <field name="prefix">COA-%(y)s%(month)s-</field>
+          <field name="padding">5</field>
+          <field name="company_id" eval="False"/>
+         </record>
+     </data>
+  </odoo>

@@ -1,0 +1,39 @@
+<odoo>
+  <data>
+   	<record model="ir.ui.view" id="catfinishingproduct_tree_view">
+        <field name="name">x.category.finishing.product.tree</field>
+        <field name="model">x.category.finishing.product</field>
+        <field name="arch" type="xml">
+            <tree string="Category Finishing Product" >
+                <field name="name"/>
+                <field name="description"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="catfinishingproduct_form_view">
+        <field name="name">x.category.finishing.product.form</field>
+        <field name="model">x.category.finishing.product</field>
+        <field name="arch"  type="xml">
+            <form string="Finishing Category Form">
+                <sheet>
+                    <group string="Informasi">
+                        <field name="name"/>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record> 
+    
+    <record model="ir.actions.act_window" id="catfinishingproduct_list_action">
+        <field name="name">CatFinishingProduct</field>
+        <field name="res_model">x.category.finishing.product</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!--<menuitem id="Catfinishingproduct_menu" parent="master_pde_menu" name="Cat Finishing Product" action="catfinishingproduct_list_action"/>-->
+
+  </data>
+</odoo>

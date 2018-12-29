@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <report
+        id = "report_kuitansi"
+        string="Kuitansi"
+        model = "x.kuitansi"
+        report-type = "qweb-pdf"
+        file = "lpj_accounting.document_kuitansi"
+        name = "lpj_accounting.document_kuitansi"
+        menu = "True"/>
+
+        <template id="document_kuitansi">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <h2>Report title</h2>
+                    </div>
+                </t>
+            </t>
+        </t>
+        </template>
+
+    </data>
+</odoo>

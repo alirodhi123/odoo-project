@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_lpj_contact_lpj_contact,lpj_contact.lpj_contact,model_lpj_contact_lpj_contact,,1,0,0,0

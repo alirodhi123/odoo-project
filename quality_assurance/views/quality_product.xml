@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="quality_product_form" model="ir.ui.view">
+            <field name="name">quality.product.form</field>
+            <field name="model">quality.alert</field>
+            <field name="inherit_id" ref="quality_assurance.quality_alert_form"/>
+            <field name="arch" type="xml">
+                <notebook>
+                    <page name="qa_product" string="QA Product" attrs="{'invisible': [('x_jenis', '!=', 'product')]}" >
+                        <notebook>
+                            <page name="qa_cetak_product" string="QA Cetak">
+                                <field name="x_qa_cetak_lines">
+                                    <tree>
+                                        <field name="x_qa_artwork"/>
+                                        <field name="x_qa_text"/>
+                                        <field name="x_qa_warna_std"/>
+                                        <field name="x_qa_warna_cetakan"/>
+                                        <field name="x_qa_kotor"/>
+                                        <field name="x_qa_jembret"/>
+                                        <field name="x_qa_inspection"/>
+                                        <field name="create_uid"/>
+                                        <field name="write_date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page name="qa_hotprint_product" string="QA Hotprint">
+                                <field name="x_qa_hotprint_lines">
+                                    <tree>
+                                        <field name="x_qa_warnafoil"/>
+                                        <field name="x_qa_kerataanfoil"/>
+                                        <field name="x_qa_ketepatanposisi"/>
+                                        <field name="x_qa_tidakmenembusrelease"/>
+                                        <field name="x_qa_tidakrontok"/>
+                                        <field name="create_uid"/>
+                                        <field name="write_date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page name="qa_laminating_product_lines" string="QA Laminting">
+                                <field name="x_qa_laminating_product_lines">
+                                    <tree>
+                                        <field name="x_qa_kerataanpermukaan"/>
+                                        <field name="x_qa_tidakbergelembung"/>
+                                        <field name="x_qa_tidakkotor"/>
+                                        <field name="create_uid"/>
+                                        <field name="write_date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page name="qa_varnish_product_lines" string="QA Varnish">
+                                <field name="x_qa_varnish_product_lines">
+                                    <tree>
+                                        <field name="x_qa_kerataanpermukaanvarnish"/>
+                                        <field name="x_qa_efekvarnish"/>
+                                        <field name="create_uid"/>
+                                        <field name="write_date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page name="qa_plongdiecut_product_lines" string="QA Plong / Diecut">
+                                <field name="x_qa_plongdiecut_product_lines">
+                                    <tree>
+                                        <field name="x_qa_dimensi"/>
+                                        <field name="x_qa_posisi"/>
+                                        <field name="x_qa_perforasi"/>
+                                        <field name="x_qa_stickertembus"/>
+                                        <field name="x_qa_releasetidakmenembus"/>
+                                        <field name="create_uid"/>
+                                        <field name="write_date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page name="qa_slitingsheeting_product_lines" string="QA Slitting / Sheeting">
+                                <field name="x_qa_slitingsheeting_product_lines">
+                                    <tree>
+                                        <field name="x_qa_arahroll"/>
+                                        <field name="x_qa_panjangroll"/>
+                                        <field name="x_qa_ketebalancore"/>
+                                        <field name="x_qa_outerdiameter"/>
+                                        <field name="x_qa_ketepatanposisi"/>
+                                        <field name="x_qa_finalcheck"/>
+                                        <field name="create_uid"/>
+                                        <field name="write_date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page name="qa_packing_product_lines" string="QA Packing">
+                                <field name="x_qa_packing_product_lines">
+                                    <tree>
+                                        <field name="x_qa_jumlahperpack"/>
+                                        <field name="x_qa_identitaspacking"/>
+                                        <field name="create_uid"/>
+                                        <field name="write_date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+        <record id="qa_cetak_product_lines_form_view" model="ir.ui.view">
+            <field name="name">x.qa.cetak.lines.form</field>
+            <field name="model">x.qa.cetak.lines</field>
+            <field name="arch" type="xml">
+                <form string="Quality Cetak">
+                    <group>
+                        <field name="x_qa_artwork"/>
+                        <field name="x_qa_text"/>
+                        <field name="x_qa_warna_std"/>
+                        <field name="x_qa_warna_cetakan"/>
+                        <field name="x_qa_kotor"/>
+                        <field name="x_qa_jembret"/>
+                        <field name="x_qa_inspection"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="qa_hotprint_product_lines_form_view" model="ir.ui.view">
+            <field name="name">x.qa.hotprint.lines.form</field>
+            <field name="model">x.qa.hotprint.lines</field>
+            <field name="arch" type="xml">
+                <form string="Quality Hotprint">
+                    <group>
+                        <field name="x_qa_warnafoil"/>
+                        <field name="x_qa_kerataanfoil"/>
+                        <field name="x_qa_ketepatanposisi"/>
+                        <field name="x_qa_tidakmenembusrelease"/>
+                        <field name="x_qa_tidakrontok"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="qa_laminating_product_lines_form_view" model="ir.ui.view">
+            <field name="name">x.qa.laminating.lines.form</field>
+            <field name="model">x.qa.laminating.lines</field>
+            <field name="arch" type="xml">
+                <form string="Quality Laminating">
+                    <group>
+                        <field name="x_qa_kerataanpermukaan"/>
+                        <field name="x_qa_tidakbergelembung"/>
+                        <field name="x_qa_tidakkotor"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="qa_varnish_product_lines" model="ir.ui.view">
+            <field name="name">x.qa.varnish.lines.form</field>
+            <field name="model">x.qa.varnish.lines</field>
+            <field name="arch" type="xml">
+                <form string="Quality Varnish">
+                    <group>
+                        <field name="x_qa_kerataanpermukaanvarnish"/>
+                        <field name="x_qa_efekvarnish"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="qa_plongdiecut_product_lines" model="ir.ui.view">
+            <field name="name">x.qa.plongdiecut.lines.form</field>
+            <field name="model">x.qa.plongdiecut.lines</field>
+            <field name="arch" type="xml">
+                <form string="Quality Plong / Diecut">
+                    <group>
+                        <field name="x_qa_dimensi"/>
+                        <field name="x_qa_posisi"/>
+                        <field name="x_qa_perforasi"/>
+                        <field name="x_qa_stickertembus"/>
+                        <field name="x_qa_releasetidakmenembus"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="qa_slitingsheeting_product_lines" model="ir.ui.view">
+            <field name="name">x.qa.slitingsheeting.lines.form</field>
+            <field name="model">x.qa.slitingsheeting.lines</field>
+            <field name="arch" type="xml">
+                <form string="Quality Slitting / Sheeting">
+                    <group>
+                        <field name="x_qa_arahroll"/>
+                        <field name="x_qa_panjangroll"/>
+                        <field name="x_qa_ketebalancore"/>
+                        <field name="x_qa_outerdiameter"/>
+                        <field name="x_qa_ketepatanposisi"/>
+                        <field name="x_qa_finalcheck"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="qa_packing_product_lines" model="ir.ui.view">
+            <field name="name">x.qa.packing.lines.form</field>
+            <field name="model">x.qa.packing.lines</field>
+            <field name="arch" type="xml">
+                <form string="Quality Packing">
+                    <group>
+                        <field name="x_qa_jumlahperpack"/>
+                        <field name="x_qa_identitaspacking"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

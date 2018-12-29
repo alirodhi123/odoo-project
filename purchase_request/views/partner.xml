@@ -1,0 +1,16 @@
+<odoo>
+    <data>
+         <record model="ir.ui.view" id="rtrw_partner_view">
+            <field name="name">res.partner.rtrw</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+
+                <!-- Menambahkan field payment term pada kontak vendor -->
+                <group name="purchase" position="inside">
+                    <field name="property_supplier_payment_term_id"></field>
+                </group>
+            </field>
+        </record>
+    </data>
+</odoo>

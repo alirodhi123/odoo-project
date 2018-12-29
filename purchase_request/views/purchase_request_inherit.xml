@@ -1,0 +1,51 @@
+<odoo>
+    <data>
+
+        <!-- Inherit purchase request tree -->
+        <record id="purchase_request_tree_view" model="ir.ui.view">
+            <field name="model">purchase.request</field>
+            <field name="inherit_id" ref="purchase_request.view_purchase_request_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr='//tree/field[@name="origin"]' position="replace">
+                    <field name="origin" invisible="1"/>
+                </xpath>
+                <xpath expr='//tree/field[@name="origin"]' position="after">
+                    <field name="x_no_ok"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Inherit purchase request form -->
+        <record id="purchase_request_form" model="ir.ui.view">
+            <field name="inherit_id" ref="purchase_request.view_purchase_request_form"/>
+            <field name="model">purchase.request</field>
+            <field name="arch" type="xml">
+                <field name="description" position="after">
+                    <field name="x_no_ok"></field>
+
+                </field>
+
+                <!--<xpath expr='//field[@name="line_ids"]/tree/field[@name="product_id"]' position="replace">-->
+                    <!--&lt;!&ndash;<field name="bom_line_ids" domain="[('bom_id', '=', parent.x_bom)]"/>&ndash;&gt;-->
+                    <!--<field name="bom_line_ids"/>-->
+                <!--</xpath>-->
+            </field>
+        </record>
+
+        <!-- Inherit purchase request line_ids -->
+        <record id="purchase_request_tree" model="ir.ui.view">
+            <field name="inherit_id" ref="purchase_request.view_purchase_request_form"/>
+            <field name="model">purchase.request</field>
+            <field name="arch" type="xml">
+                <xpath expr='//field[@name="line_ids"]/tree/field[@name="product_uom_id"]' position="after">
+                    <field name="product_qty"/>
+                </xpath>
+
+                <xpath expr='//field[@name="line_ids"]/tree/field[@name="name"]' position="after">
+                    <field name="catatan_barang"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

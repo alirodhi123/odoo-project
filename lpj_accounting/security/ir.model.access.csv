@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_lpj_accounting_lpj_accounting,lpj_accounting.lpj_accounting,model_lpj_accounting_lpj_accounting,,1,0,0,0

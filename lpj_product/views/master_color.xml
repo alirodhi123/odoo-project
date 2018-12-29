@@ -1,0 +1,51 @@
+<odoo>
+  <data>
+   	<record model="ir.ui.view" id="mastercolor_tree_view">
+        <field name="name">x.master.color.tree</field>
+        <field name="model">x.master.color</field>
+        <field name="arch" type="xml">
+            <tree string="Master Color" >
+                <field name="name"/>
+                 <field name="description"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="mastercolor_form_view">
+        <field name="name">x.master.color.form</field>
+        <field name="model">x.master.color</field>
+        <field name="arch"  type="xml">
+            <form string="Master Color Form">
+                <sheet>
+                    <group string="Informasi">
+                        <field name="name"/>
+                        <field name="description"/>
+                        <field name="x_is_campuran"/>
+                    </group>
+                    <notebook attrs="{'invisible':[('x_is_campuran','!=',True)]}">
+                    	<page string="Color Composition">
+	                        <field name="x_child_id">
+	                            <tree string="Menu Item" editable="bottom">
+	                                <field name="x_master_color_ids"/>
+	                                <field name="precentage"/>
+	                            </tree>
+                        	</field>
+                    	</page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record> 
+    
+    <record model="ir.actions.act_window" id="mastercolor_list_action">
+        <field name="name">MasterColor</field>
+        <field name="res_model">x.master.color</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    
+    <!--gak di pakai, campuran warna langsung menggunakan BOM-->
+    <!--<menuitem id="mastercolor_menu" parent="mrp.menu_mrp_bom" name="Master Color" action="mastercolor_list_action"/>-->
+    
+  </data>
+</odoo>

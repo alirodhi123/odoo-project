@@ -1,0 +1,39 @@
+<odoo>
+  <data>
+
+	<record model="ir.ui.view" id="qa_tinta_view">
+	<field name="name">quality.alert.qatinta</field>
+	<field name="model">quality.alert</field>
+	<field name="inherit_id" ref="quality_assurance.quality_alert_form"/>
+	<field name="arch" type="xml">
+        <!--<xpath expr="//field[@name='user_id']" position="after">-->
+            <!--<field name="x_warna" attrs="{'invisible': [('x_jenis', '!=', 'tinta')]}"/>-->
+            <!--<field name="x_exp_date" attrs="{'invisible': [('x_jenis', '!=', 'tinta')]}"/>-->
+        <!--</xpath>-->
+		<notebook>
+            <page string="Form Tinta" id="qa_tinta" attrs="{'invisible': [('x_jenis', '!=', 'tinta')]}">
+                    <!--<group>-->
+                        <field name="qa_id_tinta">
+                                <tree editable="bottom">
+                                    <field name="x_user_qa_tinta" string="Created by"/>
+                                    <field name="x_waktu_qa_tinta" string="Last Updated on" />
+                                    <field name="x_warna"/>
+                                    <field name="x_exp_date"/>
+                                    <field name="x_fisik"/>
+                                    <field name="x_mengendap"/>
+                                    <field name="x_mengeras"/>
+
+                                </tree>
+                            </field>
+
+            </page>
+        </notebook>
+    </field>
+	</record>
+
+  </data>
+</odoo>
+
+
+
+

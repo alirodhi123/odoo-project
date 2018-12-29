@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+        <record id="view_asset_asset_mro_buttons_from" model="ir.ui.view">
+            <field name="name">asset.asset.mro.button.inherit</field>
+            <field name="model">asset.asset</field>
+            <field name="inherit_id" ref="asset.assets_form_view"/>
+            <field name="groups_id" eval="[(4, ref('asset.group_mro_user'))]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                   <button class="oe_inline oe_stat_button" name="action_view_maintenance" type="object" 
+                       icon="fa-cogs">
+                       <field string="Maintenance" name="mro_count" widget="statinfo"/>
+                   </button>
+                </xpath>
+                <field name="active" position="before">
+                    <field name="maintenance_date"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_asset_tree_mro" model="ir.ui.view">
+            <field name="name">asset tree view mro</field>
+            <field name="model">asset.asset</field>
+            <field name="inherit_id" ref="asset.assets_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="maintenance_state_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_asset_search_mro" model="ir.ui.view">
+            <field name="name">asset search view mro</field>
+            <field name="model">asset.asset</field>
+            <field name="inherit_id" ref="asset.assets_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='group_user']" position="after">
+                  <filter name="group_maintenance_state"
+                          string="Status"
+                          context="{'group_by': 'maintenance_state_id'}"
+                          />
+                </xpath>
+            </field>
+        </record>
+
+ 	</data>
+</openerp>

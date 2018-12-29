@@ -1,0 +1,38 @@
+<odoo>
+  <data>
+   	<record model="ir.ui.view" id="packing_roll_tree_view">
+        <field name="name">x.packing.roll.direction.tree</field>
+        <field name="model">x.packing.roll.direction</field>
+        <field name="arch" type="xml">
+            <tree string="Master Color" >
+                <field name="name"/>
+                 <field name="x_image"/> 
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="packing_roll_form_view">
+        <field name="name">x.packing.roll.direction.form</field>
+        <field name="model">x.packing.roll.direction</field>
+        <field name="arch"  type="xml">
+            <form string="Master Color Form">
+                <sheet>
+                    <group string="Informasi">
+                        <field name="name"/>
+                        <field name="x_image"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record> 
+    
+    <record model="ir.actions.act_window" id="packing_roll_list_action">
+        <field name="name">Packing_Roll</field>
+        <field name="res_model">x.packing.roll.direction</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+     <!--<menuitem id="packing_roll_menu" parent="master_pde_menu" name="Packing Roll Direction" action="packing_roll_list_action"/>-->
+  </data>
+</odoo>

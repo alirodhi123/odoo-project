@@ -1,0 +1,75 @@
+<odoo>
+    <data>
+
+        <!--tree master config waste TREE-->
+        <record model="ir.ui.view" id="quotation_x_cusrequirement_tree">
+            <field name="name">x.cusrequirement.quotation.tree</field>
+            <field name="model">x.print.quo</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="x_cust"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--form master config waste FORM-->
+        <record model="ir.ui.view" id="quotation_x_cusrequirement_form">
+            <field name="name">x.cusrequirement.quotation.form</field>
+            <field name="model">x.print.quo</field>
+            <field name="arch" type="xml">
+                <form string="Printing Sales Quotation">
+                    <group>
+                        <group>
+                            <field name = "name"/>
+                            <field name = "x_cust"/>
+                        </group>
+                    </group>
+                    <notebook name = "Customer Requirement">
+                        <page string="Print Quotation" id="page_print_quo">
+                                <field name="x_quo_line">
+                                    <tree editable="bottom">
+                                        <field name = 'x_flag' invisible = '1'/>
+                                        <field name = 'x_cusreq' domain="[('x_customer_id','=', parent.x_cust),('x_flag_quo', '=', False)]"/>
+                                        <field name = 'x_item_desc'/>
+                                        <!--<field name = 'x_internal_code'/>-->
+                                        <field name = 'x_prod'/>
+                                        <field name = 'x_qty'/>
+                                        <field name = 'x_price_pcs'/>
+                                        <field name = 'x_total_price'/>
+                                    </tree>
+                                </field>
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="quotation_total">
+                              <field name="x_untaxed_amount"/>
+                              <!--<field name="x_amount_tax"/>-->
+                              <!--<field name="x_amount_total" class="oe_subtotal_footer_separator"/>-->
+                            </group>
+                        </page>
+                    </notebook>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+
+        <!--ACTION-->
+        <record model="ir.actions.act_window"
+                id="quotation_cusrequirement">
+            <field name="name">Print SQ</field>
+            <field name="res_model">x.print.quo</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="print_quotation_cusreq" name="Print SQ"
+                  parent="sales_team.menu_sales" sequence="100"
+                  action="quotation_cusrequirement"/>
+
+
+    </data>
+</odoo>
+
+

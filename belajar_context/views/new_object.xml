@@ -1,0 +1,85 @@
+<odoo>
+  <data>
+
+    <!-- ### Membuat Tampilan Tree/List ### -->
+
+      <record id="view_mymodule_tbl1_tree" model="ir.ui.view">
+		    <field name="name">new.object.tree</field>
+		    <field name="model">new.object</field>
+		    <field name="arch" type="xml">
+		        <tree string="Bridge" export="false">
+		        	<field name="nama"/>
+                    <button class="oe_highlight"
+                                name="open_second_class"
+                                string="Process"
+                                type="object"
+                                help="calls python function"/>
+		        </tree>
+		    </field>
+		</record>
+
+      <record id="new_object_view" model="ir.ui.view">
+		    <field name="name">new.object.form</field>
+		    <field name="model">new.object</field>
+		    <field name="arch" type="xml">
+		        <form string="Bridge" duplicate="false">
+		        	<sheet>
+			            <group>
+                            <field name="nama"/>
+			            </group>
+
+						<!-- Tree view -->
+						<notebook>
+						<page string="Details">
+							<field name="new_object_ids">
+								<tree editable="bottom">
+									<field name="alamat"></field>
+									<field name="umur"></field>
+									<field name="jk"></field>
+								</tree>
+							</field>
+						</page>
+					</notebook>
+		            </sheet>
+		        </form>
+		    </field>
+		</record>
+
+
+
+      <record id="action_mymodule_tbl2" model="ir.actions.act_window">
+		    <field name="name">Insert</field>
+		    <field name="res_model">new.object</field>
+		    <field name="view_type">form</field>
+		    <field name="view_mode">tree,form</field>
+		    <field name="view_id" ref="new_object_view"/>
+            <field name="target">new</field>
+		</record>
+
+    <!-- ### Membuat Action/Event Object Kursus ### -->
+
+    <record model="ir.actions.act_window" id="new_object_action">
+        <field name="name">Kursus</field>
+        <field name="res_model">new.object</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Buatlah object pertamamu ...</p>
+        </field>
+    </record>
+
+
+    <!-- ### Membuat Menu Bar ### -->
+    <menuitem id="main_training_odoo_menu" name="Create Context"/>
+
+    <!-- ### Membuat Menu Title ### -->
+    <menuitem id="training_odoo_menu" name="Training" parent="main_training_odoo_menu"/>
+
+    <!--&lt;!&ndash; ### Membuat Sub Menu ### &ndash;&gt;-->
+    <menuitem id="kursus_menu" name="Tes Context" parent="training_odoo_menu" action="kursus_list_action"/>
+    <menuitem id="kursus_menu2" name="new object" parent="training_odoo_menu" action="new_object_action"/>
+
+    <!--<menuitem action="action_mymodule_tbl2" name="Kirim" id="menu_action_mymodule_tbl2" sequence="150"/>-->
+
+  </data>
+</odoo>

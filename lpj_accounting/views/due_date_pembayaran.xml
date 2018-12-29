@@ -1,0 +1,52 @@
+<odoo>
+    <data>
+         <record model="ir.ui.view" id="due_date_tree">
+          <field name="name">due.date.pembayaran.tree</field>
+          <field name="model">x.due.date.pembayaran</field>
+          <field name="arch" type="xml">
+              <tree string="Due Date Pembayaran">
+                <field name="x_customer"></field>
+                <field name="x_lama_pembayaran"></field>
+                <field name="x_keterangan"></field>
+                <field name="x_category"></field>
+                <field name="x_type"></field>
+                <field name="x_jml_hari"></field>
+              </tree>
+          </field>
+        </record>
+
+        <record model="ir.ui.view" id="due_date_form">
+            <field name="name">due.date.pembayaran.form</field>
+            <field name="model">x.due.date.pembayaran</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                      <group string="Due Date Pembayaran">
+                        <group>
+                          <field name="x_customer"></field>
+                            <field name="x_lama_pembayaran"></field>
+                            <field name="x_keterangan"></field>
+                        </group>
+                          <group>
+                            <field name="x_category"></field>
+                            <field name="x_type"></field>
+                            <field name="x_jml_hari"></field>
+                          </group>
+                      </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+          <record model="ir.actions.act_window" id="due_date_pembayaran_action">
+          <field name="name">Due Date Pembayaran</field>
+          <field name="res_model">x.due.date.pembayaran</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Create a new Due Date Pembayaran</p>
+          </field>
+        </record>
+    </data>
+</odoo>

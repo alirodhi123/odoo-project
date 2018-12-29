@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<odoo>
+   <record id="mrp_workcenter_enhanced_tree_view" model="ir.ui.view">
+         <field name="name">mrp workcenter enhance tree view</field>
+         <field name="model">mrp.workcenter</field>
+         <field name="inherit_id" ref="mrp.mrp_workcenter_tree_view"/>
+         <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="calendar_id"/>
+            </field>
+            <field name="active" position="after">
+                <field name="wc_capacity" string="Weekly Capacity"/>
+            </field>
+         </field>
+   </record>
+</odoo>

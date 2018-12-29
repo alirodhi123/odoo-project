@@ -1,0 +1,49 @@
+<odoo>
+  <data>
+   	<record model="ir.ui.view" id="catfinishingprocess_tree_view">
+        <field name="name">x_category_finishing_process.tree</field>
+        <field name="model">x.category.finishing.process</field>
+        <field name="arch" type="xml">
+            <tree string="Category Finishing process" >
+                <field name="name"/>
+                 <field name="x_is_laminating"/>
+                 <field name="x_is_hotprint"/>
+                 <field name="x_is_emboss"/>
+                 <field name="x_is_varnish"/>
+                 <field name="x_is_foil"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="catfinishingprocess_form_view">
+        <field name="name">x_category_finishing_process.form</field>
+        <field name="model">x.category.finishing.process</field>
+        <field name="arch"  type="xml">
+            <form string="Finishing Category Form">
+                <sheet>
+                    <group string="Informasi">
+                        <field name="name"/>
+                        <field name="description"/>
+                    </group>
+                    <group>
+                        <field name="x_is_laminating"/>
+                        <field name="x_is_hotprint"/>
+                        <field name="x_is_emboss"/>
+                        <field name="x_is_varnish"/>
+                        <field name="x_is_foil"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record> 
+    
+    <record model="ir.actions.act_window" id="catfinishingprocess_list_action">
+        <field name="name">CatFinishingprocess</field>
+        <field name="res_model">x.category.finishing.process</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!--<menuitem id="Catfinishingprocess_menu" parent="master_pde_menu" name="Cat Finishing Process" action="catfinishingprocess_list_action"/>-->
+  </data>
+</odoo>

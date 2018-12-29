@@ -1,0 +1,107 @@
+<odoo>
+  <data>
+
+    <!--Membuat tampilan tree-->
+    <record model="ir.ui.view" id="kursus_tree_view">
+      <field name="name">x.kuitansi.tree</field>
+      <field name="model">x.kuitansi</field>
+      <field name="arch" type="xml">
+          <tree string="Invoice List" create="false">
+            <field name="name"></field>
+            <field name="customer"></field>
+          </tree>
+      </field>
+    </record>
+
+    <!-- Membuat tampilan form -->
+    <record model="ir.ui.view" id="kuitansi_form_view">
+    <field name="name">x.kuitansi.form</field>
+    <field name="model">x.kuitansi</field>
+    <field name="arch" type="xml">
+      <form string="New" create="false">
+        <sheet>
+          <group string="New">
+            <group>
+              <field name="name" string="No Kwitansi"></field>
+              <field name="customer" string="Customer"/>
+              <field name="amount_to_text"></field>
+            </group>
+          </group>
+          <notebook>
+            <page string="Invoice Line">
+              <field name="kuitansi_line_ids">
+                <tree editable="bottom">
+                  <field name="x_invoice" string="Invoice Id" domain="[('state', '=', 'open'),('partner_id', '=', parent.customer),('is_responsible', '=', False)]"></field>
+                  <field name="x_no_sjk" domain="[('state', '=', 'done'),('partner_id', '=', parent.customer), ('is_responsible', '=', True)]"></field>
+                    <field name="x_amount_untaxed"></field>
+                  <field name="x_taxes"></field>
+                  <field name="x_amount_total"></field>
+                </tree>
+              </field>
+
+               <!-- Perhitungan -->
+                <group class="oe_subtotal_footer">
+                  <field name="x_untaxed_amount_foot"/>
+                  <field name="x_amount_tax_foot"/>
+                  <field name="x_amount_total_foot" class="oe_subtotal_footer_separator"/>
+                </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+    </record>
+
+    <!-- Action button create kuitansi -->
+    <record id="act_kuitansi_project_task_all" model="ir.actions.act_window">
+        <field name="name">COA</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">x.kuitansi</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="kuitansi_form_view"></field>
+    </record>
+
+    <!-- ### Membuat Action/Event Object Kursus ### -->
+    <record model="ir.actions.act_window" id="kuitansi_list_action">
+      <field name="name">Create Kuitansi</field>
+      <field name="res_model">x.kuitansi</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+      <field name="help" type="html">
+          <p class="oe_view_nocontent_create">Create a new kuitansi</p>
+      </field>
+    </record>
+
+     <!-- Menambahkan button ke dalam tree view account.invoice -->
+     <record model="ir.ui.view" id="coa_tree_view">
+            <field name="name">account.invoice.tree</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_tree"></field>
+            <field name="arch" type="xml">
+                <tree>
+                    <button class="oe_highlight"
+                            name="open_second_class"
+                            string="Create Kuitansi"
+                            type="object"
+                            help="calls python function"
+                            target="new"
+                            options="{'reload_on_button': true}"
+                            attrs="{'invisible': ['|',('is_responsible', '=', True),('state', '!=', 'open')]}">
+                    </button>
+                  <field name="is_responsible" invisible="1"></field>
+                </tree>
+            </field>
+        </record>
+
+    <!-- Membuat action baru pada menu action -->
+    <!--<act_window id="launch_invoice_wizard"-->
+                <!--name="Create Kuitansi"-->
+                <!--src_model="account.invoice"-->
+                <!--res_model="x.kuitansi"-->
+                <!--view_mode="form"-->
+                <!--target="new"-->
+                <!--key2="client_action_multi"/>-->
+
+  </data>
+</odoo>

@@ -1,0 +1,49 @@
+<odoo>
+    <data>
+        <!--  -->
+        <!--   <record id="object0" model="training_odoo.training_odoo"> -->
+        <!--     <field name="name">Object 0</field> -->
+        <!--     <field name="value">0</field> -->
+        <!--   </record> -->
+        <!--  -->
+        <!--   <record id="object1" model="training_odoo.training_odoo"> -->
+        <!--     <field name="name">Object 1</field> -->
+        <!--     <field name="value">10</field> -->
+        <!--   </record> -->
+        <!--  -->
+        <!--   <record id="object2" model="training_odoo.training_odoo"> -->
+        <!--     <field name="name">Object 2</field> -->
+        <!--     <field name="value">20</field> -->
+        <!--   </record> -->
+        <!--  -->
+        <!--   <record id="object3" model="training_odoo.training_odoo"> -->
+        <!--     <field name="name">Object 3</field> -->
+        <!--     <field name="value">30</field> -->
+        <!--   </record> -->
+        <!--  -->
+        <!--   <record id="object4" model="training_odoo.training_odoo"> -->
+        <!--     <field name="name">Object 4</field> -->
+        <!--     <field name="value">40</field> -->
+        <!--   </record> -->
+        <!--  -->
+
+        	
+        	
+        <record model="training.kursus" id="kursus_1">
+            <field name="name">Technical</field>
+            <field name="description">Training technical memiliki tujuan agar user dapat membuat dan mengcustom modul ketika implementasi</field>
+        </record>
+        
+        <record model="training.kursus" id="kursus_2">
+            <field name="name">Functional</field>
+            <field name="description">Training technical memiliki tujuan agar user dapat mengoperasikan sistem seacara baik dan benar</field>
+        </record>
+        
+        <record model="training.kursus" id="kursus_3">
+            <field name="name">Python</field>
+            <!-- tidak ada tambahan description -->
+        </record>
+        	
+        	        
+    </data>
+</odoo>

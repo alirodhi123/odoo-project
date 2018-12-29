@@ -1,0 +1,383 @@
+<odoo>
+    <data>
+        <!-- View Tree Approve Cus Req -->
+        <record model="ir.ui.view" id="requirement_tree_view">
+            <field name="name">cus.requirement.tree</field>
+            <field name="model">x.cusrequirement</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="create_date" type="date"/>
+                    <field name="x_request_date" type="date"/>
+                    <field name="x_product"/>
+                    <field name="description"/>
+                    <field name="x_print"/>
+                    <field name="x_status_cr"/>
+                    <field name="state"/>
+                    <field name="x_customer_id"/>
+                    <field name="x_sales_id"/>
+                    <button name="act_reject" type="object" string="Reject" class="oe_highlight" attrs="{'invisible':[('x_status_cr','=','reject')]}"/>
+                    <!--<field name="color"/>-->
+                </tree>
+            </field>
+        </record>
+        <!-- View Kanban Approve Cus Req -->
+        <record model="ir.ui.view" id="requirement_kanban_view">
+            <field name="name">cus.requirement.kanban</field>
+            <field name="model">x.cusrequirement</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="state">
+                    <field name="color"/>
+                    <templates>
+                        &lt;
+                        <t t-name="kanban-box">
+                            <div
+                                    t-attf-class="oe_kanban_color_{{kanban_getcolor(record.color.raw_value)}} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card {{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}}">
+                                <div class="o_dropdown_kanban dropdown">
+                                    <!-- MENU DROPDOWN -->
+                                    <a class="dropdown-toggle btn" data-toggle="dropdown"
+                                       href="#">
+                                        <span class="fa fa-bars fa-lg"/>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu"
+                                        aria-labelledby="dLabel">
+                                        <li>
+                                            <a type="delete">Hapus</a>
+                                        </li>
+                                        <li>
+                                            <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div t-attf-class="oe_kanban_content">
+                                    <!-- JUDUL -->
+                                    CR :
+                                    <b>
+                                        <i>
+                                            <field name="name"/>
+                                        </i>
+                                    </b>
+                                    <br/>
+                                    Request Item :
+                                    <b>
+                                        <i>
+                                            <field name="item_description"/>
+                                        </i>
+                                    </b>
+                                    <br/>
+                                    Product :
+                                    <b>
+                                        <i>
+                                            <field name="x_product"/>
+                                        </i>
+                                    </b>
+                                    <br/>
+                                    Customer :
+                                    <b>
+                                        <i>
+                                            <field name="x_customer_id"/>
+                                        </i>
+                                    </b>
+                                    <br/>
+                                    Request Date :
+                                    <b>
+                                        <i>
+                                            <field name="x_request_date"/>
+                                        </i>
+                                    </b>
+                                    <br/>
+                                    Deskripsi :
+                                    <field name="description"/>
+                                </div>
+
+                            </div>
+                            &lt;
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <!-- View Form Approve Cus Req -->
+        <record model="ir.ui.view" id="requirement_form_view">
+            <field name="name">cus.requirement.form</field>
+            <field name="model">x.cusrequirement</field>
+            <field name="arch" type="xml">
+                <form string="Cus Requirement Form">
+                    <header>
+                        <!-- <button name="action_confirm" type="object" -->
+                        <!-- string="Confirm" -->
+                        <!-- states="1.draft" class="oe_highlight"/> -->
+                        <!-- <button name="action_draft" type="object" -->
+                        <!-- string="Reset To Draft" -->
+                        <!-- states="2.confirmed,3.done"/> -->
+                        <!-- <button name="action_done" type="object" -->
+                        <!-- string="Mark as Done" -->
+                        <!-- states="2.confirmed" class="oe_highlight"/> -->
+                        <field name="is_mkt" invisible = "1"/>
+                        <button name="action_next" type="object" string="Confirm" class="oe_highlight" attrs="{'invisible':[('state','in',['2','4','5','7','8']),('is_mkt','=',True)]}"/>
+                        <button name="action_prev" type="object" string="Reset To Previous" attrs="{'invisible':[('state','in',['1','2','4','5','7','8']),('is_mkt','=',True)]}"/>
+
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <div class="oe_title">
+                                    <h1>
+                                        <field name="name" readonly="1"/>
+                                    </h1>
+                                </div>
+                            </group>
+                            <group>
+                                <div class="oe_title">
+                                    <h1>
+                                        <!--<field name="x_code" readonly="1"/>-->
+                                    </h1>
+                                </div>
+                            </group>
+                        </group>
+
+                        <group>
+                            <group>
+                                <field name="item_description"/>
+                                <field name="x_repeat_order"/>
+                                <!--<field name="x_product" attrs="{'invisible':[('x_repeat_order','!=',True)]}"/>-->
+                                <field name="description"/>
+                                <field name="x_status_cr" attrs="{'readonly': [('compute_field', '=', False)]}"/>
+                                <field name="x_sales_id"/>
+                                <field name="x_customer_id"/>
+                                <field name="x_request_date"/>
+
+                            </group>
+                            <group>
+                                <field name="x_product" />
+                                <field name="x_drawing_file_prd" widget="image"/>
+                                <field name="x_cusreq" invisible = '1'/>
+                                <field name="x_tamp_tgl" invisible = '1'/>
+                                <field name="x_sale_order_line_ids" invisible = '1'/>
+                                <!--<field name="x_orderline" domain="[('order_id','=', x_order)]"/>-->
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Pre-Costing" id="page_precosting">
+                                <group>
+                                    <group string="DImension">
+                                        <field name="x_qty"/>
+                                        <field name="x_satuan"/>
+                                        <field name="x_material_number"/>
+                                        <field name="x_length"/>
+                                        <!--<field name="x_length_m"/>-->
+                                        <field name="x_width"/>
+                                        <!--<field name="x_width_m"/>-->
+                                        <field name="x_packing_category_id"/>
+                                    </group>
+                                    <group string="Estimated Bom">
+                                        <field name="x_supplier_id"/>
+                                        <field name="x_material_type_id"/>
+                                        <field name="x_numbers_of_colors"/>
+                                        <field name="x_varnish"/>
+                                        <field name="x_special_color"/>
+                                        <field name="x_ink_coverage"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group string="Estimated Process">
+                                        <field name="x_mrpwordkcenter_id"/>
+                                        <field name="x_lamination"/>
+                                        <field name="x_category_foil"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Price" id="page_price" groups="sales_team.group_sale_manager,sales_team.group_sale_salesman">
+                                <group>
+                                    <group string="Porpose">
+                                        <field name="x_propose_price_low" attrs="{'readonly': [('compute_field', '=', False)]}"/>
+                                        <field name="x_propose_price_high" attrs="{'readonly': [('compute_field', '=', False)]}"/>
+                                        <!--<field name="x_propose_profit_low"/>-->
+                                        <!--<field name="x_propose_profit_high"/>-->
+                                    </group>
+                                    <group string="Price">
+                                        <field name="compute_field" invisible="1"/>
+                                        <field name="x_price_low" attrs="{'readonly': [('compute_field', '=', False)]}"/>
+                                        <field name="x_price_high" attrs="{'readonly': [('compute_field', '=', False)]}"/>
+                                        <field name="x_harga_repeat" domain="[('order_id','=', x_order)]" attrs="{'invisible':[('x_repeat_order','!=',True)]}"/>
+                                        <!--<field name="x_hpp"/>-->
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Drawing and Product" context="{'page_ref':'page_precosting'}">
+                                <group>
+                                    <group string="Data Form">
+                                        <field name="x_drawing_prd"/>
+                                        <field name="x_length_prd"/>
+                                        <field name="x_width_prd"/>
+                                        <field name="x_categ_id_prd"/>
+                                    </group>
+                                    <group>
+                                        <field name="x_ink_coverage_pde_prd">
+                                            <tree editable="bottom">
+                                                <field name="x_colors_id"/>
+                                                <field name="x_category_printing_id"/>
+                                                <field name="x_coverage"/>
+                                            </tree>
+                                        </field>
+                                        <field name="x_special_color_prd"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group>
+                                        <field name="x_diecut_shape_id_prd"/>
+                                        <field name="x_material_type_ids_prd">
+                                            <tree editable="bottom">
+                                                <field name="name"/>
+                                                <field name="x_is_main"/>
+                                            </tree>
+                                        </field>
+                                        <field name="x_release_prd"/>
+                                    </group>
+                                    <group>
+                                        <field name="x_hotprint_list_ids_prd">
+                                            <tree editable="bottom">
+                                                <field name="x_category_finishing_process_id"/>
+                                            </tree>
+                                        </field>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group>
+                                        <field name="x_finishing_process_laminating_prd"/>
+                                        <field name="x_finishing_process_emboss_prd"/>
+                                        <!--<field name="x_finishing_process_foil_prd"/>-->
+                                        <field name="x_media_tempel_prd"/>
+                                    </group>
+                                    <group>
+                                        <field name="x_location_media_id_prd">
+                                            <tree editable="bottom">
+                                                <field name="name"/>
+                                            </tree>
+                                        </field>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group>
+                                        <field name="x_varnish_list_ids_prd">
+                                            <tree editable="bottom">
+                                                <field name="x_category_finishing_process_id"/>
+                                            </tree>
+                                        </field>
+                                    </group>
+                                    <group>
+                                        <field name="x_layout_product_ids_prd">
+                                            <tree editable="bottom">
+                                                <field name="x_type"/>
+                                                <field name="x_size"/>
+                                                <field name="x_druk"/>
+                                                <field name="x_space"/>
+                                                <field name="x_number"/>
+                                            </tree>
+                                        </field>
+                                    </group>
+                                </group>
+                            </page>
+                            <page String="Ribbon Spec">
+                                <group>
+                                    <group string="Ribbon">
+                                        <field name="x_ribbon_prd"/>
+                                        <field name="x_face_ink_prd"/>
+                                        <field name="x_id_core_prd"/>
+                                        <field name="x_od_core_prd"/>
+                                    </group>
+                                    <group>
+                                        <field name="x_core_type_prd"/>
+                                        <field name="x_notch_prd"/>
+                                        <field name="x_roll_perbox_ribbon_prd"/>
+                                        <field name="x_material_core_prd"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+                <!-- <div class="oe_chatter"> -->
+                <!-- <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/> -->
+                <!-- <field name="message_ids" widget="mail_thread"/> -->
+                <!-- </div> -->
+            </field>
+        </record>
+        <!-- Action Approve Cus Req -->
+        <record model="ir.actions.act_window" id="approval_list_action">
+            <field name="name">Approval</field>
+            <field name="res_model">x.cusrequirement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+        <record model="ir.actions.act_window"
+                id="requirement_list_action">
+            <field name="name">Customer Requirement</field>
+            <field name="res_model">x.cusrequirement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record model="ir.ui.view" id="stage_tree_view">
+            <field name="name">approval.stage.tree</field>
+            <field name="model">x.approvalstage</field>
+            <field name="arch" type="xml">
+                <tree string="Kursus List">
+                    <field name="name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="stage_form_view">
+            <field name="name">approval.stage.form</field>
+            <field name="model">x.approvalstage</field>
+            <field name="arch" type="xml">
+                <form string="Approval Stage Form">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <notebook>
+                            <page string="Keterangan">
+                                <field name="description"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="stage_list_action">
+            <field name="name">Approval Produk</field>
+            <field name="res_model">x.approvalstage</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <!--<menuitem id="main_approval_odoo_menu" name="PDE"/>-->
+
+        <!--<menuitem id="approval_odoo_menu"-->
+                  <!--parent="main_approval_odoo_menu" name="Approval"/>-->
+
+        <!--<menuitem id="approval_menu" name="Approval"-->
+                  <!--parent="approval_odoo_menu" action="approval_list_action"/>-->
+
+        <!--<menuitem id="requirement_menu" name="Customer Req"-->
+                  <!--parent="sales_team.menu_sales" sequence="10"-->
+                  <!--action="requirement_list_action"/>-->
+
+
+        <!-- <menuitem id="stage_menu" parent="approval_odoo_menu" name="Stage"
+            action="stage_list_action"/> -->
+
+    </data>
+</odoo>

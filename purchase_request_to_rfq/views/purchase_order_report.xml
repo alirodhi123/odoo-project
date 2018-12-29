@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+
+        <report
+            id="report_po"
+            model="purchase.order"
+            string="Print PO"
+            report_type="qweb-pdf"
+            name="purchase_request_to_rfq.report_document_po"
+            file="purchase_request_to_rfq.report_document_po"
+            menu="False"
+        />
+
+        <record id="paperformat_po" model="report.paperformat">
+            <field name="name">European A4 low margin</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">6</field>
+            <field name="margin_bottom">4</field>
+            <field name="margin_left">4</field>
+            <field name="margin_right">4</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field> <!-- Jika ingin header muncul ubah nilai - 0 -->
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="purchase_request_to_rfq.report_po" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="purchase_request_to_rfq.paperformat_po" />
+        </record>
+
+        <template id="report_document_po">
+            <t t-name="purchase_request_to_rfq.report_document_po">
+                <t t-call="report.html_container">
+                    <t t-foreach="docs" t-as="o">
+                        <div class="page">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <img t-if="res_company.logo" t-att-src="'data:image/png;base64,%s' %res_company.logo" style="width: 180%"/>
+                                </div>
+                            </div>
+                            <br></br>
+
+                            <!-- Untuk garis horizontal-->
+                            <div class="row zero_min_height">
+                                <div class="col-xs-12">
+                                    <div style="border-bottom: 1px solid black;"/>
+                                </div>
+                            </div>
+                            <br/>
+                            <!-- Row content -->
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <strong>Kepada Yth,</strong>
+                                    <div t-field="o.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;, &quot;fax&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
+                                        <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
+                                        <p t-if="o.payment_term_id"><span t-field="o.payment_term_id"/></p>
+                                </div>
+                                <div class="col-xs-6">
+                                    <table>
+                                        <tr>
+                                            <td style="padding-right: 70px; padding-bottom:6px;"><b>Ditagihkan ke</b></td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td><p t-if="o.company_id.street"><span t-field="o.company_id.street"></span></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-right: 50px; padding-bottom:6px;"><b>Dikirim ke</b></td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td><p t-if="o.company_id.street"><span t-field="o.company_id.street"></span></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="margin-right: 50px; padding-bottom:6px;"><b>Syarat Bayar</b></td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td><p t-if="o.partner_id.property_supplier_payment_term_id"><span t-field="o.partner_id.property_supplier_payment_term_id"></span></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-right: 50px; padding-bottom:6px;"><b>Pelaksana Order</b></td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td><p t-if="o.create_uid"><span t-field="o.create_uid"></span></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-right: 50px; padding-bottom:6px;"><b>Tanggal PO</b></td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td><p t-if="o.create_uid"><span t-field="o.date_order"></span></p></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Row judul -->
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="text-center">
+                                        <!--<h4 class="text-center" t-if="o.state != 'draft'">Purchase Order Confirmation</h4>-->
+                                        <!--<h4 class="text-center" t-if="o.state == 'draft'">Request for Quotation</h4>-->
+                                        <h4 class="text-center">Purchase Order Confirmation</h4>
+                                        <p t-field="o.name"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th><strong>Description</strong></th>
+                                        <th><strong>Taxes</strong></th>
+                                        <th class="text-center"><strong>Date Req</strong></th>
+                                        <th class="text-right"><strong>Qty</strong></th>
+                                        <th class="text-right"><strong>Unit Price</strong></th>
+                                        <th class="text-right"><strong>Net Price</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.order_line" t-as="line">
+                                        <td>
+                                            <span t-field="line.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="', '.join(map(lambda x: x.name, line.taxes_id))"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-field="line.date_planned"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="line.product_qty"/>
+                                            <span t-field="line.product_uom.name" groups="product.group_uom"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="line.price_unit"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="line.price_subtotal" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="row">
+                                <div class="col-xs-4 pull-right">
+                                    <table class="table table-condensed">
+                                        <tr class="border-black">
+                                            <td><strong>Sub Total</strong></td>
+                                            <td class="text-right">
+                                                <span t-field="o.amount_untaxed" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                            </td>
+                                        </tr>
+                                        <!--<tr class="border-black">-->
+                                            <!--<td><strong>Discount</strong></td>-->
+                                            <!--<td class="text-right">-->
+                                                <!--<span t-field="o.amount_untaxed" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>-->
+                                            <!--</td>-->
+                                        <!--</tr>-->
+                                        <tr>
+                                            <td>DPP</td>
+                                             <td class="text-right">
+                                                <span t-field="o.amount_untaxed" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Taxes</td>
+                                            <td class="text-right">
+                                                <span t-field="o.amount_tax" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                            </td>
+                                        </tr>
+                                         <!--<tr>-->
+                                            <!--<td>PPh</td>-->
+                                            <!--<td class="text-right">-->
+                                                <!--<span t-field="o.amount_tax" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>-->
+                                            <!--</td>-->
+                                        <!--</tr>-->
+                                        <tr class="border-black">
+                                            <td><strong>Total</strong></td>
+                                            <td class="text-right">
+                                                <span t-field="o.amount_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div> <!-- Tutup row perhitungan -->
+
+                            <p t-field="o.notes"/>
+                            <table>
+                                <tr> NB : </tr>
+                                <tr>
+                                    <td><u>PO ini tercetak secara otomatis dan tidak memerlukan tanda tangan autorisasi</u></td>
+                                </tr>
+                                <tr>
+                                    <td>This PO is automatically generated by system, no sign needed</td>
+                                </tr>
+                            </table>
+                            <br></br>
+                            <table>
+                                <div>
+                                    <div style="float: left; text-align: center;">
+                                        Hormat Kami,
+                                        <br></br>
+                                        <br></br>
+                                        <br></br>
+                                        <br/>
+                                        Raymond Sutjiono
+                                    </div>
+                                    <div style="float: Right; text-align: center;">
+                                        Diterima Oleh,
+                                        <br></br>
+                                        <br></br>
+                                        <br></br>
+                                        <br/>
+                                        (......................)
+                                    </div>
+                                </div>
+                            </table>
+                            <br/>
+                            <ol style="margin-left: 10px; margin-top : 100px;">
+                                <li style="font-size: 11px"><p>Ketentuan:</p></li>
+                                <li style="font-size: 11px"><p>Penjual Harus memberitahukan kepada pembeli terlebih dahulu setiap perubahan terhadap spesifikasi atau packing material</p></li>
+                                <li style="font-size: 11px">Nomor Surat Pesanan harus dicantumkan pada semua invoice dan surat jalan</li>
+                                <li style="font-size: 11px">Setiap pengiriman harus dilampiri dengan surat jalan asli (tembusan minimal 2 lembar) dan COA (Certificate Of Analysis) untuk material</li>
+                                <li style="font-size: 11px">Invoice/Tagihan harus disertai surat jalan asli yang sudah ditandatangani dan distempel petugas PT. Laprint Jaya</li>
+                                <li style="font-size: 11px">Resiko yang dtimbulkan selama dalam perjalanan, sebelum diterima gudang PT. Laprint Jaya menjadi beban supplier</li>
+                                <li style="font-size: 11px">Setiap keterlambatan penyerahan material/barang dari tanggal yang ditentukan harus segera diinformasikan paling lambat 1 hari sebelumnya</li>
+                                <li style="font-size: 11px">Setelah ditandatangani, diberi nama terang dan distempel perushanaan, surat pesanan ini harus di kirim via Fax ke alamat +6231 - 8011489</li>
+                                <li style="font-size: 11px">Setiap pengiriman harus mempertimbangkan aspek lingkungan dan K3 dengan mangcau peraturan dan undang - undang yang berlaku</li>
+                                <li style="font-size: 11px">Faktur pajak harus rangkap 2 dan invoice harus dilengkapi materai</li>
+                            </ol>
+                            <div class="oe_structure"/>
+
+                            <!-- Footer -->
+                            <div class="row">
+                                <div class="col-xs-12" style="position: fixed; width: 100%; bottom: -1355px;">
+                                    <div class="text-center" style="border-top: 1px solid black;">
+                                        <ul t-if="not res_company.custom_footer" style="list-style: none; margin: 0 auto;">
+                                            <t t-set="res_company" t-value="res_company.sudo()"/>
+                                            <li t-if="res_company.street">Office: <span t-field="res_company.street"/></li>
+                                            <li t-if="res_company.phone">Phone: <span t-field="res_company.phone"/><span>, 99038051, 99038051, 99038064</span> </li>
+                                            <li t-if="res_company.fax">Fax: <span t-field="res_company.fax"/></li>
+                                            <li t-if="res_company.email">Email: <span t-field="res_company.email"/></li>
+                                            <li t-if="res_company.website">Website: <span t-field="res_company.website"></span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Tutup Footer -->
+
+                        </div> <!-- Tutup page -->
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

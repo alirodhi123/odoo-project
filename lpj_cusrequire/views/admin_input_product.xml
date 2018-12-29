@@ -1,0 +1,104 @@
+<odoo>
+    <data>
+        <!-- View Tree Approve Cus Req -->
+        <!--<record model="ir.ui.view" id="edit_product_tree_view">-->
+            <!--<field name="name">admininput.product.tree</field>-->
+            <!--<field name="model">product.template</field>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<tree>-->
+                    <!--<field name="default_code"/>-->
+                    <!--<field name="name"/>-->
+                    <!--<field name="categ_id"/>-->
+                    <!--<field name="x_user_input"/>-->
+                    <!--<field name="x_input_deskripsi"/>-->
+                    <!--<field name="x_user_validator"/>-->
+                    <!--<field name="x_status_admin_input"/>-->
+                <!--</tree>-->
+            <!--</field>-->
+        <!--</record>-->
+        <!-- View Kanban Approve Cus Req -->
+        <record model="ir.ui.view" id="edit_product_kanban_view">
+            <field name="name">product.template</field>
+            <field name="model">product.template</field>
+            <!--<filter string="Sale" name="sale_ok" domain="[('is_investor', '=', True)]"/>-->
+            <field name="arch" type="xml">
+                <kanban default_group_by="x_status_admin_input">
+                    <field name="color"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div
+                                    t-attf-class="oe_kanban_color_{{kanban_getcolor(record.color.raw_value)}} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card {{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}}">
+                                <div class="o_dropdown_kanban dropdown">
+                                    <!-- MENU DROPDOWN -->
+                                    <a class="dropdown-toggle btn" data-toggle="dropdown"
+                                       href="#">
+                                        <span class="fa fa-bars fa-lg"/>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu"
+                                        aria-labelledby="dLabel">
+                                        <li>
+                                            <a type="delete">Hapus</a>
+                                        </li>
+                                        <li>
+                                            <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div t-attf-class="oe_kanban_content">
+                                    <!-- JUDUL -->
+                                    Internal Reference :
+                                    <b>
+                                        <i>
+                                            <field name="default_code"/>
+                                        </i>
+                                    </b>
+                                    <br/>
+                                    Name :
+                                    <b>
+                                        <i>
+                                            <field name="name"/>
+                                        </i>
+                                    </b>
+                                    <br/>
+                                    Admin Input :
+                                    <b>
+                                        <i>
+                                            <field name="x_user_input"/>
+                                        </i>
+                                    </b>
+                                    <br/>
+                                    Deskripsi :
+                                    <b>
+                                        <i>
+                                            <field name="x_input_deskripsi"/>
+                                        </i>
+                                    </b>
+                                    <br/>
+                                    Validator :
+                                    <b>
+                                        <i>
+                                            <field name="x_user_validator"/>
+                                        </i>
+                                    </b>
+                                </div>
+
+                            </div>
+                            &lt;
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Action Approve Cus Req -->
+        <record model="ir.actions.act_window" id="edit_product_action">
+            <field name="name">EditProduct</field>
+            <field name="res_model">product.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
+        </record>
+
+
+    </data>
+</odoo>

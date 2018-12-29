@@ -1,0 +1,41 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="rtrw_partner_view">
+            <field name="name">res.partner.rtrw</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+
+                <field name='fax' position="after">
+                    <field name="x_npwp" placeholder="Nomor NPWP"/>
+                    <field name="x_pkp"/>
+                </field>
+
+                <!--<field name='parent_id' position="after">-->
+                    <!--<field name="x_kode_customer" placeholder="Kode Customer"/>-->
+                <!--</field>-->
+
+                <!--<field name='lang' position="after">-->
+                    <!--<field name="x_payment_type"/>-->
+                    <!--<field name="x_lama_termin"/>-->
+                    <!--<field name="x_termin_id"/>-->
+                <!--</field>-->
+
+                <!--<field name='lang' position="after">-->
+                    <!--<field name="x_payment_type"/>-->
+                    <!--<field name="x_lama_termin"/>-->
+                    <!--<field name="x_termin_id"/>-->
+                <!--</field>-->
+
+                <!--<field name='lang' position="after">-->
+                    <!--<field name="x_payment_type"/>-->
+                    <!--<field name="x_lama_termin"/>-->
+                    <!--<field name="x_termin_id"/>-->
+                <!--</field>-->
+
+            </field>
+        </record>
+    </data>
+</odoo>
+
+

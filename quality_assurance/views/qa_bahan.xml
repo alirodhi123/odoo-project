@@ -1,0 +1,48 @@
+<odoo>
+  <data>
+	<record model="ir.ui.view" id="qa_bahan_view">
+	<field name="name">quality.alert.qabahan</field>
+	<field name="model">quality.alert</field>
+	<field name="inherit_id" ref="quality_assurance.quality_alert_form"/>
+	<field name="arch" type="xml">
+        <!--<xpath expr="//page[@name='tests']" position="attributes">-->
+             <!--<attribute name="attrs">{'invisible': [('x_jenis','!=',false)]}</attribute>-->
+        <!--</xpath>-->
+
+        <xpath expr="//field[@name='picking_id']" position="after">
+            <field name="x_nomor_lot" attrs="{'invisible': [('x_jenis', '!=', 'bahan')]}"/>
+        </xpath>
+        <xpath expr="//field[@name='user_id']" position="after">
+            <field name="x_jenis"/>
+        </xpath>
+		<notebook>
+            <page string="Form Bahan" id="qa_bahan" attrs="{'invisible': [('x_jenis', '!=', 'bahan')]}">
+                    <!--<group>-->
+                        <field name="qa_id">
+                                <tree editable="bottom">
+                                    <field name="x_user_qa_bahan" string="Created by"/>
+                                    <field name="x_waktu_qa_bahan" string="Last Updated on" />
+                                    <field name="x_ukuran" string="Ukuran Bahan" />
+                                    <field name="x_grammatur_top" />
+                                    <field name="x_grammatur_release" />
+                                    <field name="x_thickness_top"  />
+                                    <field name="x_thickness_release"  />
+                                    <field name="x_tdk_gelombang"  />
+                                    <field name="x_tdk_ngelokor" />
+                                    <field name="x_tdk_gembos" />
+                                    <field name="x_tdk_penyok" />
+
+
+                                </tree>
+                            </field>
+
+            </page>
+        </notebook>
+    </field>
+	</record>
+  </data>
+</odoo>
+
+
+
+
