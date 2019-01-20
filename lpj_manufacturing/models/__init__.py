@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-#from . import models
+from . import models
 #from . import sales
 from . import routing
 from . import minmax

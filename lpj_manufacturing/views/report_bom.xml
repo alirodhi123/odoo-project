@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <data>
+
+        <report
+            id="report_bom"
+            model="mrp.production"
+            string="Bill Of Material"
+            report_type="qweb-pdf"
+            name="lpj_manufacturing.report_document_bom"
+            file="lpj_manufacturing.report_document_bom"
+            menu="True"
+        />
+
+        <record id="paperformat_bom" model="report.paperformat">
+            <field name="name">European A4 low margin</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">4</field>
+            <field name="margin_bottom">30</field>
+            <field name="margin_left">4</field>
+            <field name="margin_right">4</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field> <!-- Jika ingin header muncul ubah nilai - 0 -->
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="lpj_manufacturing.report_bom" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="lpj_manufacturing.paperformat_bom" />
+        </record>
+
+        <template id="report_document_bom">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div style="font-family: Calibri;" class="page">
+                        <div class="oe_structure"/>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <h3 t-if="o.move_raw_ids">Bill Of Material</h3>
+                            </div>
+                            <div class="col-xs-6">
+                                <h4 class="text-center"><span t-field="o.name"/></h4>
+                            </div>
+                        </div>
+                        <!--<h3 t-if="o.move_raw_ids">Bill Of Material</h3>-->
+                        <table class="table table-condensed" t-if="o.move_raw_ids">
+                            <thead>
+                                <tr>
+                                    <th><strong>Product</strong></th>
+                                    <th class="text-right"><strong>Quantity</strong></th>
+                                    <th class="text-center" groups="stock.group_stock_multi_locations">
+                                        <strong>Source Location</strong>
+                                    </th>
+                                    <th class="text-center" groups="stock.group_stock_multi_locations">
+                                        <strong>Destination Location</strong>
+                                    </th>
+                                    <!--<th class="text-center">-->
+                                        <!--<strong>Barcode</strong>-->
+                                    <!--</th>-->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-if="o.move_raw_ids">
+                                    <tr>
+                                        <td colspan="4"><strong>Products to Consume</strong></td>
+                                    </tr>
+                                    <tr t-foreach="o.move_raw_ids" t-as="line">
+                                        <td>
+                                            <span t-field="line.product_id"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="line.product_uom_qty"/>
+                                            <span t-field="line.product_uom.name" groups="product.group_uom"/>
+                                        </td>
+                                        <td class="text-center" groups="stock.group_stock_multi_locations">
+                                            <span t-field="line.location_id.name"/>
+                                        </td>
+                                        <td class="text-center" groups="stock.group_stock_multi_locations">
+                                            <span t-field="line.location_dest_id.name"/>
+                                        </td>
+                                        <!--<td class="text-center">-->
+                                            <!--<span t-if="line.product_id.barcode">-->
+                                                <!--<img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', line.product_id.barcode, 600, 100)" style="width:300px;height:50px"/>-->
+                                            <!--</span>-->
+                                        <!--</td>-->
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <!-- Row verifikasi -->
+                        <div class="footer_custom_new">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <table style="width: 450px; border: 1px solid black;">
+                                        <!-- NOTE CUSTOMER -->
+
+                                    </table>
+                                </div>
+
+                                <div class="col-xs-5 col-xs-offset-1">
+                                    <table style="width: 300px; margin-left: 65px;">
+                                        <tr>
+                                            <td><h5><b>VERIFIKASI</b></h5></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="text-align: center; width: 100px; border: 1px solid black;">ACC</th>
+                                            <th style="text-align: center; width: 100px; border: 1px solid black;">Menyerahkan</th>
+                                            <th style="text-align: center; width: 100px; border: 1px solid black;">Menerima</th>
+                                        </tr>
+                                        <tr>
+                                            <th style="padding-top:60px; text-align: center; width: 100px; border: 1px solid black;">PPIC</th>
+                                            <th style="padding-top:60px; text-align: center; width: 100px; border: 1px solid black;">GUDANG</th>
+                                            <th style="padding-top:60px; text-align: center; width: 100px; border: 1px solid black;">PRODUKSI</th>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="oe_structure"/>
+                    </div> <!-- Tutup page -->
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

@@ -25,9 +25,10 @@
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
+        # 'security/security_pde.xml',
         'views/approval_product.xml',
         'views/quotation_cr.xml',
-        'views/admin_input_product.xml',
+        # 'views/admin_input_product.xml',
         'views/sale_view.xml',
         'views/print_quo.xml',
         'views/report_quotation.xml',

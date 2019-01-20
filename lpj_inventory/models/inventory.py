@@ -18,3 +18,25 @@ class stock_line(models.Model):
 
      keterangan = fields.Text(string="Keterangan")
 
+class sstock_inventory_lot(models.Model):
+     _inherit = 'stock.inventory.line'
+
+     x_kode_customer = fields.Char(string = 'Kode Customer')
+     @api.multi
+     def stock_inventorylot(self):
+          return {
+               'name': 'Go to website',
+               'res_model': 'ir.actions.act_url',
+               'type': 'ir.actions.act_url',
+               'url': 'http://192.168.1.8:8086/lot/production/lot_adjust?id=4&jumlah=1' + '&name=' + str(
+                    self.prod_lot_id.name) + '&bahan=' + '&awal=False' + '&akhir=False' + '&print=1' + '&cus=' + str(self.x_kode_customer) + '&date=' + '&categ= STC' + '&qtyakhir='
+
+               # 'url': 'http://192.168.1.8:8086/lot/production/lot_adjust?id=3&jumlah=' + '&name=' + str(
+               #      self.name) + '&bahan=' + '&awal=False' + '&akhir=False' + '&print=' + str(
+               #      self.x_jml_print) + '&cus=' + '&date=' + '&categ=' + '&qtyakhir=' + str(
+               #      self.x_qty_akhir)
+          }
+
+
+
+

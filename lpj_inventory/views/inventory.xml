@@ -17,6 +17,91 @@
                </field>
             </field>
         </record>
+        <record model="ir.ui.view" id="stock_inventory">
+            <field name="name">stock.inventory.lineids</field>
+            <field name="model">stock.inventory</field>
+            <field name="inherit_id" ref="stock.view_inventory_form"/>
+            <field name="arch" type="xml">
+                <field name="line_ids" position = "replace">
+                    <field name="line_ids" string="Inventory Details" context="{'default_location_id': location_id,  'default_product_id': product_id, 'default_prod_lot_id': lot_id, 'default_package_id': package_id, 'default_partner_id': partner_id}" mode="tree,kanban">
+                            <tree string="Inventory Details" editable="bottom" decoration-info="product_qty != theoretical_qty" decoration-danger="theoretical_qty &lt; 0">
+                                <field name="product_id"  domain="[('type','=','product')]"/>
+                                <field name="product_uom_id" string="UoM" groups="product.group_uom"/>
+                                <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" groups="stock.group_stock_multi_locations"/>
+                                <field name="prod_lot_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"  groups="stock.group_production_lot"/>
+                                <field name="package_id" domain="['|', ('location_id','=', False), ('location_id', '=', location_id)]" groups="stock.group_tracking_lot"/>
+                                <field name="partner_id" groups="stock.group_tracking_owner"/>
+                                <field name="theoretical_qty" readonly="1"/>
+                                <field name="product_qty" string="Real Quantity"/>
+                                <field name="x_kode_customer"/>
+                                <button name="stock_inventorylot" type="object" string="Print Lot"/>
+                                <field name="state" invisible="True"/>
+                            </tree>
+                            <kanban class="o_kanban_mobile">
+                                <field name="product_id"  domain="[('type','=','product')]"/>
+                                <field name="product_uom_id" groups="product.group_uom" string="UoM"/>
+                                <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" groups="stock.group_stock_multi_locations"/>
+                                <field name="prod_lot_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"  groups="stock.group_production_lot"/>
+                                <field name="package_id" domain="['|', ('location_id','=', False), ('location_id', '=', location_id)]"/>
+                                <field name="partner_id"/>
+                                <field name="theoretical_qty" readonly="1"/>
+                                <field name="product_qty" string="Real Quantity"/>
+                                <field name="state" invisible="True"/>
+
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <div t-attf-class="oe_kanban_global_click_edit
+                                                           #{record.product_qty.raw_value!=record.theoretical_qty.raw_value ? 'oe_kanban_color_6' : ''}
+                                                           #{record.theoretical_qty.raw_value&lt;0 ? 'oe_kanban_color_2' : ''}">
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <strong>
+                                                        <field name='product_id'/>
+                                                    </strong>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-12 text-muted">
+                                                    <span><t t-esc='record.location_id.string'/>: <t t-esc='record.location_id.value'/></span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-12 text-muted">
+                                                    <span><t t-esc='record.theoretical_qty.string'/>: <t t-esc='record.theoretical_qty.value'/></span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-12 text-muted">
+                                                    <span><t t-esc='record.product_qty.string'/>: <t t-esc='record.product_qty.value'/></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                    </field>
+                </field>
+
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="stock_picking_form_view">
+            <field name="name">stock.picking.form.button</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <!-- Hidden button print di Delivery Order -->
+                <button name="%(stock.action_report_delivery)d" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </button>
+
+                <!-- Hidden button print di Delivery Order -->
+                <button name="do_print_picking" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </button>
+
+            </field>
+        </record>
 
     </data>
 </odoo>

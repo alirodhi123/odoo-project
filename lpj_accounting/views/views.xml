@@ -20,11 +20,17 @@
     <field name="arch" type="xml">
       <form string="New" create="false">
         <sheet>
-          <group string="New">
+            <div class="oe_title">
+                <h2><field name="name" placeholder="Name" readonly="1"/></h2>
+            </div>
+          <group>
             <group>
-              <field name="name" string="No Kwitansi"></field>
+              <field name="invoice_id" invisible="1"></field>
               <field name="customer" string="Customer"/>
               <field name="amount_to_text"></field>
+            </group>
+            <group>
+              <field name="tgl_invoice"></field>
             </group>
           </group>
           <notebook>
@@ -33,9 +39,12 @@
                 <tree editable="bottom">
                   <field name="x_invoice" string="Invoice Id" domain="[('state', '=', 'open'),('partner_id', '=', parent.customer),('is_responsible', '=', False)]"></field>
                   <field name="x_no_sjk" domain="[('state', '=', 'done'),('partner_id', '=', parent.customer), ('is_responsible', '=', True)]"></field>
-                    <field name="x_amount_untaxed"></field>
+                  <field name="x_no_faktur"></field>
+                  <field name="date_sjk"></field>
+                  <field name="x_amount_untaxed"></field>
                   <field name="x_taxes"></field>
                   <field name="x_amount_total"></field>
+                  <field name="date_invoice" invisible="1"></field>
                 </tree>
               </field>
 

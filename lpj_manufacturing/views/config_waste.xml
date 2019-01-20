@@ -10,17 +10,18 @@
 
                             <field name="x_mesin"/>
                             <!--<field name="x_std_fixed"/>-->
+                            <field name="x_trial_produksi"/>
+                            <field name="x_config_factor"/>
+                            <field name="x_waste_prod"/>
+                            <field name="x_confirm_waste"/>
+                            <field name="x_lb_config" invisible = '1'/>
+                            <field name="x_keb_config" invisible= '1'/>
+                            <field name="x_product_uom_qty" invisible="1"></field>
+                            <field name="product_uom_qty_first" invisible="1"></field>
+                            <field name="x_uom_qty" invisible = '1'/>
                             <field name="x_std_fixed" invisible = '1'/>
                             <field name="x_std_var" invisible = '1'/>
                             <field name="x_std_trial" invisible = '1'/>
-                            <field name="x_trial_produksi"/>
-
-                            <field name="x_config_factor"/>
-                            <field name="x_lb_config" invisible = '1'/>
-                            <field name="x_keb_config" invisible= '1'/>
-                            <field name="x_waste_prod"/>
-                            <field name="x_confirm_waste"/>
-                            <field name="x_uom_qty" invisible = '1'/>
                             <!--<field name="x_coba"/>-->
                             <button name="call_move_raw" type="object" string="Calculate" class="oe_highlight"/>
 

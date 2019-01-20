@@ -75,7 +75,7 @@ class qa_slitingsheeting_product_lines(models.Model):
         string='Arah Roll')
     x_qa_panjangroll = fields.Integer(string='Panjang Roll(M)')
     x_qa_ketebalancore = fields.Integer(string='Ketebalan Core(M)')
-    x_qa_outerdiameter = fields.Integer(string='Outer Diameter(cm)')
+    x_qa_outerdiameter = fields.Float(string='Outer Diameter(cm)')
     x_qa_ketepatanposisi = fields.Selection([('1', 'Sesuai'), ('0', 'Tidak Sesuai')], string='Ketepatan Posisi Sesuai')
     x_qa_finalcheck = fields.Selection([('1', 'Sesuai'), ('0', 'Tidak Sesuai')], string='Final Check Sesuai')
 

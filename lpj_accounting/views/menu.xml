@@ -25,6 +25,12 @@
               sequence="113"
               action="due_date_pembayaran_action"></menuitem>
 
+    <!-- Sub menu Purchase Order -->
+    <menuitem name="Purchase Order" id="sub_menu_po"
+              parent="account.menu_finance_payables"
+              sequence="114"
+              action="purchase.purchase_form_action"></menuitem>
+
     <!-- Sub menu down payment -->
     <!--<menuitem name="Down Payment" id="sub_menu_dp"-->
               <!--parent="account.menu_finance_receivables"-->

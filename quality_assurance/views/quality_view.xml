@@ -161,7 +161,6 @@
                                     <field name="quantity_min" invisible="1"/>
                                     <field name="quantity_max" invisible="1"/>
                                     <field name="test_user_id"/>
-
                                     <field name="test_result" string="Quantitative Result" attrs="{'readonly':[('test_type', '=', 'quality')]}"/>
 
                                     <field name="test_result2" string="Qualitative Result" attrs="{'readonly':[('test_type', '=', 'quantity')]}"/>

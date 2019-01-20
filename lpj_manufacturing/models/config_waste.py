@@ -8,7 +8,7 @@ import odoo.addons.decimal_precision as dp
 class config_waste(models.Model):
      _inherit = 'mrp.production'
 
-     x_trial_produksi = fields.Selection([('trial', 'Trial'), ('not_trial', 'Bukan Trial')],string='Status Produksi:')
+     x_trial_produksi = fields.Selection([('trial', 'New Design'), ('not_trial', 'Repeat')],string='Status Produksi:')
      x_mesin = fields.Many2one('mrp.workcenter', string='Mesin: ')
      x_std_fixed = fields.Float(related = 'x_mesin.x_std_waste.x_fixed_m')
      x_std_var = fields.Float(related='x_mesin.x_std_waste.x_variable')
@@ -28,7 +28,9 @@ class config_waste(models.Model):
      x_last_confirm_waste = fields.Float(string = 'Confirm Last Waste', default = 0, help = 'fields ini digunakan untuk save last confirm waste')
      x_coba = fields.Char(string = 'tampungann saja ')
      x_keb_config = fields.Float(string = 'kebutuhan konfigurasi')
-     x_product_uom_qty = fields.Float(string="To consume")
+     x_product_uom_qty = fields.Float(string="To consume max", compute='get_max_to_consume')
+     product_uom_qty_first = fields.Float(string="To consume min", compute='get_min_to_consume')
+
 
      @api.multi
      def call_move_raw(self):
@@ -44,9 +46,14 @@ class config_waste(models.Model):
           self.x_last_confirm_waste = self.x_confirm_waste
           for x in self.move_raw_ids:
                self.x_coba = x.product_tmpl_id.categ_id.name
-               if x.product_tmpl_id.categ_id.name == 'BU':
+               if x.product_tmpl_id.categ_id.name == 'Label' or \
+                       x.product_tmpl_id.categ_id.name == 'BU' or \
+                       x.product_tmpl_id.categ_id.name == 'Laminating 20micr' or \
+                       x.product_tmpl_id.categ_id.name == 'Pita' or \
+                       x.product_tmpl_id.categ_id.name == 'Hot Foil':
+
                     x.product_uom_qty = x.product_uom_qty + self.x_confirm_waste
-                    # To Consume untuk report
+                    # To Consume untuk (REPORT)
                     product_uom_qty_temp = x.product_uom_qty
                     self.x_product_uom_qty = product_uom_qty_temp
 
@@ -62,15 +69,36 @@ class config_waste(models.Model):
                     # self.x_uom_qty = self.x_uom_qty + self.x_confirm_waste
 
 
-          # Get qty product to consume for report lenght OK
-          @api.onchange('x_confirm_waste')
-          def get_to_consume(self):
-               for o in self.move_raw_ids:
-                    categ = o.product_tmpl_id.categ_id.name
-                    if categ == "BU":
-                         product_uom_qty_temp = o.product_uom_qty
+     # Untuk simpan BU To consume pada move_raw_ids (REPORT) MINIMAL
+     @api.model
+     def get_min_to_consume(self):
+          for o in self.move_raw_ids:
+               category = o.product_tmpl_id.categ_id.name
+               if category == 'Label' or \
+                       category == 'BU' or \
+                       category == 'Laminating 20micr' or \
+                       category == 'Pita' or \
+                       category == 'Hot Foil':
+                    product_uom_qty_temp = o.product_uom_qty
+                    product_uom_qty_first = product_uom_qty_temp - self.x_confirm_waste
+                    # Simpan dalam variable baru
+                    self.product_uom_qty_first = product_uom_qty_first
 
+
+     # Untuk simpan BU To consume pada move_raw_ids (REPORT) MAXIMAL
+     @api.one
+     def get_max_to_consume(self):
+          for o in self.move_raw_ids:
+               category = o.product_tmpl_id.categ_id.name
+               if category == 'Label' or \
+                       category == 'BU' or \
+                       category == 'Laminating 20micr' or \
+                       category == 'Pita' or \
+                       category == 'Hot Foil':
+                    product_uom_qty_temp = o.product_uom_qty
+                    # Simpan dalam variable baru
                     self.x_product_uom_qty = product_uom_qty_temp
+
 
 
 class master_config_waste(models.Model):

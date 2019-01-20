@@ -118,7 +118,7 @@
                                         <tr>
                                             <td style="padding-right: 35px; padding-bottom:8px;"><b>No SJK</b></td>
                                             <td style="padding-right: 10px">:</td>
-                                            <td><p><span t-field="o.x_no_sjk"></span></p></td>
+                                            <td><p><span t-field="o.x_stock_id"></span></p></td>
                                         </tr>
                                         <tr>
                                             <td style="padding-right: 35px; padding-bottom:8px;"><b>Jumlah</b></td>
@@ -209,7 +209,8 @@
                                                     <br></br>
                                                     <br></br>
                                                     <br></br>
-                                                    Quality Assurance
+                                                    <b><span t-field="o.create_uid"></span></b> <br/>
+                                                    <span>Quality Assurance</span>
                                                 </div>
                                             </div>
                                         </table>
@@ -241,12 +242,13 @@
                                     <div class="row">
                                         <div class="col-xs-8 col-xs-offset-2">
                                             <table style="border: 1px solid black; width: 100%;">
+                                                <h3 class="text-center"><u>LAMPIRAN</u></h3>
+                                                <h4>Lot Number</h4>
                                                 <thead>
-                                                    <h3 class="text-center"><u>LAMPIRAN</u></h3>
-                                                    <p class="text-center"><b>No : <span t-field="o.name"></span></b></p>
-                                                    <h4>Lot Number</h4>
                                                     <tr>
-                                                        <th class="text-center" style="border: 1px solid black; padding: 4px;">Lot / Serial Number</th>
+                                                        <th class="text-center" style="border: 1px solid black; padding: 4px;">
+                                                            <p class="text-center"><b>Lot / Serial Number <span t-field="o.name"></span></b></p>
+                                                        </th>
                                                         <th class="text-center" style="border: 1px solid black; padding: 4px;">Quantity</th>
                                                     </tr>
                                                 </thead>

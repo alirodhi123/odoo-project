@@ -12,25 +12,60 @@
             menu="True"
         />
 
+        <record id="paperformat_kuitansi" model="report.paperformat">
+            <field name="name">European A4 low margin</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">4</field>
+            <field name="margin_bottom">4</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field> <!-- Jika ingin header muncul ubah nilai - 0 -->
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="lpj_accounting.report_kuitansi" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="lpj_accounting.paperformat_kuitansi" />
+        </record>
+
         <template id="report_document_kuitansi">
             <t t-name="lpj_accounting.report_document_kuitansi">
-                <t t-call="report.external_layout">
+                <t t-call="report.html_container">
                     <t t-foreach="docs" t-as="o">
                         <div class="page">
+                            <!-- Untuk logo laprint -->
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <img t-if="res_company.logo" t-att-src="'data:image/png;base64,%s' %res_company.logo" style="width: 160%"/>
+                                </div>
+                            </div>
+                            <br></br>
+
+                            <!-- Untuk garis horizontal-->
+                            <div class="row zero_min_height">
+                                <div class="col-xs-12">
+                                    <div style="border-bottom: 1px solid black;"/>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <h2 class="text-center" style="margin-top: 155px;" t-if="o.name"><span t-field="o.name"></span></h2>
-                                    <h3 class="text-center" style="margin-top: 80px;">Kwitansi Jual</h3>
+                                    <h3 class="text-center" style="margin-top: 5px;">Kwitansi Jual</h3>
                                     <b><p class="text-center" t-if="o.name"><span t-field="o.name"></span></p></b>
                                 </div>
                             </div>
 
-                            <div class="row" style="margin-top:15px">
+                            <div class="row">
                                 <div class="col-xs-6">
                                    <strong>Diterima dari:</strong>
 
                                     <!-- Memanggil object res.partner melalui field customer -->
-                                   <div><p t-field="o.customer"></p></div>
+                                    <div name="invoice_address">
+                                        <address t-field="o.customer" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: True}"/>
+                                    </div>
                                 </div>
 
                                 <div class="col-xs-6">
@@ -42,113 +77,104 @@
                                         </tr>
                                         <tr>
                                             <td style="padding-right: 35px; padding-bottom:8px;"><b>Untuk Pembayaran</b></td>
-                                            <td style="padding-right: 10px">:</td>
-                                            <td><p>0100-004-187764626</p></td>
+                                            <td>:</td>
+                                            <td style="padding-right: 0">
+                                                <ul t-foreach="o.kuitansi_line_ids" t-as="row" style="list-style-type: none; padding: 0; margin: 0; list-style-position: outside;">
+                                                    <li>
+                                                        <span t-field="row.x_no_faktur" style="padding-right: 2px;"></span><span>(</span><span t-field="row.date_invoice" t-field-options='{"format": "y/MM/d"}'></span><span>)</span>
+                                                    </li>
+                                                </ul>
+                                            </td>
                                         </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12" style="margin-top: -15px">
+                                    <table>
                                         <tr>
-                                            <td style="padding-right: 35px; padding-bottom:8px;"><b>SJ Keluar</b></td>
-                                            <td style="padding-right: 10px">:</td>
-                                            <td><p t-field="o.x_no_sjk"></p></td>
+                                            <td style="padding-right: 10px;"><b>SJ Keluar</b></td>
+                                            <td style="padding-right: 2px;">:</td>
+                                            <t t-foreach="o.kuitansi_line_ids" t-as="row">
+                                                <td style="padding-right: 2px;">
+                                                    <ul style="list-style-type: none; margin: 2px; padding: 2px;">
+                                                        <li style="display: inline;">
+                                                            <span t-field="row.x_no_sjk"></span> <span>(</span><span t-field="row.date_sjk" t-field-options='{"format": "y/MM/d"}'></span><span>)</span>
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                            </t>
                                         </tr>
                                     </table>
                                 </div>
                             </div>
 
                             <!-- Row table -->
-                            <div class="row" style="margin-top:30px;">
+                            <div class="row">
                                 <div class="col-xs-12">
-                                    <h4>Detail Harga</h4>
-                                    <table class="table table-condensed">
+                                    <table style="border: 1px solid black; width: 100%;">
                                         <thead>
                                             <tr>
-                                                <th>No Invoice</th>
-                                                <th class="text-right">Harga</th>
-                                                <th class="text-right">PPN</th>
-                                                <th class="text-right">Jumlah</th>
+                                                <th class="text-center" style="border: 1px solid black; padding: 5px;">Keterangan</th>
+                                                <th class="text-center" style="border: 1px solid black; padding: 5px;">Jumlah</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr t-foreach="o.kuitansi_line_ids" t-as="row">
-                                                <td><p t-field="row.x_invoice"></p></td>
-                                                <td class="text-right"><p t-field="row.x_amount_untaxed"></p></td>
-                                                <td class="text-right"><p t-field="row.x_taxes"></p></td>
-                                                <td class="text-right"><p t-field="row.x_amount_total"></p></td>
+                                            <tr>
+                                                <td style="border: 1px solid black; padding: 2px;">Harga Barang</td>
+                                                <td class="text-right" style="border: 1px solid black; padding: 2px;"><span t-field="o.x_untaxed_amount_foot" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border: 1px solid black; padding: 2px;">PPN</td>
+                                                <td class="text-right" style="border: 1px solid black; padding: 2px;"><span t-field="o.x_amount_tax_foot" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border: 1px solid black; padding: 2px;"><b>Total</b></td>
+                                                <td class="text-right" style="border: 1px solid black; padding: 2px;"><span t-field="o.x_amount_total_foot" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"></span></td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
 
-                            <!-- Row deskripsi total -->
-                            <div class="row">
-                                <div class="col-xs-4 pull-right">
-                                    <table class="table table-condensed">
-                                        <tr class="border-black">
-                                            <td><strong>Sub Total</strong></td>
-                                            <td class="text-right">
-                                                <span t-field="o.x_untaxed_amount_foot" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>PPN (10%)</td>
-                                            <td class="text-right">
-                                                <span t-field="o.x_amount_tax_foot" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
-                                            </td>
-                                        </tr>
-
-                                        <tr class="border-black">
-                                            <td><strong>Total</strong></td>
-                                            <td class="text-right">
-                                                <span t-field="o.x_amount_total_foot" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-                            <br/><br/>
-
                             <!-- Row alamat transfer dan ttd -->
                             <div class="row">
-                                <div class="col-xs-6">
+                                <div class="col-xs-6" style="margin-top: 8px">
                                     <strong style="padding-bottom: 5px">Alamat Transfer:</strong>
-                                    <table>
-                                        <tr>
-                                            <td style="padding-right: 35px; padding-bottom:5px; padding-top: 5px;"><b>Bank</b></td>
-                                            <td style="padding-right: 10px">:</td>
-                                            <td><p>Bank BCA</p></td>
-                                        </tr>
-                                        <tr>
-                                            <td style="padding-right: 35px; padding-bottom:5px;"><b>A/C</b></td>
-                                            <td style="padding-right: 10px">:</td>
-                                            <td><p>788.093.2688</p></td>
-                                        </tr>
-                                        <tr>
-                                            <td style="padding-right: 35px; padding-bottom:5px;"><b>A.N</b></td>
-                                            <td style="padding-right: 10px">:</td>
-                                            <td><p>PT LAPRINT JAYA</p></td>
-                                        </tr>
-                                    </table>
+                                    <br/>
 
-                                  <br/><br/>
+                                    <span style="padding-right: 35px; padding-top: 3px;"><b>Bank</b></span>
+                                    <span style="padding-right: 10px">:</span>
+                                    <span>BCA Cabang GALAXY</span><br/>
+
+                                    <span style="padding-right: 47.5px;"><b>A/C</b></span>
+                                    <span style="padding-right: 10px;">:</span>
+                                    <span>788.093.2688</span><br/>
+
+                                    <span style="padding-right: 47.5px;"><b>A.N</b></span>
+                                    <span style="padding-right: 10px;">:</span>
+                                    <span>PT LAPRINT JAYA</span>
+
+                                    <br/><br/>
 
                                   <p><i>NB : Pembayaran dengan CHEQUE dicantumkan <br/> a.n PT LAPRINT JAYA <br/>
                                      Kwitansi ini baru berlaku setelah CHEQUE yang diterima cair</i>
                                   </p>
                                 </div>
 
-                                <div class="col-xs-4 col-xs-offset-2">
+                                <div class="col-xs-4 col-xs-offset-2 text-center" style="margin-top: 8px">
                                     <table>
                                         <tr>
-                                           <td class="text-center" style="padding-bottom:100px"><p>Sidoarjo, 10 September 2018</p></td>
+                                           <td class="text-center" style="padding-bottom:100px">Sidoarjo, <span t-field="o.tgl_invoice" t-field-options='{"format": "d MMMM y"}'></span></td>
                                         </tr>
                                         <tr>
-                                            <td class="text-center"><p><b>Yanto Sutjiono</b></p></td>
+                                            <td class="text-center" style="padding-top: 25px"><p>...........................</p></td>
                                         </tr>
                                     </table>
                                 </div>
                             </div>
-                        </div>
+                        </div> <!-- Tutup page -->
                     </t>
                 </t>
             </t>

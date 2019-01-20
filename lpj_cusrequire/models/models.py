@@ -16,9 +16,9 @@ class prod_requirement(models.Model):
 
     color = fields.Integer('Warna')
     state = fields.Selection(
-        [('1', 'Marketing'), ('2', 'PDE (Tech. Spec)'), ('3', 'Approval Cus (Drawing)'),
-         ('4', 'Digital Proof'),
-         ('5', 'Trial Product'), ('6', 'Approval Trial'), ('7', 'Finalize TDS'), ('8', 'Done'),
+        [('1', 'Marketing'), ('2', 'Drawing'), ('3', 'Approval Cus (Drawing)'), ('4', 'PDE (Tech. Spec) '),
+         ('5', 'Digital Proof'),
+         ('6', 'Trial Product'), ('7', 'Approval Trial'), ('8', 'Finalize TDS'), ('9', 'Done'),
          ], default='1', track_visibility='onchange', string="Status Product")
 
     x_product = fields.Many2one('product.product', string='Product Name', domain=[('sale_ok', '=', True)])
@@ -26,6 +26,8 @@ class prod_requirement(models.Model):
     x_sale_order_line_ids = fields.One2many('sale.order.line', related='x_product.x_product_sol', readonly=True)
     x_cusreq = fields.Many2one(string = 'name last SQ', related = 'x_sale_order_line_ids.x_customer_requirement')
 
+    # x_drawing_sq = fields.Binary(string='Drawing SQ')
+    # x_dwg_sq = fields.Many2one('x.drawing', string = "Drawing SQ")
     # x_harga_repeat = fields.Integer(compute = )
     x_no_so = fields.Char(string='No. SO')
     x_harga_repeat = fields.Float(readonly=True, string='Harga Repeat')
@@ -95,24 +97,36 @@ class prod_requirement(models.Model):
             self.compute_field = False
 
     is_mkt = fields.Boolean(string="check mkt", compute="is_mkt_act")
+    is_pde_check = fields.Boolean(string="check pde", compute='is_pde')
 
     @api.one
     def is_mkt_act(self):
         res_user = self.env['res.users'].search([('id', '=', self._uid)])
         if res_user.has_group('sales_team.group_sale_salesman'):
             self.is_mkt = True
+
         else:
             self.is_mkt = False
+
+    # State untuk PDE button (Confirm dan Reset To Previous)
+    @api.one
+    def is_pde(self):
+        state = int(self.state)
+        if state == 7:
+            self.is_pde_check = True
+        elif state == 3:
+            self.is_pde_check = True
+        elif state == 1:
+            self.is_pde_check = True
+
 
     x_price_low = fields.Float('Price Low', digits=dp.get_precision('Prroduct Price'))
     x_price_high = fields.Float('Price High', readonly=True, digits=dp.get_precision('Prroduct Price'))
     x_hpp = fields.Float('HPP', readonly=True, digits=dp.get_precision('Prroduct Price'))
 
-    x_length_m = fields.Float(readonly=True, store=True,
-                              compute="check_konversi", states={'1': [('readonly', False)]},
+    x_length_m = fields.Float(readonly=True, store=True,states={'1': [('readonly', False)]},
                               digits=dp.get_precision('Payment Terms'))
-    x_width_m = fields.Float(readonly=True, store=True,
-                             compute="check_konversi", states={'1': [('readonly', False)]},
+    x_width_m = fields.Float(readonly=True, store=True, states={'1': [('readonly', False)]},
                              digits=dp.get_precision('Payment Terms'))
 
     # DataForm
@@ -149,7 +163,7 @@ class prod_requirement(models.Model):
     x_roll_perbox_ribbon_prd = fields.Integer(related="x_product.x_roll_perbox_ribbon")
     x_material_core_prd = fields.Selection(related="x_product.x_material_core")
 
-    @api.depends("x_length", "x_width", "state")
+    @api.onchange("x_length", "x_width")
     def check_konversi(self):
         if self.x_length > 0:
             self.x_length_m = self.x_length / 1000
@@ -162,9 +176,9 @@ class prod_requirement(models.Model):
             self.x_repeat_order = True
 
     @api.onchange("x_status_cr")
-    def check_repeat(self):
+    def check_repeat_a(self):
         if self.x_status_cr == 'reject':
-            self.state = '8'
+            self.state = '9'
 
     @api.multi
     def action_next(self):
@@ -198,7 +212,7 @@ class prod_requirement(models.Model):
     def write(self, vals):
 
         if self.x_repeat_order == True:
-            vals['state'] = '8'
+            vals['state'] = '9'
 
         insert_obj = self.env['x.approvalstage'].create({'name': self.name, 'description': self.state})
 
@@ -208,7 +222,7 @@ class prod_requirement(models.Model):
     def create(self, vals):
 
         if vals['x_repeat_order'] == True:
-            vals['state'] = '8'
+            vals['state'] = '9'
         else:
             vals['state'] = '1'
 
@@ -246,7 +260,8 @@ class prod_requirement(models.Model):
     @api.multi
     def act_reject(self):
         self.x_status_cr = 'reject'
-        self.state = '8'
+        self.state = '9'
+
 
 class approval_stage(models.Model):
     _name = 'x.approvalstage'

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.module.category" id="product_dev">
+        <field name="name">Product Development</field>
+        <field name="description">User access level for this module</field>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="group_pde_user_read_only" model="res.groups">
+		<field name="name">User: Read Only</field>
+	</record>
+
+	<record id="group_pde_user" model="res.groups">
+		<field name="name">User</field>
+        <field name="category_id" ref="lpj_cusrequire.product_dev"/>
+        <field name="implied_ids" eval="[(4, ref('lpj_cusrequire.group_pde_user_read_only'))]"/>
+	</record>
+
+    <record id="group_pde_supervisor" model="res.groups">
+		<field name="name">Supervisor</field>
+        <field name="category_id" ref="lpj_cusrequire.product_dev"/>
+        <field name="implied_ids" eval="[(4, ref('lpj_cusrequire.group_pde_user'))]"/>
+	</record>
+
+	<record id="group_pde_manager" model="res.groups">
+		<field name="name">Manager</field>
+        <field name="category_id" ref="lpj_cusrequire.product_dev"/>
+        <field name="implied_ids" eval="[(4, ref('lpj_cusrequire.group_pde_supervisor'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
+	</record>
+
+
+
+
+
+
+
+</odoo>

@@ -16,8 +16,9 @@ class sale_custom(models.Model):
      x_qty_meter = fields.Float(string = 'Meter')
      x_jml_prod = fields.Integer(string = 'jumlah Product')
      x_lot_operation = fields.One2many('x.lot.operation', 'x_routing_process', string = 'Lot Operation')
-
-
+     x_time_idsduration = fields.Float(string = 'duration total')
+     x_ids_duration = fields.Float(related = 'time_ids.duration')
+     x_total_duration = fields.Float(string = 'Total Durasi')
 
 
      @api.onchange('x_qty_meter')
@@ -28,6 +29,18 @@ class sale_custom(models.Model):
                if x.x_type == 'arround':
                     self.x_lebaran_bahan = x.x_jumlah / 1000
                self.qty_producing = int((self.x_qty_meter * self.x_jml_prod) / self.x_lebaran_bahan)
+
+     @api.onchange ('x_ids_duration')
+     def duration_real(self):
+          self.duration = self.duration + self.x_ids_duration
+
+     # @api.one
+     # def summary_time(self):
+     #      self.x_total_duration = 0
+     #      for a in self.time_ids:
+     #           self.x_total_duration = self.x_total_duration + a.duration
+
+
 
 class lot_operation(models.Model):
      _name = 'x.lot.operation'
@@ -41,8 +54,13 @@ class lot_operation(models.Model):
 class mrp_inherit(models.Model):
     _inherit = 'mrp.workcenter.productivity'
 
+    # user_id = fields.Many2one('hr.employee', string='User 1')
     x_wo_rp = fields.Many2one('mrp.workorder', string='Routing Proses')
-    x_wo_user = fields.Many2one('res.partner', string='Operator')
+    x_kd_mesin = fields.Char(string = 'Kode Mesin')
+    x_user = fields.Many2one('hr.employee', string='User 1')
+    x_wo_user2 = fields.Many2one('hr.employee', string='User 2')
     x_wo_lot = fields.Many2many('stock.production.lot', string='Nomor Lot')
+    x_keterangan = fields.Text(string="Keterangan")
+    x_qty = fields.Float(string="Qty")
 
 

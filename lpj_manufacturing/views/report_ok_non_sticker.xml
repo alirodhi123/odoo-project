@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <data>
+
+        <report
+            id="report_ok_non_sticker"
+            model="mrp.production"
+            string="OK Non Sticker"
+            report_type="qweb-pdf"
+            name="lpj_manufacturing.report_mrporder_new_nonsticker"
+            file="lpj_manufacturing.report_mrporder_new_nonsticker"
+            menu="True"
+        />
+
+        <record id="paperformat_ok_non_sticker" model="report.paperformat">
+            <field name="name">European A4 low margin</field>
+            <field name="default" eval="True" />
+            <field name="format">A5</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">3</field>
+            <field name="margin_bottom">4</field>
+            <field name="margin_left">4</field>
+            <field name="margin_right">4</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field> <!-- Jika ingin header muncul ubah nilai - 0 -->
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="lpj_manufacturing.report_ok_non_sticker" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="lpj_manufacturing.paperformat_ok_non_sticker" />
+        </record>
+
+        <template id="report_mrporder_new_nonsticker">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page" style="font-family: Calibri;">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <h3 class="text-center">ORDER KERJA</h3>
+                            </div>
+                            <div class="col-xs-6">
+                                <h4 class="text-center"><span t-field="o.name"/></h4>
+                            </div>
+                        </div>
+
+                        <div class="row zero_min_height">
+                            <div class="col-xs-12">
+                                <div style="border-bottom: 1px solid black;"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6" style="margin-top:10px">
+                                <strong>Detail Produksi</strong>
+                                <table style="border: 1px solid black; width: 100%;">
+                                    <tr>
+                                        <td class="text-center" style="border: 1px solid black; padding: 1px; width: 60%;"><strong>Product</strong></td>
+                                        <td class="text-center" style="border: 1px solid black; padding: 1px; width: 20%;"><strong>Scheduled Date</strong></td>
+                                        <td class="text-center" style="border: 1px solid black; padding: 1px; width: 20%;"><strong>Quantity</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; padding: 1px; vertical-align: middle; font-size: 15px; width: 60%;"><span t-field="o.product_id"></span></td>
+                                        <td style="border: 1px solid black; padding: 1px; vertical-align: middle; font-size: 15px; width: 20%;">
+                                            <span t-field="o.date_planned_start" t-field-options='{"format": "d/MM/y"}'/><span t-if="o.date_planned_finished"> - <br/><span t-field="o.date_planned_finished" t-field-options='{"format": "d/MM/y"}'/></span>
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; padding: 1px; vertical-align: middle; font-size: 16.5px; width: 20%;">
+                                            <span t-field="o.product_qty"/>
+                                            <span t-field="o.product_uom_id.name" groups="product.group_uom"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <!-- Work Order-->
+                            <div class="col-xs-6" style="margin-top:10px">
+                                <strong>Work Orders</strong>
+                                <div t-if="o.workorder_ids">
+                                    <table style="border: 1px solid black; width: 100%;">
+                                        <tr>
+                                            <td class="text-center" style="border: 1px solid black; padding: 1px;"><strong>Routing Process</strong></td>
+                                            <td class="text-center" style="border: 1px solid black; padding: 1px;"><strong>WorkCenter</strong></td>
+                                            <td class="text-center" style="border: 1px solid black; padding: 1px;"><strong>Duration(mnt)</strong></td>
+                                        </tr>
+                                        <tr t-foreach="o.workorder_ids" t-as="line2">
+                                            <td class="text-center" style="border: 1px solid black; padding: 1px; font-size: 15.5px;"><span t-field="line2.name"/></td>
+                                            <td class="text-center" style="border: 1px solid black; padding: 1px; font-size: 15.5px;"><span t-field="line2.workcenter_id.name"/></td>
+                                            <td class="text-center" style="border: 1px solid black; padding: 1px; font-size: 16.5px;"><span t-field="line2.duration_expected"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- BOM -->
+                        <h3 t-if="o.move_raw_ids">Bill Of Material</h3>
+
+                        <table class="table table-condensed" t-if="o.move_raw_ids">
+                            <thead>
+                                <tr>
+                                    <th><strong>Product</strong></th>
+                                    <th class="text-right"><strong>Quantity</strong></th>
+                                    <th class="text-center" groups="stock.group_stock_multi_locations">
+                                        <strong>Source Location</strong>
+                                    </th>
+                                    <th class="text-center" groups="stock.group_stock_multi_locations">
+                                        <strong>Destination Location</strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-if="o.move_raw_ids">
+                                    <tr>
+                                        <td colspan="4"><strong>Products to Consume</strong></td>
+                                    </tr>
+                                    <tr t-foreach="o.move_raw_ids" t-as="line">
+                                        <td>
+                                            <span style="font-size: 15.5px;" t-field="line.product_id"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span style="font-size: 15.5px;" t-field="line.product_uom_qty"/>
+                                            <span style="font-size: 15.5px;" t-field="line.product_uom.name" groups="product.group_uom"/>
+                                        </td>
+                                        <td class="text-center" groups="stock.group_stock_multi_locations">
+                                            <span style="font-size: 15.5px;" t-field="line.location_id.name"/>
+                                        </td>
+                                        <td class="text-center" groups="stock.group_stock_multi_locations">
+                                            <span style="font-size: 15.5px;" t-field="line.location_dest_id.name"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <div t-if="o.x_keterangan" class="row">
+                            <div class="col-xs-12">
+                                <div t-if="o.x_keterangan">
+                                    <h5><b>KETERANGAN</b></h5>
+                                    <span style="font-size: 15.5px;" t-field="o.x_keterangan"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- Tutup page -->
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

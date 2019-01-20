@@ -13,8 +13,6 @@ class minmax_mo(models.Model):
      _inherit = 'mrp.production'
 
      x_type_mo = fields.Selection([('stc', 'Sticker'), ('ink', 'Tinta Campuran'), ('plate', 'Plate'),('diecut', 'Diecut')], string='Type MO')
-     x_quantity_max = fields.Float(string = 'Quantity Maksimal')
-
      order = fields.Many2one('sale.order', string = 'Kode SO')
      orderline = fields.Many2one('sale.order.line', string = 'Barang SO')
      x_flag = fields.Boolean(related = 'orderline.x_flag_mo')
@@ -37,7 +35,7 @@ class minmax_mo(models.Model):
      # order_line = fields.One2many('sale.order.line', 'x_sol', string='Order Lines', related = 'cusrequire.x_so_line')
      # x_toleransi_pengiriman = fields.Integer(related = 'order_line.x_toleransi', readonly = True, string = 'Toleransi')
 
-     x_toleransi = fields.Float(string = 'Toleransi', related ='orderline.x_toleransi')
+     x_toleransi = fields.Float(string = 'Toleransi SO', related ='orderline.x_toleransi')
 
      jml_lot = fields.Char(string='Jumlah Lot')
      x_kode_awal = fields.Char(string='Kode Awal')
@@ -45,37 +43,30 @@ class minmax_mo(models.Model):
      jml_print = fields.Char(string='Jumlah Print', default=2)
      x_type_print = fields.Selection([('all', 'All'), ('specific', 'Specific')], string='Type Print out', default = 'all')
      x_keterangan = fields.Text(string="Keterangan")
-     x_qty_so = fields.Float(string="Quantity SO")
-     x_qty_so_toleransi = fields.Float(string="Quantity SO Toleransi", compute='get_qty_so_toleransi')
-     x_width = fields.Float(string="Width")
+     x_width = fields.Float(string="Width", compute='get_value')
+     quantity_so = fields.Float(string="Quantity SO", compute='get_value_qty_so')
 
-     @api.onchange('orderline', 'x_qty_so', 'product_qty', 'x_toleransi')
-     def set_value(self):
-          product_qty = self.product_qty
-          qty_so = self.x_qty_so
-          toleransi = self.x_toleransi
+     # Pcs to meter khusus untuk roll
+     x_pcs_units = fields.Float(string="Roll/sheet/fold", compute='get_value')
+     x_jarak_druk = fields.Float(string="Jarak Druk", compute='get_value')
+     pcs_to_meter = fields.Float(string="Hasil konversi", compute='convert_pcs_to_meter')
 
-          if self.x_type_mo == 'stc':
-               self.product_id = self.x_kode_product
-
-          self.x_quantity_max = ((self.x_toleransi / 100) * self.product_qty) + self.product_qty
-
-          self.x_qty_so = product_qty
-
-
-     @api.depends('x_toleransi', 'x_qty_so')
-     def get_qty_so_toleransi(self):
-          qty_so = self.x_qty_so
-          toleransi = self.x_toleransi
-
-          val_toleransi = ((toleransi / 100) * qty_so) + qty_so
-          self.x_qty_so_toleransi = val_toleransi
+     # Perhitungan QTY MAX
+     x_quantity_max = fields.Integer(string='Quantity Maksimal', compute='compute_max_qty')
+     x_isi_druk = fields.Integer(compute='get_layout_product')
+     x_jarak_druk_product = fields.Float(compute='get_layout_product')
 
      @api.model
      def create(self, vals):
           vals['x_flag'] = True
           result = super(minmax_mo, self).create(vals)
           return result
+
+     # Onchange product
+     @api.onchange('orderline')
+     def set_value(self):
+          if self.x_type_mo == 'stc':
+               self.product_id = self.x_kode_product
 
      # @api.multi
      # def write(self, vals):
@@ -93,18 +84,89 @@ class minmax_mo(models.Model):
                # 'url': 'http://192.168.1.8:8081/Lot?id=1&jumlah=' + self.jml_lot +'&name='+ self.name
           }
 
-     # Get one2many x_layout_product_ids
-     @api.onchange('product_id')
+     # Get one2many x_layout_product_ids (REPORT)
+     @api.one
      def get_value(self):
 
           id = self.product_id.id
           accros = self.env['product.product'].search([('id', '=', id)])
+          type_packing = accros.x_type_packing
+
+          # Cek apakah type packing = Roll
+          if type_packing == "roll":
+               nilai = accros.x_pcs_units
+               self.x_pcs_units = nilai
+
           for o in accros.x_layout_product_ids:
                type = o.x_type
                variable = o.x_jumlah
+               jarak_druk = o.x_druk
 
                if type == "across":
                     self.x_width = variable
+
+               # get value arround (REPORT)
+               elif type == "arround":
+                    self.x_jarak_druk = jarak_druk  # Satuan mm
+
+
+     # Get one2many order_line qty SO (REPORT)
+     @api.depends('product_id', 'x_toleransi')
+     def get_value_qty_so(self):
+
+          toleransi_so = self.x_toleransi
+          id = self.order.id
+          qty_so = self.env['sale.order'].search([('id', '=', id)])
+          for o in qty_so.order_line:
+               if self.product_id == o.product_id:
+                    # Get qty SO REAL
+                    qty = o.product_uom_qty
+                    # Menghitung TOLERANSI + QTY SO REAL
+                    valToleransi = ((toleransi_so / 100) * qty) # (5/100) : 20000 = 1000
+                    valQtyFix = valToleransi + qty # Hasil toleransi + qty SO REAL (1000 + 20000)
+                    # Put in new variable
+                    self.quantity_so = valQtyFix
+
+     # Convert pcs to meter untuk REPORT OK
+     @api.depends('x_jarak_druk', 'x_pcs_units')
+     def convert_pcs_to_meter(self):
+          hasil = self.x_pcs_units * self.x_jarak_druk #Masih dalam mm
+          self.pcs_to_meter = hasil / 1000 # Convert hasil (mm) ke meter
+
+
+     # MAX QTY MO
+     # Ambil jarak dan isi druk untuk perhitungan QTY MAX
+     @api.one
+     def get_layout_product(self):
+          id = self.product_id.id
+          product = self.env['product.product'].search([('id', '=', id)])
+          for o in product.x_layout_product_ids:
+               type = o.x_type
+               jarak_druk = o.x_druk
+               isi_druk = o.x_number
+               # Jika type product accross maka ambil isi druk
+               if type == "across":
+                    self.x_isi_druk = isi_druk # Get isi druk dari accross
+               else:
+                    self.x_jarak_druk_product = jarak_druk # Get jarak druk dari arround
+
+
+     # PERHITUNGAN QTY MAX
+     # Qty max berdasarkan stock yang ada di gudang gudang
+     # REPORT
+     @api.depends('quantity_so', 'x_toleransi', 'product_qty', 'x_product_uom_qty', 'x_isi_druk', 'x_jarak_druk_product')
+     def compute_max_qty(self):
+          qty_so = self.quantity_so
+          toleransi_so = self.x_toleransi
+          qty_to_produce = self.product_qty
+          isi_druk = self.x_isi_druk
+          jarak_druk = self.x_jarak_druk_product / 10 #konversi mm ke cm
+          panjang_bahan_max = self.x_product_uom_qty
+
+          if jarak_druk != 0:
+               qty_max_temp = (panjang_bahan_max * isi_druk) / jarak_druk
+               qty_max = qty_max_temp * 100
+               self.x_quantity_max = qty_max
 
 
 class lot_barang(models.Model):

@@ -23,11 +23,13 @@ class QualityMeasure(models.Model):
     company_id = fields.Many2one('res.company', 'Company',
                                  default=lambda self: self.env.user.company_id.id, index=1)
 
+
     @api.onchange('type')
     def onchange_type(self):
         if self.type == 'quality':
             self.quantity_min = 0.0
             self.quantity_max = 0.0
+
 
     # @api.multi
     # def create_(self):

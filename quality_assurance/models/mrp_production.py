@@ -23,13 +23,32 @@ class mrp(models.Model):
                     'picking_id_mrp': self.id,
                     'origin': self.name,
                 })
+            else:
+                self.generate_quality_measure()
 
-            # else:
-                # raise exceptions.ValidationError("Master quality measure belum ada untuk product ini")
-                # quality_measure.create({
-                #     'name': self.env['ir.sequence'].next_by_code('quality.measure') or _('New'),
-                #     'product_id': move.product_id.id,
-                # })
+    # Fungsi dijalankan ketika master quality measure tidak ada
+    @api.multi
+    def generate_quality_measure(self):
+        # Get sequence untuk quality measure
+        prefix = "QC-"
+        product_product = self.env['product.product']
+        product = product_product.search([('id', '=', self.product_id.id)])
+        default_code = product.default_code # Get internal code di product
+
+        # Create quality measure jika tidak ada pada master quality measure
+        quality_measure = self.env['quality.measure']
+
+        for move in self.move_finished_ids:
+            measures = quality_measure.search([('product_id', '=', move.product_id.id), ('trigger_time', 'in', self.picking_type_id.id)])
+            if not measures:
+                quality_measure.create({
+                    'name': prefix + default_code,
+                    'product_id': move.product_id.id,
+                    'type': 'quality',
+                    'trigger_time': [[6, 0, [6]]] #create IDS (6, 0, [ID of one2many]) for many2many
+                })
+                # Setelah create quality measure, diarahkan kembali ke method quality_alert dan create quality alert
+                self.generate_quality_alert()
 
 
     @api.multi
@@ -73,5 +92,6 @@ class mrp(models.Model):
 
     alert_count = fields.Integer(compute='_compute_alert', string='Quality Alerts', default=0)
     alert_ids = fields.Many2many('quality.alert', compute='_compute_alert', string='Quality Alerts', copy=False)
+
 
 

@@ -13,16 +13,23 @@
                     <field name="x_lebaran_bahan" invisible = '1'/>
                     <field name="x_jml_prod" invisible = '1'/>
                 </field>
+                 <field name = "date_start" position = "after">
+                     <field name = "x_ids_duration" widget="float_time" invisible = "1"/>
+                 </field>
                 <field name="time_ids" position = "replace">
                     <field name="time_ids" nolabel="1">
                         <tree editable="bottom">
                             <field name="date_start"/>
                             <field name="date_end"/>
                             <field name="duration" widget="float_time" sum="Total duration"/>
-                            <field name="user_id"/>
                             <field name="loss_id" string="Efficiency"/>
-                            <field name="x_wo_user"></field>
+                            <field name="x_kd_mesin"/>
+                            <field name="user_id" string="User 1" invisible="1"/>
+                            <field name="x_user"></field>
+                            <field name="x_wo_user2"></field>
                             <field name="x_wo_lot" widget="many2many_tags"></field>
+                            <field name="x_qty"></field>
+                            <field name="x_keterangan"></field>
                         </tree>
                         <form>
                             <group>

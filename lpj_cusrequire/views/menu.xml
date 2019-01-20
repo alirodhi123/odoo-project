@@ -13,8 +13,9 @@
                   parent="sales_team.menu_sales" sequence="10"
                   action="requirement_list_action"/>
 
-        <menuitem id="monitoring_input_menu" name="Monitoring Input"
-                  parent="main_approval_odoo_menu" action="edit_product_action" sequence="11"/>
+        <!--<menuitem id="monitoring_input_menu" name="Monitoring Input"-->
+                  <!--parent="main_approval_odoo_menu" action="edit_product_action" sequence="11"/>-->
+
         <!-- <menuitem id="stage_menu" parent="approval_odoo_menu" name="Stage"
             action="stage_list_action"/> -->
 

@@ -30,6 +30,8 @@ class print_quotation(models.Model):
         result = super(print_quotation, self).create(vals)
         return result
 
+
+
 class print_quotation_line(models.Model):
     _name = 'x.print.quo.line'
     _inherit = 'mail.thread'

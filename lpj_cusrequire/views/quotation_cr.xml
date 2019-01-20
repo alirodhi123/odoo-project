@@ -13,7 +13,7 @@
                 </xpath>
                 <xpath expr="//field[@name='payment_term_id']" position="after">
                    <field name="x_internal_quotation" domain="[('x_cust','=', partner_id)]"/>
-
+                   <field name="x_sales_external"/>
                    <!--<field name="x_sq" domain="[('x_quo_parent', '=', x_internal_quotation)]"/>-->
                 </xpath>
                 <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='product_id']"

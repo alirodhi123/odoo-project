@@ -115,8 +115,12 @@
                         <!-- string="Mark as Done" -->
                         <!-- states="2.confirmed" class="oe_highlight"/> -->
                         <field name="is_mkt" invisible = "1"/>
-                        <button name="action_next" type="object" string="Confirm" class="oe_highlight" attrs="{'invisible':[('state','in',['2','4','5','7','8']),('is_mkt','=',True)]}"/>
-                        <button name="action_prev" type="object" string="Reset To Previous" attrs="{'invisible':[('state','in',['1','2','4','5','7','8']),('is_mkt','=',True)]}"/>
+                        <field name="is_pde_check" invisible="1"></field>
+                        <button name="action_next" type="object" string="Confirm" class="oe_highlight" attrs="{'invisible':['|', '|', ('is_mkt','=',True),('is_pde_check','=',True),('state', '=', '9')]}"/>
+                        <button name="action_prev" type="object" string="Reset To Previous" attrs="{'invisible':['|', ('is_mkt','=',True),('is_pde_check','=',True)]}"/>
+
+                        <button name="action_next" type="object" string="Confirm" class="oe_highlight" attrs="{'invisible':['|', '|', ('is_mkt','=',False),('is_pde_check','=',False),('state', '=', '9')]}"/>
+                        <button name="action_prev" type="object" string="Reset To Previous" attrs="{'invisible':['|', ('is_mkt','=',False),('is_pde_check','=',False)]}"/>
 
                         <field name="state" widget="statusbar"/>
                     </header>
@@ -167,9 +171,9 @@
                                         <field name="x_satuan"/>
                                         <field name="x_material_number"/>
                                         <field name="x_length"/>
-                                        <!--<field name="x_length_m"/>-->
+                                        <field name="x_length_m" invisible = "1"/>
                                         <field name="x_width"/>
-                                        <!--<field name="x_width_m"/>-->
+                                        <field name="x_width_m" invisible="1"/>
                                         <field name="x_packing_category_id"/>
                                     </group>
                                     <group string="Estimated Bom">
@@ -179,6 +183,7 @@
                                         <field name="x_varnish"/>
                                         <field name="x_special_color"/>
                                         <field name="x_ink_coverage"/>
+                                        <!--<field name="x_dwg_sq"/>-->
                                     </group>
                                 </group>
                                 <group>
@@ -322,7 +327,7 @@
             <field name="name">Customer Requirement</field>
             <field name="res_model">x.cusrequirement</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
         </record>
 
         <record model="ir.ui.view" id="stage_tree_view">

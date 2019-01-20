@@ -44,11 +44,10 @@ class stock_pickingi_ids(models.Model):
             stock_picking = o.picking_id.id
             code_po_cus = o.picking_id.origin
             code_sjk = o.picking_id.x_sj_supplier
-            tgl_sj_supp = o.picking_id.x_tgl_sj_supp
-            tgl_terima_bhn = o.picking_id.x_tgl_kedatangan_bahan
+            tgl_pemeriksaan = o.picking_id.min_date
+            tgl_kirim = o.picking_id.min_date
             product = o.product_id.name
             partner = o.picking_id.x_partner_id
-            schedule_date = o.picking_id.min_date
             jumlah_done = o.qty_done
             width = o.product_id.x_width
             lenght = o.product_id.x_length
@@ -74,12 +73,11 @@ class stock_pickingi_ids(models.Model):
 
                 'default_x_stock_id': stock_picking,
                 'default_x_no_sjk': code_sjk,
-                'default_x_tanggal_pemeriksaan': tgl_sj_supp,
+                'default_x_tanggal_pemeriksaan': tgl_pemeriksaan,
                 'default_x_po_customer': code_po_cus,
-                'default_x_tanggal_kirim': tgl_terima_bhn,
+                'default_x_tanggal_kirim': tgl_kirim,
                 'default_x_nama_barang': product,
                 'default_x_customer': partner,
-                'default_x_schedule_date': schedule_date,
                 'default_x_jumlah': jumlah_done,
                 'default_x_width': width,
                 'default_x_lenght': lenght,
@@ -108,7 +106,7 @@ class coa(models.Model):
     # x_coa_details_ids = fields.One2many('x.coa.details', 'x_coa_id')
     name = fields.Char(string="No")
     coa_line_ids = fields.One2many('x.coa.line', 'coa_id')
-    x_stock_id = fields.Many2one('stock.picking', string="ID", default = _default_id)
+    x_stock_id = fields.Many2one('stock.picking', string="No SJK", readonly=True, default = _default_id)
     stock_id = fields.Many2one('stock.pack.operation', string="Stock IDS", default = _default_pack)
     x_customer = fields.Char(string="Partner", readonly=True)
     x_tanggal_pemeriksaan = fields.Datetime(string="Tanggal Pemeriksaan", readonly=True)
@@ -120,7 +118,6 @@ class coa(models.Model):
     x_batch = fields.Char(string="No Batch")
     x_stock_picking_ids = fields.Many2one('stock.pack.operation')
     x_nama_barang = fields.Char(string="Nama Barang", readonly=True)
-    x_schedule_date = fields.Datetime(string="Scheduled Date", readonly=True)
     x_uom = fields.Char()
     x_lot = fields.Char(string="No Batch")
 

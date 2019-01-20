@@ -138,6 +138,7 @@ class sales_order(models.Model):
     # x_internal_quotation_line = fields.One2many(related = 'x_internal_quotation.x_quo_line')
     x_sq = fields.Many2one(related = 'x_internal_quotation_line.x_cusreq')
     x_is_pkp = fields.Boolean(related='partner_id.x_pkp', readonly = True)
+    x_sales_external = fields.Many2one('res.partner', string = 'Sales Eksternal')
     # x_termin = fields.Many2one(related = 'partner_id.x_res_termin')
 
 

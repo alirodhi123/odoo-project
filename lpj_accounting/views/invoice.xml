@@ -12,11 +12,72 @@
                 </field>
                 <field name="payment_term_id" position="after">
                     <field name="x_no_faktur"/>
-                    <field name="x_no_sjk" domain="[('state', '=', 'done'), ('partner_id', '=', partner_id), ('is_responsible', '=', False)]"/>
+                    <field name="x_no_sjk" domain="[('state', '=', 'done'), ('partner_id', '=', partner_id), ('is_responsible', '=', False), ('origin', '=', origin)]"/>
                     <field name="x_no_po"></field>
+                    <field name="x_tanggal_sjk" invisible="1"></field>
                 </field>
+
+                <!-- Replace button print invoice -->
+                <xpath expr="//button[@name='invoice_print']" position="replace">
+                    <button name="invoice_print_custom" string="Print Invoice" type="object" attrs="{'invisible':[('state','=','draft')]}"/>
+                </xpath>
+
+                <!-- Menghilangkan button print invoice yg asli -->
+                <xpath expr="//button[@name='invoice_print']" position="replace">
+                    <button name="invoice_print" invisible="1"/>
+                </xpath>
+
             </field>
         </record>
+
+        <record id="account_invoice_footer_view" model="ir.ui.view">
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="model">account.invoice</field>
+            <field name="arch" type="xml">
+                <field name="amount_untaxed" position="after">
+                    <field name="x_diskon"></field>
+                    <field name="x_dpp"></field>
+                </field>
+
+                <!-- Replace Tax addons dengan field custom -->
+                <field name="amount_tax" position="attributes">
+                    <attribute name="attrs">{'invisible': [('x_diskon', '!=', 0)]}</attribute>
+                </field>
+                <field name="amount_tax" position="after">
+                    <field name="x_amount_taxx" attrs="{'invisible': [('x_diskon', '=', 0)]}"></field>
+                </field>
+
+                <!-- Replace Total addons dengan field custom -->
+                <field name="amount_total" position="attributes">
+                    <attribute name="attrs">{'invisible': [('x_diskon', '!=', 0)]}</attribute>
+                </field>
+                <field name="amount_total" position="after">
+                    <field name="x_amount_total" attrs="{'invisible': [('x_diskon', '=', 0)]}"></field>
+                </field>
+
+                <!-- Replace Amount Due addons dengan field custom -->
+                <field name="residual" position="attributes">
+                    <attribute name="attrs">{'invisible': [('x_diskon', '!=', 0)]}</attribute>
+                </field>
+                <field name="residual" position="after">
+                    <field name="x_residual" class="oe_subtotal_footer_separator" attrs="{'invisible': [('x_diskon', '=', 0)]}"></field>
+                </field>
+
+            </field>
+        </record>
+
+
+         <!-- Menambahkan field ke dalam tree view account.invoice -->
+         <record model="ir.ui.view" id="invoice_tree_view">
+                <field name="name">account.invoice.tree.view</field>
+                <field name="model">account.invoice</field>
+                <field name="inherit_id" ref="account.invoice_tree"></field>
+                <field name="arch" type="xml">
+                    <field name="partner_id" position="after">
+                        <field name="x_no_faktur"></field>
+                    </field>
+                </field>
+            </record>
 
     </data>
 </odoo>

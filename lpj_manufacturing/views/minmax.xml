@@ -21,16 +21,24 @@
                     <xpath expr="//field[@name='bom_id'][not(ancestor::field)]" position="before">
                         <field name="x_toleransi" />
                         <field name="x_quantity_max"/>
-                        <field name="x_qty_so" invisible = '1'/>
-                        <field name="x_qty_so_toleransi" invisible = '1'/>
                         <field name="x_due_kirim"/>
 
                         <!--<field name = "order_line" attrs="{'invisible': True}"/>-->
                     </xpath>
                     <xpath expr="//field[@name='origin'][not(ancestor::field)]" position="before">
                         <field name="x_keterangan"></field>
+                        <field name="x_product_bu" invisible="1"></field>
+                        <field name="x_product_label" invisible="1"></field>
+                        <field name="x_product_laminating" invisible="1"></field>
+                        <field name="x_product_pita" invisible="1"></field>
+                        <field name="x_product_hot_foil" invisible="1"></field>
                         <field name="x_width" invisible="1"></field>
-                        <field name="x_product_uom_qty" invisible="1"></field>
+                        <field name="quantity_so" invisible="1"></field>
+                        <field name="x_isi_druk" invisible="1"></field>
+                        <field name="x_jarak_druk_product" invisible="1"></field>
+                        <field name="x_jarak_druk" invisible="1"></field>
+                        <field name="x_pcs_units" invisible="1"></field>
+                        <field name="pcs_to_meter" invisible="1"></field>
                     </xpath>
 
 

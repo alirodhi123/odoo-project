@@ -15,6 +15,13 @@
                     <!--<field name="x_kode_customer" placeholder="Kode Customer"/>-->
                 <!--</field>-->
 
+
+                <!--<field name='lang' position="after">-->
+                    <!--<field name="x_payment_type"/>-->
+                    <!--<field name="x_lama_termin"/>-->
+                    <!--<field name="x_termin_id"/>-->
+                <!--</field>-->
+
                 <!--<field name='lang' position="after">-->
                     <!--<field name="x_payment_type"/>-->
                     <!--<field name="x_lama_termin"/>-->
@@ -32,6 +39,12 @@
                     <!--<field name="x_lama_termin"/>-->
                     <!--<field name="x_termin_id"/>-->
                 <!--</field>-->
+
+                <field name='lang' position="after">
+                    <!--<field name="x_payment_type"/>-->
+                    <!--<field name="x_lama_termin"/>-->
+                    <!--<field name="x_termin_id"/>-->
+                </field>
 
             </field>
         </record>

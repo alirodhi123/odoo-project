@@ -126,11 +126,12 @@ class Kuitansi (models.Model):
 
     name = fields.Char(string="No", readonly=True)
     invoice_id = fields.Many2one('account.invoice', string="Invoice", required=True, default=_default_invoice)
-    customer = fields.Char(string="Customer", required = True)
+    customer = fields.Many2one('res.partner', string="Customer", related='invoice_id.partner_id', required = True)
     kuitansi_line_ids = fields.One2many('x.kuitansi.line', 'kuitansi_id', string="Kuitansi Line")
     currency_id = fields.Many2one(related="kuitansi_line_ids.currency_id")
     company_id = fields.Many2one('res.company', string='Company', change_default=True, required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env['res.company']._company_default_get('kuitansi_line_ids.x_invoice'))
     x_amount_temp = fields.Many2one(related="kuitansi_line_ids.x_invoice")
+    tgl_invoice = fields.Date(string="Invoice Date", default=datetime.today())
 
      
     # Sequences
@@ -186,216 +187,10 @@ class kuitansi_line(models.Model):
     x_amount_total = fields.Monetary(string='Amount Total', related='x_invoice.amount_total')
     currency_id = fields.Many2one('res.currency', related='x_invoice.currency_id', store=True, readonly=True)
     is_responsible = fields.Boolean(string="Kuitansi Status", default=False)
-    x_no_sjk = fields.Many2one(string="No SJK", related='x_invoice.x_no_sjk')
-
-
-class account_invoice(models.Model):
-    _inherit = 'account.invoice'
-
-    x_due_date_pembayaran = fields.Many2one('x.due.date.pembayaran')
-    kuitansi_id = fields.Many2one('x.kuitansi')
-    x_no_sjk = fields.Many2one('stock.picking', string="No. SJK")
-    x_due_date_pembayaran = fields.Date(string="Due Date Pembayaran")
-    x_tanda_terima = fields.Date(string="Tanda Terima")
-    x_no_faktur = fields.Char(string="No. Faktur")
-    x_sale_id = fields.Many2one('sale.order')
-    x_no_po = fields.Char(string="No. PO", related='x_sale_id.x_po_cust')
-    is_responsible = fields.Boolean(string="Kuitansi Status", default=False)
-
-    # Get field PO Customer in acoount.invoice object
-    # @api.onchange('partner_id')
-    # def get_value_po(self):
-    #     x_no_po = self.x_sale_id.x_po_cust
-    #     self.x_no_po = x_no_po
-
-    # Flagging untuk SJK ketika create invoice
-    @api.multi
-    def write(self, vals):
-        # Update field is responsible = True
-        res = super(account_invoice, self).write(vals)
-
-        id = self.x_no_sjk
-        sjk = self.env['stock.picking'].search([('id', '=', id.id)])
-        sjk.write({'is_responsible': True})
-
-        return res
-
-    # Due Date invoice
-    @api.onchange('date_invoice', 'x_tanda_terima')
-    def due_date(self):
-        if self.date_invoice:
-            date = self.date_invoice
-
-        date_tanda_terima = self.x_tanda_terima
-
-        id_cus = self.partner_id
-        id_cus_due_date = self.env['x.due.date.pembayaran'].search([('x_customer', '=', id_cus.id)])
-
-        # Mengambil field yang ada pada tabel x.due.date.pembayaran
-        for i in id_cus_due_date:
-            customer = i.x_customer
-            categ = i.x_category
-            jumlah_hari = i.x_jml_hari
-            type = i.x_type
-
-            if customer:
-                date_format = '%Y-%m-%d'
-
-                # Cek apakah kategori = sjk
-                if categ == 'sjk':
-                    if type == 'after_sjk':
-                        if jumlah_hari == '15':
-                            start_date = datetime.strptime(str(date), date_format)
-                            end_date = start_date + relativedelta(days=int(jumlah_hari))
-
-                            self.x_due_date_pembayaran = end_date
-                            self.date_due = end_date
-
-                        elif jumlah_hari == '30':
-                            start_date = datetime.strptime(str(date), date_format)
-                            end_date = start_date + relativedelta(days=int(jumlah_hari))
-
-                            self.x_due_date_pembayaran = end_date
-                            self.date_due = end_date
-
-                        elif jumlah_hari == '45':
-                            start_date = datetime.strptime(str(date), date_format)
-                            end_date = start_date + relativedelta(days=int(jumlah_hari))
-
-                            self.x_due_date_pembayaran = end_date
-                            self.date_due = end_date
-
-                        elif jumlah_hari == '60':
-                            start_date = datetime.strptime(str(date), date_format)
-                            end_date = start_date + relativedelta(days=int(jumlah_hari))
-
-                            self.x_due_date_pembayaran = end_date
-                            self.date_due = end_date
-
-                        elif jumlah_hari == '90':
-                            start_date = datetime.strptime(str(date), date_format)
-                            end_date = start_date + relativedelta(days=int(jumlah_hari))
-
-                            self.x_due_date_pembayaran = end_date
-                            self.date_due = end_date
-
-                        elif jumlah_hari == '14':
-                            start_date = datetime.strptime(str(date), date_format)
-                            end_date = start_date + relativedelta(days=int(jumlah_hari))
-
-                            self.x_due_date_pembayaran = end_date
-                            self.date_due = end_date
-
-                        else:
-                            print "INVALID DATE!"
-
-                    # Cek apakah tipe pembayaran sebelum sjk
-                    elif type == 'before_sjk':
-                        start_date = datetime.strptime(str(date), date_format)
-                        if jumlah_hari == '0':
-                            self.x_due_date_pembayaran = start_date
-                            self.date_due = start_date
-
-                    elif type == 'bg':
-                        if jumlah_hari == '30':
-                            start_date = datetime.strptime(str(date), date_format)
-                            end_date = start_date + relativedelta(days=int(jumlah_hari))
-
-                            self.x_due_date_pembayaran = end_date
-                            self.date_due = end_date
-
-                        elif jumlah_hari == '45':
-                            start_date = datetime.strptime(str(date), date_format)
-                            end_date = start_date + relativedelta(days=int(jumlah_hari))
-
-                            self.x_due_date_pembayaran = end_date
-                            self.date_due = end_date
-
-                    elif type == 'dp':
-                        start_date = datetime.strptime(str(date), date_format)
-                        if jumlah_hari == '0':
-                            self.x_due_date_pembayaran = start_date
-                            self.date_due = start_date
-
-                # Cek apakah date tanda terima tidak kosong, jika kosong maka akan lanjut pada kondisi berikutnya
-                if date_tanda_terima != False:
-                    if categ == 'tt':
-                        if type == 'after_tt':
-                            if jumlah_hari == '15':
-                                start_date = datetime.strptime(str(date_tanda_terima), date_format)
-                                end_date = start_date + relativedelta(days=int(jumlah_hari))
-
-                                self.x_due_date_pembayaran = end_date
-                                self.date_due = end_date
-
-                            elif jumlah_hari == '30':
-                                start_date = datetime.strptime(str(date_tanda_terima), date_format)
-                                end_date = start_date + relativedelta(days=int(jumlah_hari))
-
-                                self.x_due_date_pembayaran = end_date
-                                self.date_due = end_date
-
-                            elif jumlah_hari == '45':
-                                start_date = datetime.strptime(str(date_tanda_terima), date_format)
-                                end_date = start_date + relativedelta(days=int(jumlah_hari))
-
-                                self.x_due_date_pembayaran = end_date
-                                self.date_due = end_date
-
-                            elif jumlah_hari == '60':
-                                start_date = datetime.strptime(str(date_tanda_terima), date_format)
-                                end_date = start_date + relativedelta(days=int(jumlah_hari))
-
-                                self.x_due_date_pembayaran = end_date
-                                self.date_due = end_date
-
-                            elif jumlah_hari == '90':
-                                start_date = datetime.strptime(str(date_tanda_terima), date_format)
-                                end_date = start_date + relativedelta(days=int(jumlah_hari))
-
-                                self.x_due_date_pembayaran = end_date
-                                self.date_due = end_date
-
-                            elif jumlah_hari == '14':
-                                start_date = datetime.strptime(str(date_tanda_terima), date_format)
-                                end_date = start_date + relativedelta(days=int(jumlah_hari))
-
-                                self.x_due_date_pembayaran = end_date
-                                self.date_due = end_date
-
-                            else:
-                                print "INVALID DATE!"
-
-
-                elif categ == 'cod':
-                    if type == 'cod':
-                        start_date = datetime.strptime(str(date), date_format)
-                        if jumlah_hari == '0':
-                            self.x_due_date_pembayaran = start_date
-                            self.date_due = start_date
-
-
-    # Fungsi mengirim data pada object lain
-    @api.multi
-    def open_second_class(self):
-        ac = self.env['ir.model.data'].xmlid_to_res_id('lpj_accounting.kuitansi_form_view', raise_if_not_found=True)
-        for o in self:
-            customer = o.partner_id.name
-
-        result = {
-            'name': 'Create Kuitansi',
-            'view_type': 'form',
-            'res_model': 'x.kuitansi',
-            'view_id': ac,
-            'context': {
-                'default_customer': customer
-            },
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'target': 'current',
-        }
-        return result
-
+    x_no_sjk = fields.Many2one('stock.picking', string="No SJK", related='x_invoice.x_no_sjk', readonly=True)
+    date_sjk = fields.Date(related='x_invoice.x_tanggal_sjk')
+    x_no_faktur = fields.Char(related='x_invoice.x_no_faktur')
+    date_invoice = fields.Date(related='x_invoice.date_invoice')
 
 class stock_picking(models.Model):
     _inherit = 'stock.picking'

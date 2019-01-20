@@ -30,6 +30,7 @@
         # 'views/down_payment.xml',
         # 'report/report_kuitansi.xml',
         'views/report_kuitansi.xml',
+        'views/report_invoice.xml',
         'views/invoice.xml',
         'views/stock_picking.xml',
         'views/due_date_pembayaran.xml',
