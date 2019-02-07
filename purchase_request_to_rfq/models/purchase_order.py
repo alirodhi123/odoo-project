@@ -8,6 +8,9 @@ from odoo import _, api, exceptions, fields, models
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
+
+
+
     @api.multi
     def _purchase_request_confirm_message_content(self, request,
                                                   request_dict):
@@ -87,6 +90,31 @@ class PurchaseOrder(models.Model):
 
 class PurchaseOrderLine(models.Model):
     _inherit = "purchase.order.line"
+
+    x_category = fields.Float(related='product_uom.factor_inv')
+    x_internal_ref = fields.Char(related='product_id.default_code')
+    x_variant_po = fields.Char(readonly=True, compute = '_get_variant_po')
+    x_qty_meterpersegi_po = fields.Float(string = 'Quantity (m2)', compute = '_meter_persegi')
+
+    @api.one
+    def _get_variant_po(self):
+        self.env.cr.execute("select pav.name from product_attribute_value_product_product_rel ppr "
+                            "left join product_attribute_value pav on ppr.product_attribute_value_id = pav.id "
+                            "left join product_attribute pa on pav.attribute_id = pa.id "
+                            "left join product_product pp on ppr.product_product_id = pp.id "
+                            "left join product_template pt on pp.product_tmpl_id = pt.id "
+                            "where pa.name = 'Lebaran' and pp.default_code = '" + self.x_internal_ref + "'")
+        o = self.env.cr.fetchone()
+        if o:
+            self.x_variant_po = o[0]
+            self.x_variant_po = (float(self.x_variant_po) / 1000)
+            return self.x_variant_po
+        else:
+            return None
+
+    @api.one
+    def _meter_persegi(self):
+        self.x_qty_meterpersegi_po = int(self.product_qty) * float(self.x_variant_po) * self.x_category
 
     purchase_request_lines = fields.Many2many(
         'purchase.request.line',

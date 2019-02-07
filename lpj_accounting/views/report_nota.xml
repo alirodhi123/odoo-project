@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+         <report
+            id="nota_report"
+            model="account.invoice"
+            string="Nota"
+            report_type="qweb-pdf"
+            name="lpj_accounting.report_nota"
+            file="lpj_accounting.report_nota"
+            menu="True"
+        />
+
+
+        <record id="paperformat_nota" model="report.paperformat">
+            <field name="name">European A4 low margin</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">6</field>
+            <field name="margin_bottom">4</field>
+            <field name="margin_left">6</field>
+            <field name="margin_right">6</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field> <!-- Jika ingin header muncul ubah nilai - 0 -->
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="lpj_accounting.nota_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="lpj_accounting.paperformat_nota" />
+        </record>
+
+
+        <template id="report_nota_document">
+            <t t-call="report.html_container">
+                <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})" />
+                <div class="page">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <img t-if="res_company.logo" t-att-src="'data:image/png;base64,%s' %res_company.logo" style="width: 180%"/>
+                        </div>
+                    </div>
+                    <br></br>
+
+                    <!-- Untuk garis horizontal-->
+                    <div class="row zero_min_height">
+                        <div class="col-xs-12">
+                            <div style="border-bottom: 1px solid black;"/>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 text-center">
+                        <div class="col-xs-12 text-center">
+                             <h3>
+                                 <span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice</span>
+                                 <span t-if="o.type == 'out_invoice' and o.state == 'proforma2'">PRO-FORMA</span>
+                                 <span t-if="o.type == 'out_invoice' and o.state == 'draft'">NOTA</span>
+                                 <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
+                                 <span t-if="o.type == 'out_refund'">Refund</span>
+                                 <span t-if="o.type == 'in_refund'">Vendor Refund</span>
+                                 <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
+                                 <!--<span t-field="o.number"/>-->
+                             </h3>
+                             <t t-if="o.number" class="text-center">
+                                 <h4 t-field="o.number"></h4>
+                             </t>
+                        </div>
+                    </div>
+
+                    <!-- Row customer -->
+                    <div class="row">
+                        <div class="col-xs-6" style="margin-top: 5px;">
+                            <strong t-if="o.partner_shipping_id == o.partner_id">Invoicing and shipping address:</strong>
+                            <strong t-if="o.partner_shipping_id != o.partner_id">Invoicing address:</strong>
+                            <div name="invoice_address">
+                                <address t-field="o.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: True}"/>
+                                <span t-if="o.partner_id.vat">TIN: <span t-field="o.partner_id.vat"/></span>
+                            </div>
+                        </div> <!-- Tutup Row invoicing and shipping address -->
+
+                        <!-- Kolom kedua sebelah kanan -->
+                        <div class="col-xs-6" style="margin-top: 5px;">
+                            <table>
+                                <tr t-if="o.x_no_faktur">
+                                    <td style="padding-right: 35px; padding-bottom: 5px;"><b>No. Faktur</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px;">:</td>
+                                    <td style="padding-bottom: 5px;"><span t-if="o.x_no_faktur"><span t-field="o.x_no_faktur"/></span></td>
+                                </tr>
+                                <tr t-if="o.x_no_po">
+                                    <td style="padding-right: 35px; padding-bottom: 5px;"><b>No. PO</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px;">:</td>
+                                    <td style="padding-bottom: 5px;"><span t-if="o.x_no_po"><span t-field="o.x_no_po"></span></span></td>
+                                </tr>
+                                <tr t-if="o.payment_term_id">
+                                    <td style="padding-right: 35px; padding-bottom: 5px;"><b>Termin Pembayaran</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px;">:</td>
+                                    <td style="padding-bottom: 5px;"><span t-if="o.payment_term_id"><span t-field="o.payment_term_id"/></span></td>
+                                </tr>
+                                <tr t-if="o.date_invoice">
+                                    <td style="padding-right: 35px; padding-bottom: 5px;"><b>Tgl. Invoice</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px;">:</td>
+                                    <td style="padding-bottom: 5px;"><span t-if="o.date_invoice"><span t-field="o.date_invoice" t-field-options='{"format": "d/MM/y"}'/></span></td>
+                                </tr>
+                                <tr t-if="o.x_no_sjk">
+                                    <td style="padding-right: 35px; padding-bottom: 5px;"><b>No. Surat Jalan</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px;">:</td>
+                                    <td style="padding-bottom: 5px;"><span t-if="o.x_no_sjk"><span t-field="o.x_no_sjk"/></span></td>
+                                </tr>
+                                <tr t-if="o.amount_to_text">
+                                    <td style="padding-right: 35px; padding-bottom: 5px;"><b>Terbilang</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px;">:</td>
+                                    <td style="padding-bottom: 5px;"><span t-if="o.amount_to_text"><span t-field="o.amount_to_text"/></span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div> <!-- Tutup row invoicing -->
+
+                    <!-- Is there a discount on at least one line? -->
+                    <div class="row">
+                        <div class="col-xs-12" style="margin-top: -10px">
+                            <t t-set="display_discount" t-value="any([l.discount for l in o.invoice_line_ids])"/>
+                            <table class="table table-bordered" style="border: 1px solid black;">
+                                <thead>
+                                    <tr>
+                                        <th style="border: 1px solid black;" class="text-center">No</th>
+                                        <th style="border: 1px solid black;" class="text-center">Description</th>
+                                        <th style="border: 1px solid black;" class="hidden">Source Document</th>
+                                        <th style="border: 1px solid black;" class="text-center">Quantity</th>
+                                        <th style="border: 1px solid black;" class="text-center">Unit Price</th>
+                                        <th style="border: 1px solid black;" t-if="display_discount" class="text-center">Disc.(%)</th>
+                                        <th style="border: 1px solid black;" class="text-center">Net Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="invoice_tbody">
+                                    <t t-set="i" t-value="1"/>
+                                    <tr t-foreach="o.invoice_line_ids" t-as="l">
+                                        <td class="text-center" style="border: 1px solid black;"><span t-esc="i"></span></td>
+                                        <td style="border: 1px solid black;"><span t-field="l.product_id.name"/></td>
+                                        <td style="border: 1px solid black;" class="hidden"><span t-field="l.origin"/></td>
+                                        <td style="border: 1px solid black;" class="text-right">
+                                            <span t-field="l.quantity"/>
+                                            <span t-field="l.uom_id" groups="product.group_uom"/>
+                                        </td>
+                                        <td style="border: 1px solid black;" class="text-right">
+                                            <span t-field="l.price_unit" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                        </td>
+                                        <td style="border: 1px solid black;" t-if="display_discount" class="text-right">
+                                            <span t-field="l.discount"/>
+                                        </td>
+                                        <td style="border: 1px solid black;" class="text-right">
+                                            <span t-field="l.price_subtotal" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                        </td>
+
+                                         <t t-set="i" t-value="i+1"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- Tutup tabel -->
+                    </div>
+
+                    <!-- Footer Harga -->
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <span>NB : Pembayaran dengan CHEQUE/BG dicantumkan a.n PT. LAPRINT JAYA</span>
+                            <span>Kwitansi ini baru berlaku setelah CHEQUE/BG yang diterima cair</span>
+                        </div>
+
+                        <div class="col-xs-4 pull-right">
+                            <!-- Jika Kolom diskon tidak diisi -->
+                            <div>
+                                <table class="table table-condensed">
+                                    <tr>
+                                        <td><strong>Bruto</strong></td>
+                                        <td class="text-right">
+                                            <span t-field="o.x_bruto" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Diskon</strong></td>
+                                        <td class="text-right">
+                                            <span t-field="o.x_discount_foot" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>DPP</strong></td>
+                                        <td class="text-right">
+                                            <span t-field="o.amount_untaxed" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                        </td>
+                                    </tr>
+                                    <t t-foreach="o._get_tax_amount_by_group()" t-as="amount_by_group">
+                                        <tr t-if="o.amount_tax">
+                                            <td> PPN <span t-esc="amount_by_group[0] if len(o.tax_line_ids) &gt; 1 else (o.tax_line_ids.tax_id.description or o.tax_line_ids.tax_id.name)"/></td>
+                                            <td class="text-right">
+                                                <span t-esc="amount_by_group[2]"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr t-if="o.amount_total" class="border-black">
+                                        <td><strong>Netto</strong></td>
+                                        <td class="text-right">
+                                             <span t-field="o.amount_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div> <!-- Tutup footer harga -->
+
+                    <p t-if="o.comment">
+                        <strong>Comment:</strong>
+                        <span t-field="o.comment"/>
+                    </p>
+                </div> <!-- Tutup page -->
+            </t>
+        </template>
+
+        <template id="report_nota">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="lpj_accounting.report_nota_document" t-lang="o.partner_id.lang"/>
+                </t>
+            </t>
+        </template>
+
+        <template id="account_invoice_report_duplicate_main">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="account.account_invoice_report_duplicate" t-lang="o.partner_id.lang"/>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

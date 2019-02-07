@@ -12,7 +12,7 @@ class sq(models.Model):
 class minmax_mo(models.Model):
      _inherit = 'mrp.production'
 
-     x_type_mo = fields.Selection([('stc', 'Sticker'), ('ink', 'Tinta Campuran'), ('plate', 'Plate'),('diecut', 'Diecut')], string='Type MO')
+     x_type_mo = fields.Selection([('stc', 'Sticker'), ('ink', 'Tinta Campuran'), ('plate', 'Plate'),('diecut', 'Diecut')], string='Type MO', required=True)
      order = fields.Many2one('sale.order', string = 'Kode SO')
      orderline = fields.Many2one('sale.order.line', string = 'Barang SO')
      x_flag = fields.Boolean(related = 'orderline.x_flag_mo')
@@ -56,6 +56,13 @@ class minmax_mo(models.Model):
      x_isi_druk = fields.Integer(compute='get_layout_product')
      x_jarak_druk_product = fields.Float(compute='get_layout_product')
 
+     # Untuk Jumlah druk MIN & MAX
+     x_across_number = fields.Integer(compute='get_jumlah_druk')
+     x_arround_number = fields.Integer(compute='get_jumlah_druk')
+     jumlah_druk_min = fields.Float(compute='calculate_jumlah_druk')
+     jumlah_druk_max = fields.Float(compute='calculate_jumlah_druk')
+
+
      @api.model
      def create(self, vals):
           vals['x_flag'] = True
@@ -63,10 +70,14 @@ class minmax_mo(models.Model):
           return result
 
      # Onchange product
-     @api.onchange('orderline')
+     @api.onchange('x_type_mo')
      def set_value(self):
           if self.x_type_mo == 'stc':
-               self.product_id = self.x_kode_product
+               # Jika orderline kosong
+               if self.orderline.id == False:
+                    self.product_id = self.product_id
+               else:
+                    self.product_id = self.x_kode_product
 
      # @api.multi
      # def write(self, vals):
@@ -167,6 +178,39 @@ class minmax_mo(models.Model):
                qty_max_temp = (panjang_bahan_max * isi_druk) / jarak_druk
                qty_max = qty_max_temp * 100
                self.x_quantity_max = qty_max
+
+
+     # REPORT JUMLAH DRUK
+     # Get jumlah druk MAX dan jumlah druk MIN dari product
+     # Model Product.product
+     @api.one
+     def get_jumlah_druk(self):
+          id = self.product_id.id
+          product_product = self.env['product.product'].search([('id', '=', id)])
+          if product_product:
+               for row in product_product.x_layout_plong_ids:
+                    if row.x_plong_type == 'across':
+                         across_number = row.x_plong_number
+                         self.x_across_number = across_number
+                    else:
+                         arround_number = row.x_plong_number
+                         self.x_arround_number = arround_number
+
+
+     # PERHITUNGAN JUMLAH DRUK MAX DAN MINIMAL
+     # Ambil dari fungsi get_jumlah_druk
+     @api.depends('product_qty', 'x_quantity_max', 'x_across_number', 'x_arround_number')
+     def calculate_jumlah_druk(self):
+          qty_to_produce = self.product_qty
+          qty_max = self.x_quantity_max
+          var_across_number = self.x_across_number
+          var_arround_number = self.x_arround_number
+
+          if var_across_number != 0 and var_arround_number != 0:
+               druk_min = qty_to_produce / (var_across_number * var_arround_number)
+               druk_max = qty_max / (var_across_number * var_arround_number)
+               self.jumlah_druk_min = druk_min
+               self.jumlah_druk_max = druk_max
 
 
 class lot_barang(models.Model):

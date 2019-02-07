@@ -138,7 +138,7 @@ class sales_order(models.Model):
     # x_internal_quotation_line = fields.One2many(related = 'x_internal_quotation.x_quo_line')
     x_sq = fields.Many2one(related = 'x_internal_quotation_line.x_cusreq')
     x_is_pkp = fields.Boolean(related='partner_id.x_pkp', readonly = True)
-    x_sales_external = fields.Many2one('res.partner', string = 'Sales Eksternal')
+    x_sales_external = fields.Many2one(related = 'partner_id.user_id')
     # x_termin = fields.Many2one(related = 'partner_id.x_res_termin')
 
 
@@ -168,7 +168,7 @@ class Quotation_cr_line(models.Model):
     x_trial = fields.Boolean(string = 'is trial')
     x_st_cr = fields.Selection(related = 'x_customer_requirement.x_status_cr')
     # x_quoline = fields.Selection(related='x_customer_requirement.x_quo_line')
-    x_duedate_kirim = fields.Datetime (string = 'Duedate kirim')
+    x_duedate_kirim = fields.Datetime (string = 'Duedate kirim', required = True)
 
     @api.model
     def create(self, vals):
@@ -193,7 +193,7 @@ class Quotation_cr_line(models.Model):
 
     @api.one
     def _get_total(self):
-        self.x_m_qty = self.x_uom_area * self.product_uom_qty
+        self.x_m_qty = (self.x_prd_temp.x_length_m * self.product_uom_qty * self.x_prd_temp.x_width_m)/0.8
 
     @api.one
     def _get_jasa(self):

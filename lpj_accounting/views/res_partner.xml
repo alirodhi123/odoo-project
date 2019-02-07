@@ -1,0 +1,16 @@
+<odoo>
+    <data>
+        <record id="res_partner_view" model="ir.ui.view">
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+
+                <field name="lang" position="after">
+                    <field name="account_number_bank" invisible="1"></field>
+                    <field name="bank_id" invisible="1"></field>
+                    <field name="street" invisible="1"></field>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

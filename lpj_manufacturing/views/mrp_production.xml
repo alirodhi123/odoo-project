@@ -1,5 +1,7 @@
 <odoo>
     <data>
+
+        <!-- Add create date untuk OK di tree View -->
         <record model="ir.ui.view" id="mrp_production_tree_view">
             <field name="name">mrp.production.tree</field>
             <field name="model">mrp.production</field>
@@ -7,6 +9,24 @@
             <field name="arch" type="xml">
                 <field name="name" position="after">
                     <field name="create_date" ></field>
+                </field>
+            </field>
+        </record>
+
+        <!-- Inherit OK menambahkan reference -->
+        <record model="ir.ui.view" id="mrp_production_form_view">
+            <field name="name">mrp.production.form</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+                <field name="routing_id" position="after">
+                    <field name="production_id" attrs="{'invisible': ['|', ('x_type_mo', '=', 'stc'),('x_type_mo', '=', False)]}"></field>
+                    <field name="panjang_bahan_bu_tinta" invisible="1"></field>
+                    <field name="panjang_bahan_label_tinta" invisible="1"></field>
+                    <field name="panjang_bahan_laminating_tinta" invisible="1"></field>
+                    <field name="panjang_bahan_pita_tinta" invisible="1"></field>
+                    <field name="panjang_bahan_hot_foil_tinta" invisible="1"></field>
+                    <field name="panjang_bahan_max" invisible="1"></field>
                 </field>
             </field>
         </record>

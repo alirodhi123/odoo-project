@@ -1,0 +1,19 @@
+<odoo>
+    <data>
+
+        <!-- Menambahkan field amount to text di account payment -->
+         <record model="ir.ui.view" id="payment_form_view">
+            <field name="name">account.payment.form.view</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"></field>
+            <field name="arch" type="xml">
+                <field name="communication" position="after">
+                    <field name="amount_to_text" invisible="1"></field>
+                    <field name="x_amount_total" invisible="1"></field>
+                    <field name="kode" invisible="1"></field>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

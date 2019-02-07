@@ -41,16 +41,24 @@
                   <field name="x_no_sjk" domain="[('state', '=', 'done'),('partner_id', '=', parent.customer), ('is_responsible', '=', True)]"></field>
                   <field name="x_no_faktur"></field>
                   <field name="date_sjk"></field>
+                  <field name="x_total_jasa"></field>
+                  <field name="x_total_material"></field>
+                  <field name="x_diskon"></field>
                   <field name="x_amount_untaxed"></field>
                   <field name="x_taxes"></field>
                   <field name="x_amount_total"></field>
                   <field name="date_invoice" invisible="1"></field>
+                  <field name="x_bruto_kwt" invisible="1"></field>
                 </tree>
               </field>
 
                <!-- Perhitungan -->
                 <group class="oe_subtotal_footer">
+                  <field name="x_bruto_kwt_foot"></field>
+                  <field name="x_diskon_foot"></field>
                   <field name="x_untaxed_amount_foot"/>
+                  <field name="x_total_jasa_foot" attrs="{'invisible': [('x_total_jasa_foot', '=', 0)]}"></field>
+                  <field name="x_total_material_foot" attrs="{'invisible': [('x_total_material_foot', '=', 0)]}"></field>
                   <field name="x_amount_tax_foot"/>
                   <field name="x_amount_total_foot" class="oe_subtotal_footer_separator"/>
                 </group>

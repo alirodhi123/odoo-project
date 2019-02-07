@@ -100,6 +100,21 @@
                     <attribute name="invisible">True</attribute>
                 </button>
 
+                <!-- Add button print SJK -->
+                <xpath expr="//button[@name='do_print_picking']" position="after">
+                    <button name="print_sjk"
+                            class="oe_highlight"
+                            states="assigned"
+                            string="Print SJK"
+                            type="object"
+                            attrs="{'invisible':[('state','not in',['assigned','done'])]}"/>
+                </xpath>
+
+                <!-- Add flagging delivery -->
+                <field name="origin" position="after">
+                    <field name="is_delivery" invisible="1"></field>
+                </field>
+
             </field>
         </record>
 

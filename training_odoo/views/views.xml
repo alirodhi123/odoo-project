@@ -1,7 +1,7 @@
 <odoo>
   <data>
-  	
-  	
+
+
     <!-- explicit list view definition -->
     <!--
     <record model="ir.ui.view" id="training_odoo.list">
@@ -58,12 +58,12 @@
               action="training_odoo.action_server"/>
     -->
 
-    	
-    	
-    	
-		
+
+
+
+
 	<!-- ### Membuat Search View Kursus ### -->
-		
+
 	<record model="ir.ui.view" id="kursus_search_view">
 		<field name="name">training.kursus.search</field>
 	    <field name="model">training.kursus</field>
@@ -75,15 +75,15 @@
 				<filter name="my_courses" string="Kursus Saya" domain="[('responsible_id', '=', uid)]"/>
 				<group string="Group By">
 					<filter name="by_responsible" string="Penanggung Jawab" context="{'group_by': 'responsible_id'}"/>
-				</group>				
+				</group>
 			</search>
 		</field>
 	</record>
-		
-    	
-    	
+
+
+
 	<!-- ### Membuat Tampilan Tree/List Kursus ### -->
-	
+
 	<record model="ir.ui.view" id="kursus_tree_view">
 	    <field name="name">training.kursus.tree</field>
 	    <field name="model">training.kursus</field>
@@ -150,26 +150,26 @@
 	        <p class="oe_view_nocontent_create">Buatlah kursus pertamamu ...</p>
 	    </field>
 	</record>
-	
-	
-	<!-- ### Membuat Menu Bar ### -->
-	
-	<menuitem id="main_training_odoo_menu" name="Training Odoo"/>
-	
-		
-	<!-- ### Membuat Menu Title ### -->
-	
-	<menuitem id="training_odoo_menu" name="Training" parent="main_training_odoo_menu"/>
-	
-	
-	<!-- ### Membuat Sub Menu Kursus ### -->
-	
-	<menuitem id="kursus_menu" name="Kursus" parent="training_odoo_menu" action="kursus_list_action"/>
-        
 
-                  	
-		
-	
+
+	<!-- ### Membuat Menu Bar ### -->
+
+	<menuitem id="main_training_odoo_menu" name="Training Odoo"/>
+
+
+	<!-- ### Membuat Menu Title ### -->
+
+	<menuitem id="training_odoo_menu" name="Training" parent="main_training_odoo_menu"/>
+
+
+	<!-- ### Membuat Sub Menu Kursus ### -->
+
+	<menuitem id="kursus_menu" name="Kursus" parent="training_odoo_menu" action="kursus_list_action"/>
+
+
+
+
+
 	
 	<!-- ### Membuat Tampilan Tree/List Sesi ### -->
 	
@@ -322,12 +322,12 @@
 			</kanban>
 		</field>
 	</record>
-	
 
-	
-	
-	
-	
+
+
+
+
+
 	<!-- ### Membuat Action/Event Object Sesi ### -->
 	
 	<record model="ir.actions.act_window" id="sesi_list_action">
@@ -336,17 +336,17 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form,calendar,gantt,graph,pivot,kanban</field>
 	</record>
-	
-	
+
+
 	<!-- ### Membuat Sub Menu Sesi ### -->
-	
+
 	<menuitem id="sesi_menu" name="Sesi" parent="training_odoo_menu" action="sesi_list_action"/>
-		
-		
-		
-		
-		
-		
+
+
+
+
+
+
 				    	    
   </data>
 </odoo>

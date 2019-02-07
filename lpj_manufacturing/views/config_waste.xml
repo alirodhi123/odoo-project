@@ -28,6 +28,31 @@
                         <!--<field name="x_total_waste"/>-->
                     </group>
                 </field>
+                <!--<field name="move_raw_ids" position = "replace" options="{'reload_on_button': True}" context="{'default_location_id': location_src_id, 'default_location_dest_id': location_dest_id}">-->
+                    <!--<tree editable="bottom" delete="0" default_order="is_done desc,sequence" decoration-muted="is_done" decoration-warning="quantity_done&gt;product_uom_qty" decoration-success="quantity_done==product_uom_qty" decoration-danger="quantity_available &lt; product_uom_qty" create="0">-->
+                        <!--<field name="product_id" required="1"/>-->
+                        <!--<field name="product_uom" groups="product.group_uom"/>-->
+                        <!--<field name="has_tracking" invisible="1"/>-->
+                        <!--<field name="is_done" invisible="1"/>-->
+                        <!--<field name="sequence" invisible="1"/>-->
+                        <!--<field name="location_id" domain="[('id', 'child_of', parent.location_id)]" invisible="1"/>-->
+                        <!--<field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>-->
+                        <!--<field name="state" invisible="1"/>-->
+                        <!--<field name="quantity_available" attrs="{'invisible': [('is_done', '=', True)]}"/>-->
+                        <!--<field name="product_uom_qty" readonly="1" attrs="{'required': [('product_id', '!=', False)]}" string="To Consume"/>-->
+                        <!--<field name="quantity_done" attrs="{'readonly': ['|', ('is_done', '=', True), ('has_tracking', 'in', ['lot','serial'])]}" string="Consumed"/>-->
+                        <!--<field name="x_stockmove_variant"/>-->
+                        <!--<button name="split_move_lot" string="Register lots" type="object" icon="fa-list"-->
+                                        <!--attrs="{'invisible': [('has_tracking', 'not in', ['lot','serial'])]}"/>-->
+                    <!--</tree>-->
+                <!--</field>-->
+                <xpath expr="//field[@name='move_raw_ids']/tree/field[@name='quantity_done']" position="after">
+                        <field name="x_stockmove_internalref" invisible="1"/>
+                        <field name="x_stockmove_variant" invisible="1"/>
+                        <field name="x_toconsume_meterpersegi"/>
+                        <field name="x_consumed_meterpersegi"/>
+
+                </xpath>
 
             </field>
         </record>

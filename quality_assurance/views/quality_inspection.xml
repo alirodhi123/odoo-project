@@ -1,0 +1,67 @@
+<odoo>
+    <data>
+
+        <!-- Tree View quality inspection -->
+        <record model="ir.ui.view" id="quality_inspection_tree_view">
+            <field name="name">quality.inspection.tree</field>
+            <field name="model">quality.inspection</field>
+            <field name="arch" type="xml">
+                <tree string="Quality Inspection">
+                    <field name="x_production_id"></field>
+                    <field name="x_product_id"></field>
+                    <field name="x_partner_id"></field>
+                    <field name="x_status_qc"></field>
+                    <field name="name"></field>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form Quality Inspection -->
+        <record model="ir.ui.view" id="quality_inspection_form_view">
+            <field name="name">quality.inspection.form</field>
+            <field name="model">quality.inspection</field>
+            <field name="arch" type="xml">
+                <form string="Quality Inspection">
+                    <sheet>
+                        <div class="oe_title">
+                            <h2><field name="name" placeholder="Name" readonly="1"/></h2>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="x_production_id"></field>
+                                <field name="x_product_id"></field>
+                                <field name="x_partner_id"></field>
+                                <field name="x_tanggal_inspeksi"></field>
+                                <field name="x_nama_operator"></field>
+                                <field name="x_nama_qc"></field>
+                                <field name="x_jumlah"></field>
+                                <field name="x_jumlah_persegi"></field>
+                            </group>
+                            <group>
+                                <field name="x_status_qc"></field>
+                                <field name="x_category_permasalahan"></field>
+                                <field name="x_deskripsi_permasalahan"></field>
+                                <field name="x_asal_product"></field>
+                                <field name="x_tindakan_perbaikan"></field>
+                                <field name="x_status_akhir"></field>
+                                <field name="x_jumlah_akhir"></field>
+                                <field name="x_jumlah_persegi_akhir"></field>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="quality_inspection_action">
+            <field name="name">Quality Inspection</field>
+            <field name="res_model">quality.inspection</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Inspeksi ...</p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,53 @@
+<odoo>
+    <data>
+
+        <!--
+        SALE ORDER
+        INHERIT
+        Sale Order Inherite View
+        -->
+        <record model="ir.ui.view" id="sale_order_line_inherit_view">
+            <field name="name">sale.order.line</field>
+            <field name="model">sale.order.line</field>
+            <field name="inherit_id" ref="sale.view_order_line_tree"/>
+            <field name="arch" type="xml">
+                 <xpath expr="/tree/field[@name='price_subtotal']" position="after">
+                    <button class="oe_highlight"
+                            name="open_ok_form"
+                            string="Create OK"
+                            type="object"
+                            attrs="{'invisible': ['|', ('x_flag_mo', '=', True), ('state', '!=', 'done')]}"
+                            help="calls python function"/>
+
+                     <field name="state" invisible="1"></field>
+                     <field name="x_flag_mo" invisible="1"></field>
+                 </xpath>
+
+                 <xpath expr="/tree/field[@name='price_subtotal']" position="replace">
+                   <field name="price_subtotal"
+                          groups="sales_team.group_sale_manager,
+                                  sales_team.group_sale_salesman,
+                                  account.group_account_user,
+                                  account.group_account_manager">
+
+                   </field>
+                 </xpath>
+
+                <xpath expr="/tree/field[@name='name']" position="after">
+                    <field name="x_duedate_kirim"></field>
+                 </xpath>
+
+            </field>
+        </record>
+
+        <record id="action_product_sale_list" model="ir.actions.act_window">
+            <field name="name">Open SO</field>
+            <field name="res_model">sale.order.line</field>
+            <field name="view_mode">tree</field>
+            <!--<field name="groups_id" eval="[(6,0, [ref('account.group_account_user,account.group_account_manager')])]"/>-->
+            <!--<field name="context">{'search_default_product_id': [active_id], 'default_product_id': active_id}</field>-->
+            <field name="domain">[('state', 'in', ['sale', 'done'])]</field>
+        </record>
+
+    </data>
+</odoo>

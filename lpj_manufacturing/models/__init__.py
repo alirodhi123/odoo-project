@@ -6,5 +6,6 @@ from . import routing
 from . import minmax
 from . import config_waste
 from . import meter_to_pcs
+from . import sale_order
 # from . import sj_lot
 

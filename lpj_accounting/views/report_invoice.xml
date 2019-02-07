@@ -103,12 +103,12 @@
                                 <tr>
                                     <td style="padding-right: 35px; padding-bottom: 5px; font-size: 16px;"><b>Tgl. Invoice</b></td>
                                     <td style="padding-right: 10px; padding-bottom: 5px; font-size: 16px;">:</td>
-                                    <td style="font-size: 16px; padding-bottom: 5px;"><span t-if="o.date_invoice"><span t-field="o.date_invoice"/></span></td>
+                                    <td style="font-size: 16px; padding-bottom: 5px;"><span t-if="o.date_invoice"><span t-field="o.date_invoice" t-field-options='{"format": "d/MM/y"}'/></span></td>
                                 </tr>
                                 <tr>
                                     <td style="padding-right: 35px; padding-bottom: 5px; font-size: 16px;"><b>Due Date</b></td>
                                     <td style="padding-right: 10px; padding-bottom: 5px; font-size: 16px;">:</td>
-                                    <td style="font-size: 16px; padding-bottom: 5px;"><span t-if="o.date_due"><span t-field="o.date_due"/></span></td>
+                                    <td style="font-size: 16px; padding-bottom: 5px;"><span t-if="o.date_due"><span t-field="o.date_due" t-field-options='{"format": "d/MM/y"}'/></span></td>
                                 </tr>
                                 <tr>
                                     <td style="padding-right: 35px; padding-bottom: 5px; font-size: 16px;"><b>No. Surat Jalan</b></td>
@@ -131,7 +131,7 @@
                                         <th style="border: 1px solid black; font-size: 16px;" class="hidden">Source Document</th>
                                         <th style="border: 1px solid black; font-size: 16px;" class="text-center">Quantity</th>
                                         <th style="border: 1px solid black; font-size: 16px;" class="text-center">Unit Price</th>
-                                        <th style="border: 1px solid black; font-size: 16px;" t-if="display_discount" class="text-right">Disc.(%)</th>
+                                        <th style="border: 1px solid black; font-size: 16px;" t-if="display_discount" class="text-center">Disc.(%)</th>
                                         <th style="border: 1px solid black; font-size: 16px;" class="text-center">Net Price</th>
                                     </tr>
                                 </thead>
@@ -166,10 +166,22 @@
                     <div class="row">
                         <div class="col-xs-4 pull-right">
                             <!-- Jika Kolom diskon tidak diisi -->
-                            <div t-if="o.x_diskon == 0">
+                            <div>
                                 <table class="table table-condensed">
                                     <tr>
                                         <td style="font-size: 16px;"><strong>Bruto</strong></td>
+                                        <td style="font-size: 16px;" class="text-right">
+                                            <span t-field="o.x_bruto" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size: 16px;"><strong>Diskon</strong></td>
+                                        <td style="font-size: 16px;" class="text-right">
+                                            <span t-field="o.x_discount_foot" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size: 16px;"><strong>DPP</strong></td>
                                         <td style="font-size: 16px;" class="text-right">
                                             <span t-field="o.amount_untaxed" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
                                         </td>
@@ -190,47 +202,6 @@
                                     </tr>
                                 </table>
                             </div>
-
-                            <!-- Jika kolom diskon diisi -->
-                            <div t-if="o.x_diskon != 0">
-                                <table class="table table-condensed">
-                                    <tr>
-                                        <td style="font-size: 16px;"><strong>Bruto</strong></td>
-                                        <td style="font-size: 16px;" class="text-right">
-                                            <span t-field="o.amount_untaxed" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
-                                        </td>
-                                    </tr>
-
-                                    <tr t-if="o.x_diskon" class="border-black">
-                                        <td style="font-size: 16px;"><strong>Diskon</strong></td>
-                                        <td style="font-size: 16px;" class="text-right">
-                                            <span t-field="o.x_diskon" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
-                                        </td>
-                                    </tr>
-
-                                    <tr t-if="o.x_dpp" class="border-black">
-                                        <td style="font-size: 16px;"><strong>DPP</strong></td>
-                                        <td style="font-size: 16px;" class="text-right">
-                                            <span t-field="o.x_dpp" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
-                                        </td>
-                                    </tr>
-
-                                    <tr t-if="o.x_amount_taxx" class="border-black">
-                                        <td style="font-size: 16px;"> PPN 10%</td>
-                                        <td style="font-size: 16px;" class="text-right">
-                                            <span t-field="o.x_amount_taxx" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
-                                        </td>
-                                    </tr>
-
-                                    <tr t-if="o.x_amount_total" class="border-black">
-                                        <td style="font-size: 16px;"><strong>Netto</strong></td>
-                                        <td style="font-size: 16px;" class="text-right">
-                                             <span t-field="o.x_amount_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-
                         </div>
                     </div> <!-- Tutup footer harga -->
 

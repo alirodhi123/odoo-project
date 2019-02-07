@@ -33,7 +33,11 @@
 
                 <xpath expr="//field[@name='order_line']/tree"
                        position="inside">
+                    <field name="x_qty_meterpersegi_po"/>
                     <field name="purchase_request_lines" invisible="1"/>
+                    <field name="x_category" invisible="1"/>
+                    <field name="x_internal_ref" invisible="1"/>
+                    <field name="x_variant_po" invisible="1"/>
                     <button string="Purchase Request lines"
                         attrs="{'invisible': [('purchase_request_lines', '=', [])]}"
                         name="action_openRequestLineTreeView"

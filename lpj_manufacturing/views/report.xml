@@ -6,7 +6,7 @@
         <report
             id="report_order_kerja"
             model="mrp.production"
-            string="Order Kerja"
+            string="OK Sticker"
             report_type="qweb-pdf"
             name="lpj_manufacturing.report_mrporder_new"
             file="lpj_manufacturing.report_mrporder_new"
@@ -48,26 +48,26 @@
                         </div>
 
                         <div class="row zero_min_height">
-                            <div class="col-xs-12">
+                            <div class="col-xs-12" style="margin-top: -8px">
                                 <div style="border-bottom: 1px solid black;"/>
                             </div>
                         </div>
 
                         <!-- Baris pertama -->
                         <div class="row mt32 mb32">
-                            <div t-if="o.order.partner_id" class="col-xs-3" style="margin-top: -25px">
+                            <div t-if="o.order.partner_id" class="col-xs-3" style="margin-top: -35px">
                                 <strong>Customer:</strong><br/>
                                 <span t-field="o.order.partner_id"/>
                             </div>
-                            <div t-if="o.product_id" class="col-xs-5" style="margin-top: -25px">
+                            <div t-if="o.product_id" class="col-xs-5" style="margin-top: -35px">
                                 <strong>Product:</strong><br/>
                                 <span t-field="o.product_id"/>
                             </div>
-                            <div t-if="o.x_due_kirim" class="col-xs-2" style="margin-top: -25px">
+                            <div t-if="o.x_due_kirim" class="col-xs-2" style="margin-top: -35px">
                                 <strong>Due Date:</strong><br/>
                                 <span t-field="o.x_due_kirim" t-field-options='{"format": "d/MM/y"}'/>
                             </div>
-                            <div t-if="o.date_planned_start" class="col-xs-2" style="margin-top: -25px">
+                            <div t-if="o.date_planned_start" class="col-xs-2" style="margin-top: -35px">
                                 <strong>Scheduled Date:</strong><br/>
                                 <span t-field="o.date_planned_start" t-field-options='{"format": "d/MM/y"}'/><span t-if="o.date_planned_finished"> - <br/><span t-field="o.date_planned_finished" t-field-options='{"format": "d/MM/y"}'/></span>
                             </div>
@@ -75,7 +75,7 @@
 
                         <!-- Row Detail bahan -->
                         <div class="row">
-                            <div class="col-xs-6" style="margin-top: -30px">
+                            <div class="col-xs-6" style="margin-top: -35px">
                                 <strong>Informasi</strong>
                                 <table style="border: 1px solid black; width: 100%;">
                                     <tr>
@@ -93,7 +93,7 @@
                                 </table>
                             </div>
 
-                            <div class="col-xs-6" style="margin-top: -30px">
+                            <div class="col-xs-6" style="margin-top: -35px">
                                 <strong>Detail Produksi</strong>
                                 <table style="border: 1px solid black; width: 100%;">
                                     <tr>
@@ -229,10 +229,19 @@
                         <!-- Row Keterangan -->
                         <div class="row">
                             <div class="col-xs-6">
-                                <div t-if="o.x_keterangan">
-                                    <h5><b>KETERANGAN</b></h5>
-                                    <span style="font-size: 15px;" t-field="o.x_keterangan"></span>
-                                </div>
+                                <h5><b>Keterangan</b></h5>
+                                <table style="border: 1px solid black; width: 100%;">
+                                    <tr>
+                                        <th class="text-center" style="border: 1px solid black; width: 50%; padding: 1px;">Ket</th>
+                                        <th class="text-center" style="border: 1px solid black; width: 25%; padding: 1px;"><span>Jml Druk Min</span></th>
+                                        <th class="text-center" style="border: 1px solid black; width: 25%; padding: 1px;"><span>Jml Druk Max</span></th>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center" style="border: 1px solid black; width: 50%; font-size: 15px;"><span t-field="o.x_keterangan"></span></td>
+                                        <td class="text-center" style="border: 1px solid black; width: 25%; font-size: 16px;"><span t-field="o.jumlah_druk_min"></span><span> druk</span></td>
+                                        <td class="text-center" style="border: 1px solid black; width: 25%; font-size: 16px;"><span t-field="o.jumlah_druk_max"></span><span> druk</span></td>
+                                    </tr>
+                                </table>
                             </div>
                             <div class="col-xs-6">
                                 <div>

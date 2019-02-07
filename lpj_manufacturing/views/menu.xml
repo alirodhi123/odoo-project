@@ -1,9 +1,10 @@
 <odoo>
     <data>
-        <!-- Sub menu sales order -->
-        <menuitem name="Sales Order" id="sub_menu_sales_order_mrp"
+
+        <!-- Sub menu sales order line -->
+        <menuitem name="Open SO" id="sub_menu_sales_order_line_mrp"
                   parent="mrp.menu_mrp_root"
-                  sequence="111"
-                  action="sale.action_orders"></menuitem>
+                  sequence="112"
+                  action="action_product_sale_list"></menuitem>
     </data>
 </odoo>

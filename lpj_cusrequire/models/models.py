@@ -2,6 +2,7 @@
 
 from odoo import models, fields, api
 import odoo.addons.decimal_precision as dp
+from datetime import datetime
 
 
 class prod_requirement(models.Model):
@@ -9,6 +10,7 @@ class prod_requirement(models.Model):
     _inherit = 'mail.thread'
 
     name = fields.Char(string='Code')
+    x_duedate_drawing = fields.Datetime(string='Due Date Drawing', default=datetime.today())
     item_description = fields.Char(string='Item Name', required=True, readonly=True,
                                    states={'1': [('readonly', False)]},
                                    track_visibility='always')
@@ -22,6 +24,7 @@ class prod_requirement(models.Model):
          ], default='1', track_visibility='onchange', string="Status Product")
 
     x_product = fields.Many2one('product.product', string='Product Name', domain=[('sale_ok', '=', True)])
+    x_product_tmpl = fields.Many2one('product.template', string='Product Template', domain=[('sale_ok', '=', True)])
     x_quotation_id = fields.Many2one('sale.order')
     x_sale_order_line_ids = fields.One2many('sale.order.line', related='x_product.x_product_sol', readonly=True)
     x_cusreq = fields.Many2one(string = 'name last SQ', related = 'x_sale_order_line_ids.x_customer_requirement')
@@ -70,6 +73,7 @@ class prod_requirement(models.Model):
                                     states={'1': [('readonly', False)]})
     x_varnish = fields.Boolean('Varnish', readonly=True, states={'1': [('readonly', False)]})
     x_width = fields.Float('Width (mm)', readonly=True, states={'1': [('readonly', False)]})
+
     x_repeat_order = fields.Boolean('Repeat Order')
     x_status_cr = fields.Selection(
         [('draft', 'Draft'), ('SPV', 'Need Approval SPV'), ('approve', 'Approve'), ('done', 'Done'),

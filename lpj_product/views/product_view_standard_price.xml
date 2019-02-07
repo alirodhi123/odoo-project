@@ -3,9 +3,10 @@
 
         <!--
         XML untuk hidden view
+        Product.template
         -->
 
-        <!-- Hidden standard price -->
+        <!-- Hidden standard price product.template -->
         <record model="ir.ui.view" id="product_templ_form_inh_visible_standard_price">
             <field name="name">product.template.form2</field>
             <field name="model">product.template</field>
@@ -17,13 +18,37 @@
             </field>
         </record>
 
-        <!-- Hidden list_price -->
+        <!-- Hidden list_price product.template -->
          <record model="ir.ui.view" id="product_templ_form_inh_visible_list_price">
             <field name="name">product.template.form</field>
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='list_price']" position="replace">
+                    <field name="list_price" groups="sales_team.group_sale_manager,sales_team.group_sale_salesman,sales_team.group_sale_salesman_all_leads"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Hidden standard price product.product -->
+        <record model="ir.ui.view" id="product_product_form_inh_visible_standard_price">
+            <field name="name">product.product.form2</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='standard_price']" position="replace">
+                    <field name="standard_price" groups="purchase.group_purchase_manager,purchase.group_purchase_user"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Hidden list_price product.product -->
+         <record model="ir.ui.view" id="product_product_form_inh_visible_list_price">
+            <field name="name">product.product.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='lst_price']" position="replace">
                     <field name="list_price" groups="sales_team.group_sale_manager,sales_team.group_sale_salesman,sales_team.group_sale_salesman_all_leads"/>
                 </xpath>
             </field>

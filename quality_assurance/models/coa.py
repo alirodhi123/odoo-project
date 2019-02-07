@@ -42,7 +42,7 @@ class stock_pickingi_ids(models.Model):
         for o in self:
             stock = o.id
             stock_picking = o.picking_id.id
-            code_po_cus = o.picking_id.origin
+            code_po_cus = o.picking_id.sale_id.x_po_cust
             code_sjk = o.picking_id.x_sj_supplier
             tgl_pemeriksaan = o.picking_id.min_date
             tgl_kirim = o.picking_id.min_date

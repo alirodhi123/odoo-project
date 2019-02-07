@@ -123,8 +123,37 @@ class master_config_waste(models.Model):
 
      x_std_waste = fields.One2many('x.standart.waste.produksi','x_mesin', string = 'standart waste')
 
-# class move_raw(models.Model):
-#      _inherit = 'stock.move'
+class stock_move_variant(models.Model):
+     _inherit = 'stock.move'
+
+     x_stockmove_internalref = fields.Char(related='product_id.default_code')
+     x_stockmove_variant = fields.Char(readonly=True, compute = '_get_variant_mo')
+     x_toconsume_meterpersegi = fields.Float(string = 'To Consume (m2)', readonly=True, compute='_toconsumemeper')
+     x_consumed_meterpersegi = fields.Float(string='Consumed (m2)', readonly=True, compute='_consumedmeper')
+
+     @api.one
+     def _get_variant_mo(self):
+          self.env.cr.execute("select pav.name from product_attribute_value_product_product_rel ppr "
+                              "left join product_attribute_value pav on ppr.product_attribute_value_id = pav.id "
+                              "left join product_attribute pa on pav.attribute_id = pa.id "
+                              "left join product_product pp on ppr.product_product_id = pp.id "
+                              "left join product_template pt on pp.product_tmpl_id = pt.id "
+                              "where pa.name = 'Lebaran' and pp.default_code = '" + self.x_stockmove_internalref + "'")
+          z = self.env.cr.fetchone()
+          if z:
+               self.x_stockmove_variant = z[0]
+               self.x_stockmove_variant = (float(self.x_stockmove_variant) / 1000)
+               return self.x_stockmove_variant
+          else:
+               return None
+
+     @api.one
+     def _toconsumemeper(self):
+          self.x_toconsume_meterpersegi = float(self.product_uom_qty) * float(self.x_stockmove_variant)
+
+     @api.one
+     def _consumedmeper(self):
+          self.x_consumed_meterpersegi = float(self.quantity_done) * float(self.x_stockmove_variant)
 
      # @api.one
      # def cal_waste(self):

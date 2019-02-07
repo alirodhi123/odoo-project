@@ -150,22 +150,41 @@ class Kuitansi (models.Model):
     # Menjumlahkan untaxed amount, taxes, amount total
     @api.one
     @api.depends('kuitansi_line_ids.x_amount_untaxed', 'kuitansi_line_ids.x_taxes',
-                 'kuitansi_line_ids.x_amount_total')
+                 'kuitansi_line_ids.x_amount_total', 'kuitansi_line_ids.x_total_jasa', 'kuitansi_line_ids.x_total_material',
+                 'kuitansi_line_ids.x_diskon', 'kuitansi_line_ids.x_bruto_kwt')
     def _compute_amount(self):
         amount_untaxed = 0
         taxes = 0
         amount_total = 0
+        total_jasa = 0
+        total_material = 0
+        diskon = 0
+        bruto = 0
+
         for m in self.kuitansi_line_ids:
             amount_untaxed += m.x_amount_untaxed
             taxes += m.x_taxes
             amount_total += m.x_amount_total
+            total_jasa += m.x_total_jasa
+            total_material += m.x_total_material
+            diskon += m.x_diskon
+            bruto += m.x_bruto_kwt
+
         self.x_untaxed_amount_foot = amount_untaxed
         self.x_amount_tax_foot = taxes
         self.x_amount_total_foot = amount_total
+        self.x_total_jasa_foot = total_jasa
+        self.x_total_material_foot = total_material
+        self.x_diskon_foot = diskon
+        self.x_bruto_kwt_foot = bruto
 
     x_untaxed_amount_foot = fields.Monetary(string='Untaxed Amount', compute='_compute_amount', readonly=True)
     x_amount_tax_foot = fields.Monetary(string='Tax', readonly=True, compute='_compute_amount')
     x_amount_total_foot = fields.Monetary(string='Total', readonly=True, compute='_compute_amount')
+    x_total_jasa_foot = fields.Monetary(string='Total Service', readonly=True, compute='_compute_amount')
+    x_total_material_foot = fields.Monetary(string='Total Material', readonly=True, compute='_compute_amount')
+    x_diskon_foot = fields.Monetary(string="Discount", readonly=True, compute='_compute_amount')
+    x_bruto_kwt_foot = fields.Monetary(string="Bruto", readonly=True, compute='_compute_amount')
 
     @api.one
     @api.depends('x_amount_total_foot')
@@ -191,6 +210,10 @@ class kuitansi_line(models.Model):
     date_sjk = fields.Date(related='x_invoice.x_tanggal_sjk')
     x_no_faktur = fields.Char(related='x_invoice.x_no_faktur')
     date_invoice = fields.Date(related='x_invoice.date_invoice')
+    x_total_jasa = fields.Monetary(related='x_invoice.x_total_jasa', string="Harga Service")
+    x_total_material = fields.Monetary(related='x_invoice.x_total_material', string="Harga Material")
+    x_diskon = fields.Monetary(related='x_invoice.x_discount_foot', string="Discount")
+    x_bruto_kwt = fields.Monetary(related='x_invoice.x_bruto')
 
 class stock_picking(models.Model):
     _inherit = 'stock.picking'

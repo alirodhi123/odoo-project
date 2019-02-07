@@ -1,0 +1,25 @@
+${'RECEIVING REPORT'.rjust(45)}
+
+   No       : ${id}                  PO : ${po}
+   Date     : ${tgl}                    DO : ${do}
+   Supplier : ${pelanggan}
+
+   ${'-'*70}
+   No. ${'Part Code'.ljust(15)} ${'Part Name'.ljust(40)} ${'Quantity'.ljust(5)}
+   ${'-'*70}
+   % for val in rows:
+   ${val}
+   % endfor
+   ${'-'*70}
+
+${'Shipper,'.rjust(20)} ${'Created by,'.rjust(20)}
+
+
+
+${'(Supplier)'.rjust(20)} ${user.rjust(20)}
+${' '}
+${' '}
+${' '}
+${' '}
+${' '}
+${' '}

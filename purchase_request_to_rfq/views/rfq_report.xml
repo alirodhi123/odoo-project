@@ -118,6 +118,7 @@
                                         <th><strong>Taxes</strong></th>
                                         <th class="text-center"><strong>Date Req</strong></th>
                                         <th class="text-right"><strong>Qty</strong></th>
+                                        <th class="text-right"><strong>Qty(m2)</strong></th>
                                         <th class="text-right"><strong>Unit Price</strong></th>
                                         <th class="text-right"><strong>Net Price</strong></th>
                                     </tr>
@@ -136,6 +137,9 @@
                                         <td class="text-right">
                                             <span t-field="line.product_qty"/>
                                             <span t-field="line.product_uom.name" groups="product.group_uom"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="line.x_qty_meterpersegi_po"/>
                                         </td>
                                         <td class="text-right">
                                             <span t-field="line.price_unit"/>
@@ -185,7 +189,7 @@
                             <br></br>
 
                             <br/>
-                            <ol style="margin-left: 10px; margin-top : 100px;">
+                            <ol style="margin-left: 10px;">
                                 <li style="font-size: 11px"><p>Ketentuan:</p></li>
                                 <li style="font-size: 11px"><p>Penjual Harus memberitahukan kepada pembeli terlebih dahulu setiap perubahan terhadap spesifikasi atau packing material</p></li>
                                 <li style="font-size: 11px">Nomor Surat Pesanan harus dicantumkan pada semua invoice dan surat jalan</li>

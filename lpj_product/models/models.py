@@ -8,6 +8,7 @@ class data_form(models.Model):
     _inherit = 'product.template'
     _name = 'product.template'
 
+    x_pp_template = fields.One2many('product.product','product_tmpl_id',string='roduct_product')
     x_is_trial = fields.Boolean(string = 'is trial', default=True)
     x_pic_trial = fields.Char(default = 'BARANG TRIAL')
     x_internal = fields.Char(related = 'categ_id.name')
@@ -46,6 +47,7 @@ class data_form(models.Model):
     x_gramature_product = fields.Float(string="Gramature (gsm)", track_visibility='onchange')
     x_thickness_product = fields.Float(string="Thickness (mikron)", track_visibility='onchange')
     x_length = fields.Float('Length (mm)')
+    x_width_variant = fields.Char(string = 'Variant', readonly = True, compute = '_get_variant')
     x_width = fields.Float('Width (mm)', track_visibility='onchange')
     x_length_m = fields.Float(readonly=True, store=True, compute="check_konversi",
                               digits=dp.get_precision('Payment Terms'))
@@ -78,7 +80,7 @@ class data_form(models.Model):
     x_drawing_file = fields.Binary(related='x_drawing.x_file')
     x_tds = fields.Many2one('x.tds', 'TDS')
     x_customer = fields.Many2one('res.partner', string='Customer/Suppler', domain=['|',('customer', '=', True),('supplier', '=', True)])
-
+    # x_product_product = fields.Many2many('product_product','product_tmpl_id', string = 'product_product_template')
     # ribbon spech
     x_ribbon = fields.Many2one('x.ribbon.type', 'Ribbon Type')
     x_face_ink = fields.Selection([('in', 'IN'), ('out', 'OUT')], string='Face Ink')
@@ -90,7 +92,7 @@ class data_form(models.Model):
     x_notch = fields.Boolean('With Notch')
     x_roll_perbox_ribbon = fields.Integer('Roll Perbox')
     x_material_core = fields.Selection([('paper', 'Paper'), ('plastic', 'Plastic')], string='Material Core')
-
+    # x_tamp_barcode = fields.Float('Tampungan barcode', related = 'x_qty_mpersegi')
     # Code
     x_code = fields.Char("My Code")
 
@@ -110,11 +112,53 @@ class data_form(models.Model):
             self.x_od_core_m = self.x_od_core / 1000
 
 
+
+    @api.one
+    def _get_variant(self):
+        self.x_width_variant = self.id
+        self.env.cr.execute("select pav.name from product_attribute_value_product_product_rel ppr "
+                            "left join product_attribute_value pav on ppr.product_attribute_value_id = pav.id "
+                            "left join product_attribute pa on pav.attribute_id = pa.id "
+                            "left join product_product pp on ppr.product_product_id = pp.id "
+                            "left join product_template pt on pp.product_tmpl_id = pt.id "
+                            "where pa.name = 'Lebaran' and pp.barcode = '" + str(self.barcode) + "'")
+        # self.x_width_variant = self.env.cr.fetchone()[0]
+
+
 class hasil_bungkus(models.Model):
     _name = 'x.hasil.bungkus'
 
     name = fields.Char(required=True)
     description = fields.Text(string='Description')
+
+class pp_variant(models.Model):
+    _inherit = 'product.product'
+
+    x_variant_value  = fields.Char(readonly=True, compute = '_pp_variant')
+    x_qty_mpersegi = fields.Float(string = 'Quantity Meter Persegi', compute = '_perkalian')
+
+
+    @api.one
+    def _pp_variant(self):
+        if self.barcode:
+            self.env.cr.execute("select pav.name from product_attribute_value_product_product_rel ppr "
+                                "left join product_attribute_value pav on ppr.product_attribute_value_id = pav.id "
+                                "left join product_attribute pa on pav.attribute_id = pa.id "
+                                "left join product_product pp on ppr.product_product_id = pp.id "
+                                "left join product_template pt on pp.product_tmpl_id = pt.id "
+                                "where pa.name = 'Lebaran' and pp.barcode = '" + self.barcode + "'")
+            a = self.env.cr.fetchone()
+            if a:
+                self.x_variant_value = a[0]
+                self.x_variant_value = (float(self.x_variant_value)/1000)
+                return self.x_variant_value
+            else:
+                return None
+
+    @api.one
+    def _perkalian(self):
+        self.x_qty_mpersegi = int(self.qty_available) * float(self.x_variant_value)
+
 
 
 class diecut_shape(models.Model):
@@ -307,5 +351,7 @@ class ribbon_type(models.Model):
 
     name = fields.Char(required=True)
     description = fields.Text(string='Plate Type')
+
+
 
 

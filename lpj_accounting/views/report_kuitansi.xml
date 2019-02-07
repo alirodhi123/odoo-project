@@ -81,7 +81,7 @@
                                             <td style="padding-right: 0">
                                                 <ul t-foreach="o.kuitansi_line_ids" t-as="row" style="list-style-type: none; padding: 0; margin: 0; list-style-position: outside;">
                                                     <li>
-                                                        <span t-field="row.x_no_faktur" style="padding-right: 2px;"></span><span>(</span><span t-field="row.date_invoice" t-field-options='{"format": "y/MM/d"}'></span><span>)</span>
+                                                        <span t-field="row.x_no_faktur" style="padding-right: 2px;"></span><span>(</span><span t-field="row.date_invoice" t-field-options='{"format": "d/MM/y"}'></span><span>)</span>
                                                     </li>
                                                 </ul>
                                             </td>
@@ -100,7 +100,7 @@
                                                 <td style="padding-right: 2px;">
                                                     <ul style="list-style-type: none; margin: 2px; padding: 2px;">
                                                         <li style="display: inline;">
-                                                            <span t-field="row.x_no_sjk"></span> <span>(</span><span t-field="row.date_sjk" t-field-options='{"format": "y/MM/d"}'></span><span>)</span>
+                                                            <span t-field="row.x_no_sjk"></span> <span>(</span><span t-field="row.date_sjk" t-field-options='{"format": "d/MM/y"}'></span><span>)</span>
                                                         </li>
                                                     </ul>
                                                 </td>
@@ -124,6 +124,18 @@
                                             <tr>
                                                 <td style="border: 1px solid black; padding: 2px;">Harga Barang</td>
                                                 <td class="text-right" style="border: 1px solid black; padding: 2px;"><span t-field="o.x_untaxed_amount_foot" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"></span></td>
+                                            </tr>
+                                            <tr t-if="o.x_total_material_foot">
+                                                <td style="border: 1px solid black; padding: 2px;">Harga Material</td>
+                                                <td class="text-right" style="border: 1px solid black; padding: 2px;"><span t-field="o.x_total_material_foot" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"></span></td>
+                                            </tr>
+                                            <tr t-if="o.x_total_jasa_foot">
+                                                <td style="border: 1px solid black; padding: 2px;">Harga Service</td>
+                                                <td class="text-right" style="border: 1px solid black; padding: 2px;"><span t-field="o.x_total_jasa_foot" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"></span></td>
+                                            </tr>
+                                            <tr t-if="o.x_diskon_foot">
+                                                <td style="border: 1px solid black; padding: 2px;">Diskon</td>
+                                                <td class="text-right" style="border: 1px solid black; padding: 2px;"><span t-field="o.x_diskon_foot" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"></span></td>
                                             </tr>
                                             <tr>
                                                 <td style="border: 1px solid black; padding: 2px;">PPN</td>

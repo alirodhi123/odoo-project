@@ -9,7 +9,7 @@
                     <xpath expr="//field[@name='product_id'][not(ancestor::field)]" position="before">
                         <field name="x_type_mo"/>
                         <field name="order" attrs="{'invisible': [('x_type_mo', '!=', 'stc')]}"/>
-                        <field name="orderline" domain="[('order_id','=', order), ('x_flag_mo','=', False)]" attrs="{'invisible': [('x_type_mo', '!=', 'stc')]}"/>
+                        <field name="orderline" domain="[('order_id','=', order), ('x_flag_mo','=', False)]" attrs="{'invisible': [('x_type_mo', '!=', 'stc')]}" invisible="1"/>
                         <!--<field name="x_flag"/>-->
                         <!--<field name = "x_sale_order"/>-->
                         <!--<field name="x_sale_order_line" domain="[('x_order_id','=', x_sale_order)]"/>-->
@@ -39,6 +39,10 @@
                         <field name="x_jarak_druk" invisible="1"></field>
                         <field name="x_pcs_units" invisible="1"></field>
                         <field name="pcs_to_meter" invisible="1"></field>
+                        <field name="x_across_number" invisible="1"></field>
+                        <field name="x_arround_number" invisible="1"></field>
+                        <field name="jumlah_druk_min" invisible="1"></field>
+                        <field name="jumlah_druk_max" invisible="1"></field>
                     </xpath>
 
 

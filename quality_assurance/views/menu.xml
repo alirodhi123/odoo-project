@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Menu Quality Inspection -->
+        <menuitem name="Quality Inspection" id="sub_menu_quality_inspection"
+              parent="menu_quality_assurance"
+              sequence="11"
+              action="quality_inspection_action"></menuitem>
+
+    </data>
+</odoo>

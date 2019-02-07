@@ -236,26 +236,26 @@
 
                                 <!-- Page Break -->
                                 <t t-if="o.coa_line_ids">
-                                    <p style="page-break-after:always;">   </p>
+                                    <p style="page-break-inside: avoid;">   </p>
 
                                     <!-- Row table lot -->
                                     <div class="row">
-                                        <div class="col-xs-8 col-xs-offset-2">
+                                        <div class="col-xs-8 col-xs-offset-2" style="margin-top: 200px;">
+                                            <h3 class="text-center"><u>LAMPIRAN</u></h3>
+                                            <h4>Lot Number</h4>
                                             <table style="border: 1px solid black; width: 100%;">
-                                                <h3 class="text-center"><u>LAMPIRAN</u></h3>
-                                                <h4>Lot Number</h4>
-                                                <thead>
-                                                    <tr>
+                                                <thead style="display: table-header-group">
+                                                    <tr style="page-break-inside: avoid">
                                                         <th class="text-center" style="border: 1px solid black; padding: 4px;">
                                                             <p class="text-center"><b>Lot / Serial Number <span t-field="o.name"></span></b></p>
                                                         </th>
-                                                        <th class="text-center" style="border: 1px solid black; padding: 4px;">Quantity</th>
+                                                        <th class="text-center" style="border: 1px solid black; padding: 4px;"><span>Quantity</span></th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
-                                                    <tr t-foreach="o.coa_line_ids" t-as="row">
-                                                        <td class="text-center" style="border: 1px solid black; padding: 4px;"><span t-field="row.lot_id"></span></td>
-                                                        <td style="border: 1px solid black; padding: 4px;"><span t-field="row.qty"></span></td>
+                                                <tbody style="display: table-row-group">
+                                                    <tr style="page-break-inside: avoid" t-foreach="o.coa_line_ids" t-as="row">
+                                                        <td class="text-center" style="border: 1px solid black; padding: 4px; vertical-align: middle;"><span t-field="row.lot_id"></span></td>
+                                                        <td style="border: 1px solid black; padding: 4px; vertical-align: middle;"><span t-field="row.qty"></span></td>
                                                     </tr>
                                                 </tbody>
                                             </table>

@@ -1,0 +1,1 @@
+${no.rjust(3)} ${code.ljust(15)} ${name.ljust(40)} ${qty.rjust(5)}

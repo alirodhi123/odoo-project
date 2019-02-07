@@ -3,6 +3,7 @@ import subprocess
 
 from odoo import models, fields, api
 import odoo.addons.decimal_precision as dp
+from datetime import datetime
 
 
 class lot_barang(models.Model):
@@ -10,7 +11,14 @@ class lot_barang(models.Model):
 
      x_sj_supplier = fields.Char(string='Nomor Surat Jalan Supplier')
      x_tgl_sj_supp = fields.Datetime(string='Tanggal Surat Jalan Supplier')
-     x_tgl_kedatangan_bahan = fields.Datetime(string='Tanggal Terima Bahan')
+     x_tgl_kedatangan_bahan = fields.Datetime(string='Tanggal Terima Bahan', default=datetime.today(), readonly = True)
+     is_delivery = fields.Boolean(default=False)
+
+     @api.multi
+     def print_sjk(self):
+          self.write({'is_delivery': True})
+          return self.env['report'].get_action(self, 'lpj_inventory.report_deliveryslip')
+
 
 
 class stock_line(models.Model):

@@ -37,6 +37,7 @@
         'views/config_waste.xml',
         'views/meter_to_pcs.xml',
         'views/mrp_production.xml',
+        'views/sale_order.xml',
         'views/report.xml',
         'views/report_bom.xml',
         'views/report_ok_non_sticker.xml',

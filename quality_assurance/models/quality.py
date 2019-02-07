@@ -65,6 +65,7 @@ class QualityAlert(models.Model):
                                                ('waspada', 'Waspada'),
                                                ('awas', 'Awas')],  track_visibility='onchange')
     picking_id_mrp = fields.Many2one('mrp.production', string='Source Operation')
+    x_kedatangan_bahan = fields.Datetime(related='picking_id.x_tgl_kedatangan_bahan')
 
     # Button generate untuk stock.picking
     @api.multi

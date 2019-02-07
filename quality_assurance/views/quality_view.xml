@@ -113,7 +113,7 @@
                 <field name="x_status_inspeksi"/>
                 <field name="x_status_quality"/>
                 <field name="product_id"/>
-                <field name="date"/>
+                <field name="x_kedatangan_bahan"></field>
                 <field name="name"/>
             </tree>
         </field>
@@ -142,9 +142,10 @@
                         <group>
                             <field name="product_id" />
                             <field name="user_id" />
+                            <field name="date"/>
                         </group>
                         <group>
-                            <field name="date"/>
+                            <field name="x_kedatangan_bahan"></field>
                             <!--<field name="origin"/>-->
                             <field name="picking_id" readonly="1" attrs="{'invisible': [('picking_id', '=', False)]}"/>
                             <field name="picking_id_mrp" readonly="1" attrs="{'invisible': [('picking_id_mrp', '=', False)]}"></field>
