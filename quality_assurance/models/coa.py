@@ -55,6 +55,8 @@ class stock_pickingi_ids(models.Model):
             thickness = o.product_id.x_thickness_product
             shelflife = o.product_id.life_time
             unit_of_measure = o.product_uom_id.name
+            keterangan_lem = o.product_id.x_keterangan_lem
+            material_type = o.product_id.x_material_type_coa
 
             # Looping for one2many value
             lot = ""
@@ -63,6 +65,18 @@ class stock_pickingi_ids(models.Model):
                     lot += ", " + x.lot_id.name
                 else:
                     lot = x.lot_id.name
+
+            # Looping untuk partner
+            nama_partner = ""
+            for row in o.picking_id.partner_id:
+                parent = row.parent_id
+                # Jika parent kosong
+                if parent.active == False:
+                    nama_partner = row.name
+                else:
+                    for i in parent:
+                        nama_partner = i.name
+
 
         result = {
             'name': '2nd class',
@@ -77,7 +91,7 @@ class stock_pickingi_ids(models.Model):
                 'default_x_po_customer': code_po_cus,
                 'default_x_tanggal_kirim': tgl_kirim,
                 'default_x_nama_barang': product,
-                'default_x_customer': partner,
+                'default_x_customer': nama_partner,
                 'default_x_jumlah': jumlah_done,
                 'default_x_width': width,
                 'default_x_lenght': lenght,
@@ -85,6 +99,8 @@ class stock_pickingi_ids(models.Model):
                 'default_x_thickness': thickness,
                 'default_x_shelflife': shelflife,
                 'default_x_uom': unit_of_measure,
+                'default_x_keterangan': keterangan_lem,
+                'default_x_kode_material': material_type,
 
             },
             'type': 'ir.actions.act_window',
@@ -110,7 +126,7 @@ class coa(models.Model):
     stock_id = fields.Many2one('stock.pack.operation', string="Stock IDS", default = _default_pack)
     x_customer = fields.Char(string="Partner", readonly=True)
     x_tanggal_pemeriksaan = fields.Datetime(string="Tanggal Pemeriksaan", readonly=True)
-    x_kode_material = fields.Char(string="Kode Material")
+    x_kode_material = fields.Char(string="Kode Material", readonly=True)
     x_po_customer = fields.Char(string="No PO Customer", readonly=True)
     x_jumlah = fields.Integer(string="Jumlah", readonly=True )
     x_no_sjk = fields.Char(string="No SJK", readonly=True)
@@ -120,6 +136,7 @@ class coa(models.Model):
     x_nama_barang = fields.Char(string="Nama Barang", readonly=True)
     x_uom = fields.Char()
     x_lot = fields.Char(string="No Batch")
+    x_keterangan = fields.Text(string="Keterangan Lem")
 
 
     # Notes field

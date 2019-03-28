@@ -8,4 +8,5 @@ import quality_product
 import coa
 import mrp_production
 import quality_inspection
+import problem_tags
 

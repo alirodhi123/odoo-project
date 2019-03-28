@@ -4,12 +4,21 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="model">res.partner</field>
             <field name="arch" type="xml">
-
                 <field name="lang" position="after">
                     <field name="account_number_bank" invisible="1"></field>
                     <field name="bank_id" invisible="1"></field>
                     <field name="street" invisible="1"></field>
                 </field>
+
+                <!-- Hidden field trust pada res.partner -->
+                <field name="trust" position="after">
+                    <field name="trust_custom"></field>
+                </field>
+
+                <!-- Inherit field trust new pada res.partner -->
+                <!--<field name="trust" position="attributes">-->
+                    <!--<attribute name="invisible">True</attribute>-->
+                <!--</field>-->
             </field>
         </record>
     </data>

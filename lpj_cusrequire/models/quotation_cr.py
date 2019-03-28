@@ -42,6 +42,7 @@ class penawaran_cr(models.Model):
     
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all', track_visibility='always')
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all', track_visibility='always')
+
     
     @api.model
     def create(self, vals):
@@ -61,9 +62,6 @@ class penawaran_cr(models.Model):
         
         result = super(penawaran_cr, self).create(vals)
         return result
-    
-    #def _prepare_procurement_group(self):
-    #    return {'name': self.name}
 
 
 class penawaran_cr_line(models.Model):
@@ -117,29 +115,30 @@ class penawaran_cr_line(models.Model):
            self.name = self.product_id.x_status_cr
            self.price_subtotal = self.price_unit * self.product_uom_qty
 
-    # @api.onchange('state')
-    # def sq_change(self):
-    #
-    #     if (self.state == 'sale') or (self.price_unit != '')
-    #         self.name = self.product_id.x_status_cr
-    #         self.price_subtotal = self.price_unit * self.product_uom_qty
-# class Quotation_CR(models.Model):
-#     _inherit = 'sales.order'
-#     _name = 'sales.order'
-#
-#     x_customer_requirement = fields.One2many('x.cusrequirement','x_quotation_id')
-#     x_customer_req_filter = fields.Many2one(related='x_customer_requirement.x_customer_id')
+
 class sales_order(models.Model):
     _inherit = 'sale.order'
+
     x_po_cust = fields.Char(string='PO Customer')
     x_internal_quotation = fields.Many2one('x.print.quo',string = 'Internal Quotation')
     x_internal_quotation_line = fields.Many2one('x.print.quo.line')
-
     # x_internal_quotation_line = fields.One2many(related = 'x_internal_quotation.x_quo_line')
     x_sq = fields.Many2one(related = 'x_internal_quotation_line.x_cusreq')
     x_is_pkp = fields.Boolean(related='partner_id.x_pkp', readonly = True)
     x_sales_external = fields.Many2one(related = 'partner_id.user_id')
+    x_customer_trust = fields.Boolean(default=False, compute='get_payment_terms_cust')
     # x_termin = fields.Many2one(related = 'partner_id.x_res_termin')
+
+    # Update flagging x_customer_trust jika Payment Terms tidak diisi
+    @api.one
+    def get_payment_terms_cust(self):
+        customer = self.partner_id
+        res_partner = self.env['res.partner'].search([('id', '=', customer.id)])
+        if res_partner:
+            for o in res_partner:
+                customer_trust = o.trust
+                if customer_trust == 'block':
+                    return self.update({'x_customer_trust': True})
 
 
 class Quotation_cr_line(models.Model):
@@ -168,7 +167,7 @@ class Quotation_cr_line(models.Model):
     x_trial = fields.Boolean(string = 'is trial')
     x_st_cr = fields.Selection(related = 'x_customer_requirement.x_status_cr')
     # x_quoline = fields.Selection(related='x_customer_requirement.x_quo_line')
-    x_duedate_kirim = fields.Datetime (string = 'Duedate kirim', required = True)
+    x_duedate_kirim = fields.Datetime(string = 'Duedate kirim', required = True)
 
     @api.model
     def create(self, vals):

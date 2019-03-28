@@ -43,7 +43,7 @@ class master_lot(models.Model):
                'res_model': 'ir.actions.act_url',
                'type': 'ir.actions.act_url',
                'url': 'http://192.168.1.8:8086/Lot?id=3&jumlah=' + '&name=' + str(
-                    self.name) + '&bahan=' + '&awal=False' + '&akhir=False' + '&print=' + str(
+                    self.name) + '&bahan='+ str(self.product_id.name)+ '&awal=False' + '&akhir=False' + '&print=' + str(
                     self.x_jml_print) + '&cus='+ '&date=' + '&categ=' + '&qtyakhir=' + str(
                     self.x_qty_akhir)
           }

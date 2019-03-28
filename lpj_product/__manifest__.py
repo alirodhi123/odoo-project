@@ -25,6 +25,7 @@
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
+        'security/security.xml',
         'views/diecut_shape.xml',
         'views/category_finishing_product.xml',
         'views/category_finishing_process.xml',
@@ -42,7 +43,7 @@
         'views/menu.xml',
         'views/sequences.xml',
         'views/product_view_standard_price.xml',
-
+        # 'views/report_label_plate.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

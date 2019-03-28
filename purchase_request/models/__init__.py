@@ -4,5 +4,6 @@
 
 from . import purchase_request
 from . import purchase_request_inherit
+from . import purchase_order_inherit
 from . import manufacturing_order
 from . import partner

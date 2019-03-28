@@ -1,0 +1,19 @@
+<odoo>
+    <data>
+         <record model="ir.ui.view" id="inherit_training_odoo">
+            <field name="name">training.kursus.form</field>
+            <field name="model">training.kursus</field>
+            <field name="inherit_id" ref="training_odoo.kursus_form_view"/>
+            <!--<field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>-->
+            <field name="arch" type="xml">
+                <page name="sesi" position="before">
+                    <!--<attribute name="groups">mrp.group_mrp_user</attribute>-->
+                    <page name="ket" string="Keterangan">
+                        <field name="description"></field>
+                    </page>
+                </page>
+            </field>
+        </record>
+
+    </data>
+</odoo>

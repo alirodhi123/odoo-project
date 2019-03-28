@@ -85,7 +85,7 @@
                                     <tr>
                                         <td style="padding-right: 35px; padding-bottom:8px;"><b>PO Customer</b></td>
                                         <td style="padding-right: 10px">:</td>
-                                        <td><p t-if="o.sale_id.x_po_cust"><span t-field="o.sale_id.x_po_cust"></span></p></td>
+                                        <td><p t-if="o.x_po_cus"><span t-field="o.x_po_cus"></span></p></td>
                                     </tr>
                                 </table>
                             </div>

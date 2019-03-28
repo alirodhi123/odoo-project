@@ -153,25 +153,25 @@
 
                     <!-- Footer Harga -->
                     <div class="row">
-                        <div class="col-xs-6">
-                            <!-- Bank Account -->
-                            <div t-if="o.partner_id.bank_id">
-                                <strong style="font-size: 16px">Bank Account</strong><br/>
-                                <span style="padding-right: 36px; padding-top: 3px; font-size: 15px;">Bank</span>
-                                <span style="padding-right: 10px; font-size: 15px;">:</span>
-                                <span t-field="o.partner_id.bank_id" style="font-size: 15px;"></span>
-                            </div>
+                        <!--<div class="col-xs-6">-->
+                            <!--&lt;!&ndash; Bank Account &ndash;&gt;-->
+                            <!--<div t-if="o.partner_id.bank_id">-->
+                                <!--<strong style="font-size: 16px">Bank Account</strong><br/>-->
+                                <!--<span style="padding-right: 36px; padding-top: 3px; font-size: 15px;">Bank</span>-->
+                                <!--<span style="padding-right: 10px; font-size: 15px;">:</span>-->
+                                <!--<span t-field="o.partner_id.bank_id" style="font-size: 15px;"></span>-->
+                            <!--</div>-->
 
-                            <div t-if="o.partner_id.account_number_bank">
-                                <span style="padding-right: 21px; padding-top: 3px; font-size: 15px;">No Rek</span>
-                                <span style="padding-right: 10px; font-size: 15px;">:</span>
-                                <span t-field="o.partner_id.account_number_bank" style="font-size: 15px;"></span>
-                            </div>
+                            <!--<div t-if="o.partner_id.account_number_bank">-->
+                                <!--<span style="padding-right: 21px; padding-top: 3px; font-size: 15px;">No Rek</span>-->
+                                <!--<span style="padding-right: 10px; font-size: 15px;">:</span>-->
+                                <!--<span t-field="o.partner_id.account_number_bank" style="font-size: 15px;"></span>-->
+                            <!--</div>-->
 
-                            <div t-if="o.partner_id.street_bank">
-                                <span t-field="o.partner_id.street_bank" style="font-size: 15px;"></span>
-                            </div>
-                        </div>
+                            <!--<div t-if="o.partner_id.street_bank">-->
+                                <!--<span t-field="o.partner_id.street_bank" style="font-size: 15px;"></span>-->
+                            <!--</div>-->
+                        <!--</div>-->
                         <div class="col-xs-4 pull-right">
                             <div>
                                 <table class="table table-condensed">

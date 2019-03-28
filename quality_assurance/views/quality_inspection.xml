@@ -3,22 +3,25 @@
 
         <!-- Tree View quality inspection -->
         <record model="ir.ui.view" id="quality_inspection_tree_view">
-            <field name="name">quality.inspection.tree</field>
+            <field name="name">Monitoring Produk Tidak Sesuai</field>
             <field name="model">quality.inspection</field>
             <field name="arch" type="xml">
                 <tree string="Quality Inspection">
                     <field name="x_production_id"></field>
                     <field name="x_product_id"></field>
+                    <field name="x_type_product"></field>
                     <field name="x_partner_id"></field>
-                    <field name="x_status_qc"></field>
+                    <field name="x_jumlah_awal_foot"></field>
                     <field name="name"></field>
+                    <field name="x_jumlah_foot"></field>
+                    <field name="x_keterangan"></field>
                 </tree>
             </field>
         </record>
 
         <!-- Form Quality Inspection -->
         <record model="ir.ui.view" id="quality_inspection_form_view">
-            <field name="name">quality.inspection.form</field>
+            <field name="name">Monitoring Produk Tidak Sesuai</field>
             <field name="model">quality.inspection</field>
             <field name="arch" type="xml">
                 <form string="Quality Inspection">
@@ -30,31 +33,56 @@
                             <group>
                                 <field name="x_production_id"></field>
                                 <field name="x_product_id"></field>
-                                <field name="x_partner_id"></field>
-                                <field name="x_tanggal_inspeksi"></field>
-                                <field name="x_nama_operator"></field>
-                                <field name="x_nama_qc"></field>
-                                <field name="x_jumlah"></field>
-                                <field name="x_jumlah_persegi"></field>
+                                <field name="x_type_product"></field>
                             </group>
                             <group>
-                                <field name="x_status_qc"></field>
-                                <field name="x_category_permasalahan"></field>
-                                <field name="x_deskripsi_permasalahan"></field>
-                                <field name="x_asal_product"></field>
-                                <field name="x_tindakan_perbaikan"></field>
-                                <field name="x_status_akhir"></field>
-                                <field name="x_jumlah_akhir"></field>
-                                <field name="x_jumlah_persegi_akhir"></field>
+                                <field name="x_partner_id"></field>
+                                <field name="x_nama_qc"></field>
+                                <field name="x_keterangan"></field>
                             </group>
                         </group>
+
+                        <!-- Inspection Line -->
+                        <notebook>
+                            <page string="Analysis and Action" name="analisa_permasalahan">
+                                <field name="quality_inspection_ids">
+                                    <tree editable="bottom">
+                                        <field name="x_category_permasalahan" widget="many2many_tags"></field>
+                                        <field name="x_deskripsi_permasalahan"></field>
+                                        <field name="x_tanggal_inspeksi"></field>
+                                        <field name="x_mesin" widget="many2many_tags"></field>
+                                        <field name="x_asal_product"></field>
+                                        <field name="x_status_qc"></field>
+                                        <field name="x_nama_operator"></field>
+                                        <field name="x_jumlah_awal"></field>
+                                        <field name="x_jumlah_persegi_awal"></field>
+                                        <field name="x_tindakan_perbaikan"></field>
+                                        <field name="x_status_akhir"></field>
+                                        <field name="x_jumlah"></field>
+                                        <field name="x_jumlah_persegi"></field>
+                                        <field name="image" widget="image"></field>
+                                        <field name="second_image" widget="image"></field>
+                                    </tree>
+                                </field>
+
+                                <!-- Perhitungan -->
+                                <group class="oe_subtotal_footer" style="margin-left: 10px">
+                                    <field name="x_jumlah_foot"></field>
+                                    <field name="x_jumlah_persegi_foot"/>
+                                </group>
+                                <group class="oe_subtotal_footer" style="margin-right: 20px">
+                                    <field name="x_jumlah_awal_foot"></field>
+                                    <field name="x_jumlah_awal_persegi_foot"></field>
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
         </record>
 
         <record model="ir.actions.act_window" id="quality_inspection_action">
-            <field name="name">Quality Inspection</field>
+            <field name="name">Monitoring Produk Tidak Sesuai</field>
             <field name="res_model">quality.inspection</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

@@ -8,7 +8,7 @@
                 <xpath expr="//field[@name='partner_id']" position="after">
                    <field name="x_sj_supplier"/>
                     <field name="x_tgl_sj_supp"/>
-                    <field name="x_tgl_kedatangan_bahan"/>
+                    <field name="x_tgl_kedatangan_bahan" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}"/>
                 </xpath>
 
                 <!-- Stock pack operation -->
@@ -104,15 +104,38 @@
                 <xpath expr="//button[@name='do_print_picking']" position="after">
                     <button name="print_sjk"
                             class="oe_highlight"
-                            states="assigned"
                             string="Print SJK"
                             type="object"
-                            attrs="{'invisible':[('state','not in',['assigned','done'])]}"/>
+                            attrs="{'invisible':['|', ('picking_type_code', '!=', 'outgoing'),('state','not in',['assigned','partially_available','done'])]}"/>
                 </xpath>
+
+                <!-- Replace button validate -->
+                <button name="do_new_transfer" position="replace">
+                    <button name="do_new_transfer"
+                            string="Validate"
+                            groups="stock.group_stock_user"
+                            type="object"
+                            class="oe_highlight"
+                            attrs="{'invisible': ['|', ('picking_type_code', '=', 'outgoing'),
+                                                       ('state', 'not in', ('draft', 'partially_available', 'assigned'))]}"/>
+                </button>
+
+                <!-- Add Button validate custom untuk Delivery Order -->
+                <button name="print_sjk" position="before">
+                    <button name="do_new_transfer_custom"
+                            string="Validate"
+                            groups="stock.group_stock_manager"
+                            type="object"
+                            class="oe_highlight"
+                            attrs="{'invisible': ['|', ('picking_type_code', '!=', 'outgoing'),
+                                                       ('state', 'not in', ('draft', 'partially_available', 'assigned'))]}"/>
+                </button>
 
                 <!-- Add flagging delivery -->
                 <field name="origin" position="after">
                     <field name="is_delivery" invisible="1"></field>
+                    <field name="x_po_cus" invisible="1"></field>
+                    <field name="x_group_id_so" invisible="1"></field>
                 </field>
 
             </field>

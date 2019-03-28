@@ -1,5 +1,6 @@
 <odoo>
     <data>
+        <!-- Form View -->
         <record id="dataform_product_template_form_view" model="ir.ui.view">
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="model">project.task</field>
@@ -9,6 +10,10 @@
                 </field>
                 <field name="project_id" position="before">
                     <field name="x_name" readonly="True"></field>
+                </field>
+                <field name="tag_ids" position="after">
+                    <field name="x_duration"/>
+                    <!--<field name="x_category_status"/>-->
                 </field>
                 <page name="description_page" position="after">
                     <page name="action_task" string="Analysis and Action">
@@ -27,6 +32,30 @@
                     </page>
                 </page>
                 <!--<page name="extra_info"  position="replace" attrs="{'invisible': 'True'}" />-->
+            </field>
+        </record>
+
+        <!--
+            TREE VIEW PROJECT CCA
+         -->
+        <record id="view_task_tree_inherited_2" model="ir.ui.view">
+            <field name="name">project.task.tree.inherited</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_tree2" />
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="x_name"/>
+                    <field name="name"/>
+                    <field name="create_uid"/>
+                    <field name="user_id" invisible="context.get('user_invisible', False)"/>
+                    <field name="tag_ids"/>
+                    <field name="create_date" type="date"/>
+                    <field name="date_deadline"/>
+                    <field name="message_needaction" invisible="1"/>
+                    <field name="sequence" invisible="not context.get('seq_visible', False)"/>
+                    <field name="date_deadline" invisible="context.get('deadline_visible',True)"/>
+                    <field name="stage_id" invisible="context.get('set_visible',False)"/>
+                </tree>
             </field>
         </record>
     </data>

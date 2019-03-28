@@ -14,9 +14,27 @@
                 </field>
             </group>
         </group>
-
 	</field>
 	</record>
+
+       <record id="quality_product_template_form_view" model="ir.ui.view">
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="model">product.template</field>
+            <field name="arch" type="xml">
+                <page name="packinginfo" position="after">
+                    <page name="quality" string="Quality" groups="quality_assurance.group_quality_manager,quality_assurance.group_quality_user" attrs="{'invisible':[('sale_ok','!=',True)]}">
+                        <group>
+                            <group string="Quality Information">
+                                <field name="x_gramature_product"/>
+                                <field name="x_thickness_product"/>
+                                <field name="x_material_type_coa"></field>
+                                <field name="x_keterangan_lem"/>
+                            </group>
+                        </group>
+                    </page>
+                </page>
+            </field>
+        </record>
 
   </data>
 </odoo>

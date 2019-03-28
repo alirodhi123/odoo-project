@@ -1,0 +1,23 @@
+<odoo>
+    <data>
+
+        <!-- Inherit OK menambahkan button refresh -->
+        <record model="ir.ui.view" id="mrp_production_form_view_refresh">
+            <field name="name">mrp.production.form</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_scrap']" position="after">
+                    <button class="oe_highlight"
+                        string="Check BOM"
+                        name="compare_bom"
+                        type="object"
+                        help="calls python function"
+                        attrs="{'invisible': ['|', ('state', '!=', 'confirmed'),('availability', '=', 'none')]}"
+                        options="{'reload_on_button': true}">
+                    </button>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

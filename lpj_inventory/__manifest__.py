@@ -28,6 +28,7 @@
         'views/sj_lot.xml',
         'views/lot_workorder.xml',
         'views/report_sjk.xml',
+        'views/report_internal_transfer.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

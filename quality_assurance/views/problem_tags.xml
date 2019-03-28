@@ -1,0 +1,85 @@
+<odoo>
+    <data>
+
+
+        <!--
+            VIEW UNTUK PROBLEM TAGS
+            Tree View quality inspection
+         -->
+        <record model="ir.ui.view" id="problem_tags_tree_view">
+            <field name="name">Problem Tags</field>
+            <field name="model">problem.tags</field>
+            <field name="arch" type="xml">
+                <tree string="List Problem Tags">
+                    <field name="name"></field>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Category Masalah -->
+        <record model="ir.ui.view" id="problem_tags_form_view">
+            <field name="name">Tags</field>
+            <field name="model">problem.tags</field>
+            <field name="arch" type="xml">
+                <form string="Tags">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="problem_tags_action" model="ir.actions.act_window">
+            <field name="name">Tags</field>
+            <field name="res_model">problem.tags</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new tag.
+              </p>
+            </field>
+        </record>
+
+
+        <!--
+            VIEW UNTUK MESIN TAGS
+            Tree View quality inspection
+         -->
+        <record model="ir.ui.view" id="mesin_tags_tree_view">
+            <field name="name">Mesin Tags</field>
+            <field name="model">x.mesin.tags</field>
+            <field name="arch" type="xml">
+                <tree string="List Machine Tags">
+                    <field name="name"></field>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Category Masalah -->
+        <record model="ir.ui.view" id="mesin_tags_form_view">
+            <field name="name">Tags</field>
+            <field name="model">x.mesin.tags</field>
+            <field name="arch" type="xml">
+                <form string="Tags">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="mesin_tags_action" model="ir.actions.act_window">
+            <field name="name">Tags</field>
+            <field name="res_model">x.mesin.tags</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new tag.
+              </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

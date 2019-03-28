@@ -63,11 +63,8 @@
                         </group>
                     </page>
                 </notebook>
-
             </field>
         </record>
-
-
     </data>
 </odoo>
 

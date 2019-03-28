@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <data>
+
+        <report
+            string="Internal Transfer"
+            id="action_report_internal_transfer"
+            model="stock.picking"
+            report_type="qweb-pdf"
+            name="lpj_inventory.report_internaltransfer"
+            file="lpj_inventory.report_internaltransfer"
+        />
+
+        <record id="paperformat_internaltransfer" model="report.paperformat">
+            <field name="name">European A4 low margin</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">4</field>
+            <field name="margin_bottom">4</field>
+            <field name="margin_left">4</field>
+            <field name="margin_right">4</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field> <!-- Jika ingin header muncul ubah nilai - 0 -->
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="lpj_inventory.action_report_internal_transfer" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="lpj_inventory.paperformat_internaltransfer" />
+        </record>
+
+        <template id="report_internaltransfer_document">
+            <t t-call="report.html_container">
+                <t t-call="report.html_container">
+                    <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})" />
+                    <div class="page">
+                        <!-- Row logo laprint -->
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <img t-if="res_company.logo" t-att-src="'data:image/png;base64,%s' %res_company.logo" style="width: 168%"/>
+                            </div>
+                        </div>
+                        <br></br>
+
+                        <!-- Untuk garis horizontal-->
+                        <div class="row zero_min_height">
+                            <div class="col-xs-12">
+                                <div style="border-bottom: 1px solid black;"/>
+                            </div>
+                        </div>
+
+                        <!-- Judul -->
+                        <div class="row">
+                            <div class="col-xs-12 text-center">
+                                <h3>Internal Transfer</h3>
+                                <h4 t-field="o.name" class="mt0"/>
+                            </div>
+                        </div>
+
+                        <!-- Row Informasi Internal Transfer -->
+                        <div class="row mt32 mb32">
+                            <div t-if="o.location_id" class="col-xs-3" style="margin-top: -20px">
+                                <strong>Source Location:</strong><br/>
+                                <span t-field="o.location_id"/>
+                            </div>
+                            <div t-if="o.location_dest_id" class="col-xs-3" style="margin-top: -20px">
+                                <strong>Destination Location:</strong><br/>
+                                <span t-field="o.location_dest_id"/>
+                            </div>
+                            <div t-if="o.origin" class="col-xs-3" style="margin-top: -20px">
+                                <strong>Source:</strong><br/>
+                                <span t-field="o.origin"/>
+                            </div>
+                            <div t-if="o.min_date" class="col-xs-3" style="margin-top: -20px">
+                                <strong>Scheduled Date:</strong><br/>
+                                <span t-field="o.min_date" t-field-options='{"format": "d/MM/y"}'/>
+                            </div>
+                        </div>
+                        <!-- Tutup Row informasi internal transfer -->
+
+                        <!-- Row line internal transfer -->
+                        <div class="row">
+                            <div class="col-xs-12" style="margin-top: -20px">
+                                <table class="table table-condensed" t-if="o.pack_operation_ids" style="width: 100%;">
+                                  <t t-set="has_serial_number" t-value="o.pack_operation_ids.filtered('pack_lot_ids')" groups="stock.group_production_lot"/>
+                                  <thead>
+                                    <tr>
+                                        <th style="width: 60%"><strong>Product</strong></th>
+                                        <th class="text-right"><strong>Quantity</strong></th>
+                                        <th t-if="has_serial_number">
+                                            <strong>Lot/Serial Number</strong>
+                                        </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <t t-set="pack_operation_ids" t-value="o.pack_operation_ids"/>
+                                    <t groups="base.group_portal" t-set="pack_operation_ids" t-value="o.pack_operation_ids.sudo()"/>
+                                    <tr t-foreach="pack_operation_ids" t-as="pack_operation">
+                                        <td style="width: 60%"><span t-field="pack_operation.product_id"/><br/>
+                                            <span t-field="pack_operation.product_id.description_picking"/>
+                                            <t t-if="not pack_operation.product_id and pack_operation.package_id"><span  t-field="pack_operation.package_id"/></t></td>
+                                        <td class="text-right"><span t-field="pack_operation.product_qty"/> <span t-field="pack_operation.product_uom_id" groups="product.group_uom"/></td>
+
+                                        <td t-if="has_serial_number">
+                                            <table class="table table-condensed" t-if="pack_operation.pack_lot_ids">
+                                                <tr t-foreach="pack_operation.pack_lot_ids" t-as="packlot">
+                                                    <td>
+                                                        <span t-field="packlot.lot_id"/>
+                                                        <t t-if="not packlot.lot_id">
+                                                            <span t-field="packlot.lot_name"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="packlot.qty"/> <t t-if="o.picking_type_id.use_existing_lots and o.state!='done'"> / <span t-field="packlot.qty_todo"/></t>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <p t-if="o.state in ['draft', 'waiting', 'confirmed']">
+                            You do not have any products reserved for this picking.  Please click the 'Reserve' button
+                            to check if products are available.
+                        </p>
+                        <p t-field="o.note"/>
+                    </div> <!-- Tutup page -->
+                </t>
+             </t>
+        </template>
+
+        <template id="report_internaltransfer">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="lpj_inventory.report_internaltransfer_document" t-lang="o.partner_id.lang"/>
+            </t>
+        </template>
+
+    </data>
+</odoo>

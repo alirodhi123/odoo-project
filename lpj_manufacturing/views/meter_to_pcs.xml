@@ -1,6 +1,23 @@
 <odoo>
     <data>
 
+        <record model="ir.ui.view" id="work_order_form_view_hidden">
+            <field name="name">mrp.workorder.form</field>
+            <field name="model">mrp.workorder</field>
+            <field name="inherit_id" ref="mrp.mrp_production_workcenter_form_view_inherit"/>
+            <field name="arch" type="xml">
+                <!-- Hidden tab time tracking -->
+                <page name="time_tracking" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </page>
+
+                <!-- Hidden tab miscellaneous -->
+                <page name="miscellaneous" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </page>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="conv_form_view">
             <field name="name">mrp.workorder.conv</field>
             <field name="model">mrp.workorder</field>
@@ -46,19 +63,6 @@
                         </form>
                     </field>
                 </field>
-                <!--<notebook>-->
-                    <!--<page string="Lot Operation" id="lot_operator">-->
-                        <!--<tree editable="bottom">-->
-                            <!--<field name="x_lot_operation">-->
-                                <!--<tree editable="bottom">-->
-                                    <!--<field name="name"/>-->
-                                    <!--<field name="x_routing"/>-->
-                                    <!--<field name="x_user"/>-->
-                                <!--</tree>-->
-                            <!--</field>-->
-                        <!--</tree>-->
-                    <!--</page>-->
-                <!--</notebook>-->
             </field>
         </record>
 

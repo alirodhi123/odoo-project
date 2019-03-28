@@ -9,6 +9,7 @@
           <tree string="Invoice List" create="false">
             <field name="name"></field>
             <field name="customer"></field>
+            <field name="x_amount_total_foot"></field>
           </tree>
       </field>
     </record>
@@ -71,7 +72,7 @@
 
     <!-- Action button create kuitansi -->
     <record id="act_kuitansi_project_task_all" model="ir.actions.act_window">
-        <field name="name">COA</field>
+        <field name="name">Kuitansi</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">x.kuitansi</field>
         <field name="view_type">form</field>
@@ -89,6 +90,40 @@
           <p class="oe_view_nocontent_create">Create a new kuitansi</p>
       </field>
     </record>
+
+      <!--
+          KUITANSI LINE
+      -->
+    <record id="kuitansi_line_tree" model="ir.ui.view">
+        <field name="name">kuitansi.line.tree</field>
+        <field name="model">x.kuitansi.line</field>
+        <field name="arch" type="xml">
+            <tree string="Kuitansi Lines" create="false">
+                <field name="kuitansi_id"></field>
+                <field name="x_invoice"></field>
+                <field name="date_sjk"></field>
+                <field name="x_no_sjk"></field>
+                <field name="x_no_faktur"></field>
+                <field name="x_total_jasa"></field>
+                <field name="x_total_material"></field>
+                <field name="x_diskon"></field>
+                <field name="x_amount_untaxed"></field>
+                <field name="x_taxes"></field>
+                <field name="x_amount_total"></field>
+            </tree>
+        </field>
+     </record>
+
+      <record model="ir.actions.act_window" id="kuitansi_ids_list_action">
+          <field name="name">Kuitansi Line</field>
+          <field name="res_model">x.kuitansi.line</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree</field>
+          <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Kuitansi Line</p>
+          </field>
+    </record>
+
 
      <!-- Menambahkan button ke dalam tree view account.invoice -->
      <record model="ir.ui.view" id="coa_tree_view">
@@ -110,15 +145,6 @@
                 </tree>
             </field>
         </record>
-
-    <!-- Membuat action baru pada menu action -->
-    <!--<act_window id="launch_invoice_wizard"-->
-                <!--name="Create Kuitansi"-->
-                <!--src_model="account.invoice"-->
-                <!--res_model="x.kuitansi"-->
-                <!--view_mode="form"-->
-                <!--target="new"-->
-                <!--key2="client_action_multi"/>-->
 
   </data>
 </odoo>

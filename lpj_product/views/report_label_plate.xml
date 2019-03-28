@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+            id="label_plate_report"
+            model="product.template"
+            string="Label Plate"
+            report_type="qweb-pdf"
+            name="lpj_product.report_label"
+            file="lpj_product.report_label"
+        />
+
+        <record id="paperformat_label_plate" model="report.paperformat">
+            <field name="name">European A4 low margin</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">6</field>
+            <field name="margin_bottom">4</field>
+            <field name="margin_left">6</field>
+            <field name="margin_right">6</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field> <!-- Jika ingin header muncul ubah nilai - 0 -->
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="lpj_product.label_plate_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="lpj_product.paperformat_label_plate" />
+        </record>
+
+        <template id="report_label">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <table>
+                                    <tr>
+                                        <td style="padding-right: 35px; padding-bottom: 5px; font-size: 16px;"><b>Plate No.</b></td>
+                                        <td style="padding-right: 10px; padding-bottom: 5px; font-size: 16px;">:</td>
+                                        <td style="font-size: 16px; padding-bottom: 5px;"><span t-if="o.barcode"><span t-field="o.barcode"/></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-right: 35px; padding-bottom: 5px; font-size: 16px;"><b>Nama Stiker</b></td>
+                                        <td style="padding-right: 10px; padding-bottom: 5px; font-size: 16px;">:</td>
+                                        <td style="font-size: 16px; padding-bottom: 5px;"><span t-if="o.name"><span t-field="o.name"></span></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-right: 35px; padding-bottom: 5px; font-size: 16px;"><b>No. Desain</b></td>
+                                        <td style="padding-right: 10px; padding-bottom: 5px; font-size: 16px;">:</td>
+                                        <td style="font-size: 16px; padding-bottom: 5px;"><span t-if="o.name"><span t-field="o.name"/></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-right: 35px; padding-bottom: 5px; font-size: 16px;"><b>Revisi Ke</b></td>
+                                        <td style="padding-right: 10px; padding-bottom: 5px; font-size: 16px;">:</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-right: 35px; padding-bottom: 5px; font-size: 16px;"><b>Tgl dibuat</b></td>
+                                        <td style="padding-right: 10px; padding-bottom: 5px; font-size: 16px;">:</td>
+                                        <td style="font-size: 16px; padding-bottom: 5px;"><span t-if="o.create_date"><span t-field="o.create_date" t-field-options='{"format": "d/MM/y"}'/></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-right: 35px; padding-bottom: 5px; font-size: 16px;"><b>Pelanggan</b></td>
+                                        <td style="padding-right: 10px; padding-bottom: 5px; font-size: 16px;">:</td>
+                                        <td style="font-size: 16px; padding-bottom: 5px;"><span t-if="o.x_customer"><span t-field="o.x_customer"/></span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div> <!-- Tutup Page -->
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

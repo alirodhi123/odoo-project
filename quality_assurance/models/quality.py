@@ -31,11 +31,6 @@ class QualityMeasure(models.Model):
             self.quantity_max = 0.0
 
 
-    # @api.multi
-    # def create_(self):
-    #     self.product_template_id = self.product_id
-
-
 class QualityAlert(models.Model):
     _name = 'quality.alert'
     _inherit = ['mail.thread']
@@ -66,6 +61,8 @@ class QualityAlert(models.Model):
                                                ('awas', 'Awas')],  track_visibility='onchange')
     picking_id_mrp = fields.Many2one('mrp.production', string='Source Operation')
     x_kedatangan_bahan = fields.Datetime(related='picking_id.x_tgl_kedatangan_bahan')
+    x_schedule_ok = fields.Datetime(related='picking_id_mrp.date_planned_start', string="Deadline Start OK")
+
 
     # Button generate untuk stock.picking
     @api.multi
@@ -84,9 +81,9 @@ class QualityAlert(models.Model):
 
         # Jika OK, eksekusi program dibawah
         else:
-            measures = quality_measure.search([('product_id', '=', self.product_id.id),
+            measures_production = quality_measure.search([('product_id', '=', self.product_id.id),
                                                ('trigger_time', 'in', self.picking_id_mrp.picking_type_id.id)])
-            for measure in measures:
+            for measure in measures_production:
                 self.env['quality.test'].create({
                     'quality_measure': measure.id,
                     'alert_id': self.id,

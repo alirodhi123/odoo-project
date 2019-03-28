@@ -7,53 +7,43 @@
             <field name="arch" type="xml">
                 <field name="origin" position="after">
                     <group>
-
-                            <field name="x_mesin"/>
-                            <!--<field name="x_std_fixed"/>-->
-                            <field name="x_trial_produksi"/>
-                            <field name="x_config_factor"/>
-                            <field name="x_waste_prod"/>
-                            <field name="x_confirm_waste"/>
-                            <field name="x_lb_config" invisible = '1'/>
-                            <field name="x_keb_config" invisible= '1'/>
-                            <field name="x_product_uom_qty" invisible="1"></field>
-                            <field name="product_uom_qty_first" invisible="1"></field>
-                            <field name="x_uom_qty" invisible = '1'/>
-                            <field name="x_std_fixed" invisible = '1'/>
-                            <field name="x_std_var" invisible = '1'/>
-                            <field name="x_std_trial" invisible = '1'/>
-                            <!--<field name="x_coba"/>-->
-                            <button name="call_move_raw" type="object" string="Calculate" class="oe_highlight"/>
-
-                        <!--<field name="x_total_waste"/>-->
+                        <field name="x_mesin"/>
+                        <field name="x_trial_produksi"/>
+                        <field name="x_config_factor"/>
+                        <field name="x_waste_prod"/>
+                        <field name="x_confirm_waste"/>
+                        <field name="x_lb_config" invisible = '1'/>
+                        <field name="x_keb_config" invisible= '1'/>
+                        <field name="x_product_uom_qty" invisible="1"></field>
+                        <field name="product_uom_qty_first" invisible="1"></field>
+                        <field name="x_uom_qty" invisible = '1'/>
+                        <field name="x_std_fixed" invisible = '1'/>
+                        <field name="x_std_var" invisible = '1'/>
+                        <field name="x_std_trial" invisible = '1'/>
                     </group>
                 </field>
-                <!--<field name="move_raw_ids" position = "replace" options="{'reload_on_button': True}" context="{'default_location_id': location_src_id, 'default_location_dest_id': location_dest_id}">-->
-                    <!--<tree editable="bottom" delete="0" default_order="is_done desc,sequence" decoration-muted="is_done" decoration-warning="quantity_done&gt;product_uom_qty" decoration-success="quantity_done==product_uom_qty" decoration-danger="quantity_available &lt; product_uom_qty" create="0">-->
-                        <!--<field name="product_id" required="1"/>-->
-                        <!--<field name="product_uom" groups="product.group_uom"/>-->
-                        <!--<field name="has_tracking" invisible="1"/>-->
-                        <!--<field name="is_done" invisible="1"/>-->
-                        <!--<field name="sequence" invisible="1"/>-->
-                        <!--<field name="location_id" domain="[('id', 'child_of', parent.location_id)]" invisible="1"/>-->
-                        <!--<field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>-->
-                        <!--<field name="state" invisible="1"/>-->
-                        <!--<field name="quantity_available" attrs="{'invisible': [('is_done', '=', True)]}"/>-->
-                        <!--<field name="product_uom_qty" readonly="1" attrs="{'required': [('product_id', '!=', False)]}" string="To Consume"/>-->
-                        <!--<field name="quantity_done" attrs="{'readonly': ['|', ('is_done', '=', True), ('has_tracking', 'in', ['lot','serial'])]}" string="Consumed"/>-->
-                        <!--<field name="x_stockmove_variant"/>-->
-                        <!--<button name="split_move_lot" string="Register lots" type="object" icon="fa-list"-->
-                                        <!--attrs="{'invisible': [('has_tracking', 'not in', ['lot','serial'])]}"/>-->
-                    <!--</tree>-->
-                <!--</field>-->
+
+                <!-- Inherit line manufacturing order -->
                 <xpath expr="//field[@name='move_raw_ids']/tree/field[@name='quantity_done']" position="after">
-                        <field name="x_stockmove_internalref" invisible="1"/>
-                        <field name="x_stockmove_variant" invisible="1"/>
-                        <field name="x_toconsume_meterpersegi"/>
-                        <field name="x_consumed_meterpersegi"/>
-
+                    <field name="x_stockmove_internalref" invisible="1"/>
+                    <field name="x_stockmove_variant" invisible="1"/>
+                    <field name="x_toconsume_meterpersegi"/>
+                    <field name="x_consumed_meterpersegi"/>
                 </xpath>
+            </field>
+        </record>
 
+        <record model="ir.ui.view" id="mrp_production_waste_view_new">
+            <field name="name">mrp.production.waste</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+                <field name="x_confirm_waste" position="after">
+                    <group class="oe_inline">
+                        <button name="call_move_raw" type="object" string="Calculate" class="oe_highlight oe_inline"/>
+                        <button name="confirm_move_raw" type="object" string="Confirm Waste" class="oe_highlight oe_inline"/>
+                    </group>
+                </field>
             </field>
         </record>
 
@@ -122,15 +112,14 @@
         </record>
 
         <!--ACTION-->
-        <record model="ir.actions.act_window"
-                id="master_waste_action">
+        <record model="ir.actions.act_window" id="master_waste_action">
             <field name="name">Master Waste</field>
             <field name="res_model">x.standart.waste.produksi</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <record model="ir.actions.act_window"
-                id="factor_waste_action">
+
+        <record model="ir.actions.act_window" id="factor_waste_action">
             <field name="name">Master Factor Waste</field>
             <field name="res_model">x.config.factor.waste</field>
             <field name="view_type">form</field>

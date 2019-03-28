@@ -12,7 +12,7 @@
                 </field>
                 <field name="payment_term_id" position="after">
                     <field name="x_no_faktur"/>
-                    <field name="x_no_sjk" domain="[('state', '=', 'done'), ('partner_id', '=', partner_shipping_id), ('is_responsible', '=', False), ('origin', '=', origin)]"/>
+                    <field name="x_no_sjk" domain="[('state', '=', 'done'), ('partner_id', '=', partner_shipping_id), ('is_responsible', '=', False), ('x_group_id_so', '=', origin)]"/>
                     <field name="x_no_po"></field>
                     <field name="x_tanggal_sjk" invisible="1"></field>
                     <field name="amount_to_text" invisible="1"></field>

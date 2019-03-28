@@ -3,12 +3,11 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0).
 
 from odoo import _, api, exceptions, fields, models
+import odoo.addons.decimal_precision as dp
 
 
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
-
-
 
 
     @api.multi
@@ -94,7 +93,10 @@ class PurchaseOrderLine(models.Model):
     x_category = fields.Float(related='product_uom.factor_inv')
     x_internal_ref = fields.Char(related='product_id.default_code')
     x_variant_po = fields.Char(readonly=True, compute = '_get_variant_po')
-    x_qty_meterpersegi_po = fields.Float(string = 'Quantity (m2)', compute = '_meter_persegi')
+    x_qty_meterpersegi_po = fields.Float(string = 'Quantity (m2)', compute = '_meter_persegi', stored = True)
+    x_harga_meterpersegi = fields.Float(string = 'Harga (m2)')
+    price_unit = fields.Float(string='Unit Price', required=True, digits=dp.get_precision('Product Price'), stored = True)
+
 
     @api.one
     def _get_variant_po(self):
@@ -115,6 +117,12 @@ class PurchaseOrderLine(models.Model):
     @api.one
     def _meter_persegi(self):
         self.x_qty_meterpersegi_po = int(self.product_qty) * float(self.x_variant_po) * self.x_category
+        if float(self.x_variant_po) == 0 :
+            self.x_variant_po = 1
+        if self.x_category == 0 :
+            self.x_category = 1
+        a = float(self.x_variant_po) * self.x_category * self.x_harga_meterpersegi
+        self.write({'price_unit': a})
 
     purchase_request_lines = fields.Many2many(
         'purchase.request.line',

@@ -10,8 +10,8 @@ class qa_alert(models.Model):
      qa_id = fields.One2many('x.qa.bahan', 'x_qa', copy=True)
      x_nomor_lot = fields.Char('Nomor Lot', track_visibility='onchange')
      x_ukuran = fields.Char('Ukuran', track_visibility='onchange')
-     x_jenis = fields.Selection([('bahan','Bahan'),('tinta','Tinta'), ('product','Product'),('plate','Plate'),('diecut','Diecut')], string = 'Jenis')
-     # x_test_bahan = fields.One2many('x.testing.bahan', 'x_test', 'Testing_bahan', track_visibility='onchange')
+     x_jenis = fields.Selection([('bahan','Bahan'),('tinta','Tinta'), ('product','Product'),('plate','Plate'),('diecut','Diecut')],
+                                string = 'Jenis Produk')
 
 
 class qa_bahan(models.Model):
@@ -32,8 +32,4 @@ class qa_bahan(models.Model):
      x_tdk_ngelokor = fields.Selection([('1', 'Approve'), ('0', 'Reject')], string='Bahan Tidak Ngelokor')
      x_tdk_gembos = fields.Selection([('1', 'Approve'), ('0', 'Reject')], string='Bahan Tidak Gembos')
      x_tdk_penyok = fields.Selection([('1', 'Approve'), ('0', 'Reject')], string='Core Tidak Penyok')
-
-     # def empl_to_exp(self):
-     #     fields = self.env['x.qa.bahan'].fields_get()
-     #     return [(k, v['string']) for k, v in fields.items()]
 

@@ -113,6 +113,7 @@
                 <field name="x_status_inspeksi"/>
                 <field name="x_status_quality"/>
                 <field name="product_id"/>
+                <field name="x_jenis"></field>
                 <field name="x_kedatangan_bahan"></field>
                 <field name="name"/>
             </tree>
@@ -130,13 +131,10 @@
                             type="object"
                             class="oe_highlight"
                             groups="quality_assurance.group_quality_user"/>
-
                 </header>
                 <sheet>
                     <div class="oe_title">
-
                         <h2><field name="name" placeholder="Name" readonly="1"/></h2>
-
                     </div>
                     <group>
                         <group>
@@ -145,8 +143,8 @@
                             <field name="date"/>
                         </group>
                         <group>
-                            <field name="x_kedatangan_bahan"></field>
-                            <!--<field name="origin"/>-->
+                            <field name="x_kedatangan_bahan" attrs="{'invisible': [('picking_id', '=', False)]}"></field>
+                            <field name="x_schedule_ok" attrs="{'invisible': [('picking_id_mrp', '=', False)]}"></field>
                             <field name="picking_id" readonly="1" attrs="{'invisible': [('picking_id', '=', False)]}"/>
                             <field name="picking_id_mrp" readonly="1" attrs="{'invisible': [('picking_id_mrp', '=', False)]}"></field>
                             <field name="x_status_inspeksi" />

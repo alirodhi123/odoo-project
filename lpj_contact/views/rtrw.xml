@@ -11,41 +11,19 @@
                     <field name="x_pkp"/>
                 </field>
 
-                <!--<field name='parent_id' position="after">-->
-                    <!--<field name="x_kode_customer" placeholder="Kode Customer"/>-->
+                <!--<field name="trust" position="after">-->
+                    <!--<field name="trust_custom"></field>-->
                 <!--</field>-->
 
+                <!--<group name="acc_sale" position="inside">-->
+                    <!--<field name="trust_custom"></field>-->
+                <!--</group>-->
 
-                <!--<field name='lang' position="after">-->
-                    <!--<field name="x_payment_type"/>-->
-                    <!--<field name="x_lama_termin"/>-->
-                    <!--<field name="x_termin_id"/>-->
-                <!--</field>-->
-
-                <!--<field name='lang' position="after">-->
-                    <!--<field name="x_payment_type"/>-->
-                    <!--<field name="x_lama_termin"/>-->
-                    <!--<field name="x_termin_id"/>-->
-                <!--</field>-->
-
-                <!--<field name='lang' position="after">-->
-                    <!--<field name="x_payment_type"/>-->
-                    <!--<field name="x_lama_termin"/>-->
-                    <!--<field name="x_termin_id"/>-->
-                <!--</field>-->
-
-                <!--<field name='lang' position="after">-->
-                    <!--<field name="x_payment_type"/>-->
-                    <!--<field name="x_lama_termin"/>-->
-                    <!--<field name="x_termin_id"/>-->
-                <!--</field>-->
-
-                <field name='lang' position="after">
-                    <!--<field name="x_payment_type"/>-->
-                    <!--<field name="x_lama_termin"/>-->
-                    <!--<field name="x_termin_id"/>-->
-                </field>
-
+                <!--<xpath expr="/form/sheet/notebook/page[@name='accounting']" position="inside">-->
+                    <!--<group name="acc_sale" position="inside">-->
+                        <!--<field name="trust_custom"/>-->
+                    <!--</group>-->
+                <!--</xpath>-->
             </field>
         </record>
     </data>

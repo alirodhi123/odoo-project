@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 from odoo.tools import amount_to_text_en, datetime, timedelta
 from odoo.tools import amount_to_text
 from datetime import timedelta
@@ -136,6 +137,11 @@ class account_invoice(models.Model):
     x_total_jasa = fields.Monetary(compute='get_value_jasa_material')
     x_total_material = fields.Monetary(compute='get_value_jasa_material')
 
+    # Sql untuk no faktur tidak boleh ada yg sama
+    _sql_constraints = [
+        ('name_uniq', 'unique (x_no_faktur)', "Faktur Number already exists !"),
+    ]
+
     # Untuk fungsi terbilang
     @api.one
     @api.depends('x_amount_total')
@@ -148,17 +154,23 @@ class account_invoice(models.Model):
     amount_to_text = fields.Text(string="Terbilang", store=True, readonly=True,
                                  compute='_amount_in_word')
 
+
     # Flagging untuk SJK ketika create invoice
     @api.multi
-    def write(self, vals):
-        # Update field is responsible = True
-        res = super(account_invoice, self).write(vals)
-
+    def action_invoice_open(self):
         id = self.x_no_sjk
         sjk = self.env['stock.picking'].search([('id', '=', id.id)])
-        sjk.write({'is_responsible': True})
+        if sjk:
+            sjk.write({'is_responsible': True})
 
-        return res
+        # lots of duplicate calls to action_invoice_open, so we remove those already open
+        to_open_invoices = self.filtered(lambda inv: inv.state != 'open')
+        if to_open_invoices.filtered(lambda inv: inv.state not in ['proforma2', 'draft']):
+            raise UserError(_("Invoice must be in draft or Pro-forma state in order to validate it."))
+        to_open_invoices.action_date_assign()
+        to_open_invoices.action_move_create()
+        return to_open_invoices.invoice_validate()
+
 
     # Get PO Cust
     @api.one
@@ -396,7 +408,6 @@ class account_invoice(models.Model):
 
         self.x_total_jasa = harga_jasa
         self.x_total_material = harga_material
-
 
 
 class account_invoice_line(models.Model):

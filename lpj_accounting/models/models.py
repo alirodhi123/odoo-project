@@ -200,7 +200,7 @@ class kuitansi_line(models.Model):
 
     kuitansi_id = fields.Many2one('x.kuitansi', ondelete='cascade')
     x_invoice_line = fields.Many2one('account.invoice.line')
-    x_invoice = fields.Many2one('account.invoice')
+    x_invoice = fields.Many2one('account.invoice', string="Invoice ID")
     x_amount_untaxed = fields.Monetary(string='Amount Untaxed', related='x_invoice.amount_untaxed')
     x_taxes = fields.Monetary(string="Taxes", related="x_invoice.amount_tax")
     x_amount_total = fields.Monetary(string='Amount Total', related='x_invoice.amount_total')

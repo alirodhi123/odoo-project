@@ -8,7 +8,7 @@
           <field name="model">x.coa</field>
           <field name="arch" type="xml">
               <tree string="Certificate of Analysis List">
-                  <field name="name"></field>
+                <field name="name"></field>
                 <field name="x_stock_id"></field>
                 <field name="x_customer"></field>
                 <field name="x_nama_barang"></field>
@@ -33,11 +33,13 @@
                                 <field name="x_customer"></field>
                                 <field name="x_nama_barang"></field>
                                 <field name="x_tanggal_pemeriksaan"></field>
+                                <field name="x_tanggal_kirim"></field>
                             </group>
                             <group>
-                                <field name="x_tanggal_kirim"></field>
                                 <field name="x_po_customer"></field>
                                 <field name="x_jumlah"></field>
+                                <field name="x_keterangan"></field>
+                                <field name="x_kode_material"></field>
                                 <field name="stock_id" invisible="1"></field>
                             </group>
                         </group>

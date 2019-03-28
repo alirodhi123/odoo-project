@@ -19,16 +19,22 @@
               sequence="112"
               action="kuitansi_list_action"></menuitem>
 
+    <!-- Sub menu kuitansi -->
+    <menuitem name="Kuitansi Line" id="sub_menu_kuitansi_line"
+              parent="account.menu_finance_receivables"
+              sequence="113"
+              action="kuitansi_ids_list_action"></menuitem>
+
     <!-- Sub menu Due date pembayaran -->
     <menuitem name="Due Date Pembayaran" id="sub_menu_pembayaran"
               parent="account.menu_finance_receivables"
-              sequence="113"
+              sequence="114"
               action="due_date_pembayaran_action"></menuitem>
 
     <!-- Sub menu Purchase Order -->
     <menuitem name="Purchase Order" id="sub_menu_po"
               parent="account.menu_finance_payables"
-              sequence="114"
+              sequence="115"
               action="purchase.purchase_form_action"></menuitem>
 
     <!-- Sub menu down payment -->

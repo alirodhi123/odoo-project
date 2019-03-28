@@ -39,7 +39,7 @@
         'views/invoice.xml',
         'views/stock_picking.xml',
         'views/due_date_pembayaran.xml',
-        'views/res_partner.xml',
+        # 'views/res_partner.xml',
         'views/account_payment.xml',
         'demo/demo.xml',
         'views/menu.xml',

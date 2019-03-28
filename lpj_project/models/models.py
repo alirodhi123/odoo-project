@@ -21,6 +21,8 @@ class inherit_project_task(models.Model):
 
     x_project_task_line = fields.One2many('project.task.line','x_project_task_id','Task')
     x_name = fields.Char(string="No Laporan", readonly=True)
+    x_duration = fields.Integer(string="Durasi (H)")
+    x_category_status = fields.Selection([('minor', 'Minor'), ('major', 'Major')] ,string='Status Project')
 
     # Sequences
     @api.model

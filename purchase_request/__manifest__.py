@@ -25,6 +25,7 @@
         "views/purchase_request_view.xml",
         "reports/report_purchaserequests.xml",
         "views/purchase_request_inherit.xml",
+        "views/purchase_order_inherit.xml",
         "views/manufacturing_order.xml",
         "views/purchase_request_report.xml",
         "views/partner.xml",

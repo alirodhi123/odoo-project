@@ -162,7 +162,7 @@
                                         <tr t-foreach="o.workorder_ids" t-as="line2">
                                             <td class="text-center" style="border: 1px solid black; padding: 1px; font-size: 15px;"><span t-field="line2.name"/></td>
                                             <td class="text-center" style="border: 1px solid black; padding: 1px; font-size: 15px;"><span t-field="line2.workcenter_id.name"/></td>
-                                            <td class="text-center" style="border: 1px solid black; padding: 1px; font-size: 16.5px;"><span t-field="line2.duration_expected"/></td>
+                                            <td class="text-center" style="border: 1px solid black; padding: 1px; font-size: 16.5px;"><span t-field="line2.duration_expected" t-options='{"widget": "float", "precision": 1}'/></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -229,17 +229,17 @@
                         <!-- Row Keterangan -->
                         <div class="row">
                             <div class="col-xs-6">
-                                <h5><b>Keterangan</b></h5>
+                                <h5><b></b></h5>
                                 <table style="border: 1px solid black; width: 100%;">
                                     <tr>
-                                        <th class="text-center" style="border: 1px solid black; width: 50%; padding: 1px;">Ket</th>
-                                        <th class="text-center" style="border: 1px solid black; width: 25%; padding: 1px;"><span>Jml Druk Min</span></th>
-                                        <th class="text-center" style="border: 1px solid black; width: 25%; padding: 1px;"><span>Jml Druk Max</span></th>
+                                        <th class="text-center" style="border: 1px solid black; width: 56%; padding: 1px;">Ket</th>
+                                        <th class="text-center" style="border: 1px solid black; width: 22%; padding: 1px;"><span>Jml Druk Min</span></th>
+                                        <th class="text-center" style="border: 1px solid black; width: 22%; padding: 1px;"><span>Jml Druk Max</span></th>
                                     </tr>
                                     <tr>
-                                        <td class="text-center" style="border: 1px solid black; width: 50%; font-size: 15px;"><span t-field="o.x_keterangan"></span></td>
-                                        <td class="text-center" style="border: 1px solid black; width: 25%; font-size: 16px;"><span t-field="o.jumlah_druk_min"></span><span> druk</span></td>
-                                        <td class="text-center" style="border: 1px solid black; width: 25%; font-size: 16px;"><span t-field="o.jumlah_druk_max"></span><span> druk</span></td>
+                                        <td style="border: 1px solid black; width: 56%; font-size: 15px;"><span t-field="o.x_keterangan"></span></td>
+                                        <td class="text-center" style="border: 1px solid black; width: 22%; font-size: 16px;"><span t-field="o.jumlah_druk_min" t-options='{"widget": "float", "precision": 1}'></span><span> druk</span></td>
+                                        <td class="text-center" style="border: 1px solid black; width: 22%; font-size: 16px;"><span t-field="o.jumlah_druk_max" t-options='{"widget": "float", "precision": 1}'></span><span> druk</span></td>
                                     </tr>
                                 </table>
                             </div>

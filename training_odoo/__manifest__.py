@@ -34,6 +34,7 @@
         'views/views.xml',
         'views/templates.xml',
         'views/partner.xml',
+        'views/inherited.xml',
         'wizard/wizard_view.xml',
     ],
     # only loaded in demonstration mode

@@ -7,7 +7,7 @@ import odoo.addons.decimal_precision as dp
 class _drawing(models.Model):
     _name = 'x.drawing'
     _inherit = 'mail.thread'
-    _description = 'Test untuk drawing'
+    _description = 'Drawing'
 
     name = fields.Char(string='Code')
     x_file = fields.Binary(string = 'Image',track_visibility='onchange')

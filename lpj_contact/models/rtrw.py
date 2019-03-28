@@ -6,7 +6,7 @@ from odoo import models, fields, api
 
 
 class inherit_contact_partner(models.Model):
-
+     _name = 'res.partner'
      _inherit = 'res.partner'
 
      x_rt = fields.Char(string = 'RT')
@@ -14,6 +14,13 @@ class inherit_contact_partner(models.Model):
      x_npwp = fields.Char(string = 'NPWP')
      x_pkp = fields.Boolean(string = 'PKP')
      x_kode_customer = fields.Char(string='Kode Customer')
+     trust = fields.Selection(
+                    [('good', 'Good Debtor'), ('normal', 'Normal Debtor'), ('bad', 'Bad Debtor'), ('block', 'Block Debtor')],
+                    string='Degree of trust you have in this debtor', default='block')
+
+     # trust_custom = fields.Selection(
+     #      [('good', 'Good Debtor'), ('normal', 'Normal Debtor'), ('bad', 'Bad Debtor'), ('block', 'Block Debtor')],
+     #      string='Degree of trust you have in this debtor', default='block')
 
      # x_termin_id = fields.Many2one('x.termin', string='Berdasarkan')
      # x_payment_type = fields.Selection([('dp','DP'),('nondp','NON DP')], string = 'Payment Type')

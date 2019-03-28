@@ -43,6 +43,7 @@
         'views/qa_tinta.xml',
         'views/quality_product.xml',
         'views/quality_inspection.xml',
+        'views/problem_tags.xml',
         'views/coa.xml',
         'views/sequence.xml',
         'views/mrp_view.xml',

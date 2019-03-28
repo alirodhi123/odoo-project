@@ -25,6 +25,8 @@ class mrp_production(models.Model):
      panjang_bahan_max = fields.Float()
      # Untuk OK otomatis dari SO
      orderline = fields.Many2one('sale.order.line', default=_default_id)
+     date_planned_start = fields.Datetime('Deadline Start', copy=False, default=fields.Datetime.now,index=True, required=True,
+                          states={'confirmed': [('readonly', False)]}, oldname="date_planned", track_visibility='onchange')
 
 
      # ORDER KERJA

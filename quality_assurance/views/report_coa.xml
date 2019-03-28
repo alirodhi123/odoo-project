@@ -71,7 +71,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-xs-12 text-center">
+                                <div class="col-xs-12 text-center" style="margin-top: -15px;">
                                     <h2>COA</h2>
                                     <h4><u>Certificate of Analysis</u></h4>
                                     <p><b>No : <span t-field="o.name"></span></b></p>
@@ -102,9 +102,6 @@
                                             <td style="padding-right: 10px">:</td>
                                             <td><p t-field="o.x_tanggal_kirim" t-field-options='{"format": "d/MM/y"}'></p></td>
                                         </tr>
-                                        <tr>
-                                            <th style="padding-bottom: 20px;">Notes</th>
-                                        </tr>
                                     </table>
                                 </div> <!-- Tutup div col-xs-6 -->
 
@@ -131,7 +128,7 @@
                                         <tr>
                                             <td style="padding-right: 35px; padding-bottom:8px;"><b>Kode Material</b></td>
                                             <td style="padding-right: 10px">:</td>
-                                            <td><p t-field="o.x_no_sjk"></p></td>
+                                            <td><p t-field="o.x_kode_material"></p></td>
                                         </tr>
                                         <tr>
                                             <td style="padding-right: 35px; padding-bottom:8px;"><b>No Batch</b></td>
@@ -143,7 +140,7 @@
 
                                 <!-- Row x.coa.notes -->
                                 <div class="row">
-                                    <div class="col-xs-10 col-xs-offset-1">
+                                    <div class="col-xs-10 col-xs-offset-1" style="margin-top: 10px">
                                             <table class="table table-bordered">
                                                 <tr style="background-color: lightgray;">
                                                     <th class="text-center" style="border: 1px solid black;">ITEM</th>
@@ -199,6 +196,16 @@
                                     </div>
                                 </div> <!-- Tutup row x.coa.details -->
 
+                                <!-- Row Keterangan -->
+                                <div class="row">
+                                    <div class="col-xs-12" style="margin-top: -13px; margin-left: 15px; margin-right: 15px;">
+                                        <t t-if="o.x_keterangan">
+                                            <h5><b>Keterangan</b></h5>
+                                            <span t-field="o.x_keterangan"></span>
+                                        </t>
+                                    </div>
+                                </div>
+
                                 <!-- Row TTD -->
                                 <div class="row" style="margin-top: 15px; margin-right: 65px;">
                                     <div class="col-xs-12">
@@ -236,11 +243,11 @@
 
                                 <!-- Page Break -->
                                 <t t-if="o.coa_line_ids">
-                                    <p style="page-break-inside: avoid;">   </p>
+                                    <p style="page-break-before:always;">   </p>
 
                                     <!-- Row table lot -->
                                     <div class="row">
-                                        <div class="col-xs-8 col-xs-offset-2" style="margin-top: 200px;">
+                                        <div class="col-xs-8 col-xs-offset-2">
                                             <h3 class="text-center"><u>LAMPIRAN</u></h3>
                                             <h4>Lot Number</h4>
                                             <table style="border: 1px solid black; width: 100%;">

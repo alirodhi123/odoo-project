@@ -46,6 +46,8 @@ class data_form(models.Model):
                                           track_visibility='onchange')
     x_gramature_product = fields.Float(string="Gramature (gsm)", track_visibility='onchange')
     x_thickness_product = fields.Float(string="Thickness (mikron)", track_visibility='onchange')
+    x_keterangan_lem = fields.Text(string="Keterangan Lem", track_visibility='onchange')
+    x_material_type_coa = fields.Char(string="Material Type")
     x_length = fields.Float('Length (mm)')
     x_width_variant = fields.Char(string = 'Variant', readonly = True, compute = '_get_variant')
     x_width = fields.Float('Width (mm)', track_visibility='onchange')
@@ -92,9 +94,9 @@ class data_form(models.Model):
     x_notch = fields.Boolean('With Notch')
     x_roll_perbox_ribbon = fields.Integer('Roll Perbox')
     x_material_core = fields.Selection([('paper', 'Paper'), ('plastic', 'Plastic')], string='Material Core')
-    # x_tamp_barcode = fields.Float('Tampungan barcode', related = 'x_qty_mpersegi')
     # Code
     x_code = fields.Char("My Code")
+
 
     @api.depends("x_length", "x_width", "x_jarak_druk", "x_lebar_bahan", "categ_id", "x_id_core", "x_od_core")
     def check_konversi(self):
@@ -110,7 +112,6 @@ class data_form(models.Model):
             self.x_id_core_m = self.x_id_core / 1000
         if self.x_od_core > 0:
             self.x_od_core_m = self.x_od_core / 1000
-
 
 
     @api.one
@@ -351,6 +352,13 @@ class ribbon_type(models.Model):
 
     name = fields.Char(required=True)
     description = fields.Text(string='Plate Type')
+
+class ribbon_type(models.Model):
+    _name = 'x.ribbon.type'
+
+    name = fields.Char(required=True)
+    description = fields.Text(string='Plate Type')
+
 
 
 

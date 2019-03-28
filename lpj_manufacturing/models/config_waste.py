@@ -26,7 +26,6 @@ class config_waste(models.Model):
      x_waste_prod = fields.Float(string = 'Waste Produksi')
      x_confirm_waste = fields.Float(string = 'Confirm Waste', default = 0)
      x_last_confirm_waste = fields.Float(string = 'Confirm Last Waste', default = 0, help = 'fields ini digunakan untuk save last confirm waste')
-     x_coba = fields.Char(string = 'tampungann saja ')
      x_keb_config = fields.Float(string = 'kebutuhan konfigurasi')
      x_product_uom_qty = fields.Float(string="To consume max", compute='get_max_to_consume')
      product_uom_qty_first = fields.Float(string="To consume min", compute='get_min_to_consume')
@@ -41,11 +40,10 @@ class config_waste(models.Model):
           self.x_keb_config = (( self.x_length_prod * self.x_width_prod * self.product_qty)/(1 - (self.x_waste_config/100)))/self.x_lb_config
           self.x_waste_prod = self.x_std_fixed + ((self.x_std_var / 100) * self.x_keb_config) + self.x_value_trial
 
-     @api.onchange('x_confirm_waste')
+     @api.multi
      def confirm_waste(self):
           self.x_last_confirm_waste = self.x_confirm_waste
           for x in self.move_raw_ids:
-               self.x_coba = x.product_tmpl_id.categ_id.name
                if x.product_tmpl_id.categ_id.name == 'Label' or \
                        x.product_tmpl_id.categ_id.name == 'BU' or \
                        x.product_tmpl_id.categ_id.name == 'Laminating 20micr' or \
@@ -62,11 +60,29 @@ class config_waste(models.Model):
                if x.product_tmpl_id.categ_id.name == 'DC':
                     x.product_uom_qty = x.product_uom_qty + self.x_confirm_waste
 
+     # Untuk perhitungan confirm waste yg ada di OK Lines
+     @api.multi
+     def confirm_move_raw(self):
+          temp_confirm_waste = self.x_confirm_waste
+          # Cek apakah confirm waste sama dengan sebelumnya
+          if temp_confirm_waste != self.x_last_confirm_waste:
+               for x in self.move_raw_ids:
+                    if x.product_tmpl_id.categ_id.name == 'Label' or \
+                            x.product_tmpl_id.categ_id.name == 'BU' or \
+                            x.product_tmpl_id.categ_id.name == 'Laminating 20micr' or \
+                            x.product_tmpl_id.categ_id.name == 'Pita' or \
+                            x.product_tmpl_id.categ_id.name == 'Hot Foil':
+                         x.product_uom_qty = x.product_uom_qty + self.x_confirm_waste
+                         # To Consume untuk (REPORT)
+                         product_uom_qty_temp = x.product_uom_qty
+                         self.x_product_uom_qty = product_uom_qty_temp
 
-               # if x.product_id.categ_id == '8':
-               #      x.move_raw_ids.product_uom_qty = 200
-                    # x.move_raw_ids.product_uom_qty = x.move_raw_ids.product_uom_qty + self.x_confirm_waste
-                    # self.x_uom_qty = self.x_uom_qty + self.x_confirm_waste
+                    if x.product_tmpl_id.categ_id.name == 'PL':
+                         x.product_uom_qty = x.product_uom_qty + self.x_confirm_waste
+                    if x.product_tmpl_id.categ_id.name == 'DC':
+                         x.product_uom_qty = x.product_uom_qty + self.x_confirm_waste
+
+          self.x_last_confirm_waste = temp_confirm_waste
 
 
      # Untuk simpan BU To consume pada move_raw_ids (REPORT) MINIMAL
@@ -133,19 +149,20 @@ class stock_move_variant(models.Model):
 
      @api.one
      def _get_variant_mo(self):
-          self.env.cr.execute("select pav.name from product_attribute_value_product_product_rel ppr "
-                              "left join product_attribute_value pav on ppr.product_attribute_value_id = pav.id "
-                              "left join product_attribute pa on pav.attribute_id = pa.id "
-                              "left join product_product pp on ppr.product_product_id = pp.id "
-                              "left join product_template pt on pp.product_tmpl_id = pt.id "
-                              "where pa.name = 'Lebaran' and pp.default_code = '" + self.x_stockmove_internalref + "'")
-          z = self.env.cr.fetchone()
-          if z:
-               self.x_stockmove_variant = z[0]
-               self.x_stockmove_variant = (float(self.x_stockmove_variant) / 1000)
-               return self.x_stockmove_variant
-          else:
-               return None
+          if self.x_stockmove_internalref:
+               self.env.cr.execute("select pav.name from product_attribute_value_product_product_rel ppr "
+                                   "left join product_attribute_value pav on ppr.product_attribute_value_id = pav.id "
+                                   "left join product_attribute pa on pav.attribute_id = pa.id "
+                                   "left join product_product pp on ppr.product_product_id = pp.id "
+                                   "left join product_template pt on pp.product_tmpl_id = pt.id "
+                                   "where pa.name = 'Lebaran' and pp.default_code = '" + self.x_stockmove_internalref + "'")
+               z = self.env.cr.fetchone()
+               if z:
+                    self.x_stockmove_variant = z[0]
+                    self.x_stockmove_variant = (float(self.x_stockmove_variant) / 1000)
+                    return self.x_stockmove_variant
+               else:
+                    return None
 
      @api.one
      def _toconsumemeper(self):

@@ -30,7 +30,10 @@
             </field>
         </record>
 
-        <!-- Hidden standard price product.product -->
+        <!--
+            Hidden standard price product.product
+            PRODUCT.PRODUCT
+        -->
         <record model="ir.ui.view" id="product_product_form_inh_visible_standard_price">
             <field name="name">product.product.form2</field>
             <field name="model">product.product</field>
@@ -49,7 +52,87 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='lst_price']" position="replace">
+                    <field name="lst_price" groups="sales_team.group_sale_manager,sales_team.group_sale_salesman,sales_team.group_sale_salesman_all_leads"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!--
+            TREE VIEW
+            Hidden sale price dan cost
+            PRODUCT.TEMPLATE
+        -->
+        <record model="ir.ui.view" id="product_product_template_tree_view">
+            <field name="name">product.template.tree</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="list_price" position="replace">
                     <field name="list_price" groups="sales_team.group_sale_manager,sales_team.group_sale_salesman,sales_team.group_sale_salesman_all_leads"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_product_template_tree_view_2">
+            <field name="name">product.template.tree</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="standard_price" position="replace">
+                    <field name="standard_price" groups="purchase.group_purchase_manager,purchase.group_purchase_user"/>
+                </field>
+            </field>
+        </record>
+
+
+         <!--
+            TREE VIEW
+            Hidden sale price dan cost
+            PRODUCT.PRODUCT
+        -->
+        <record model="ir.ui.view" id="product_product_tree_view">
+            <field name="name">product.product.tree</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_product_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="lst_price" position="replace">
+                    <field name="lst_price" groups="sales_team.group_sale_manager,sales_team.group_sale_salesman,sales_team.group_sale_salesman_all_leads"/>
+                </field>
+
+                <field name="price" position="replace">
+                    <field name="price" groups="sales_team.group_sale_manager,sales_team.group_sale_salesman,sales_team.group_sale_salesman_all_leads"/>
+                </field>
+            </field>
+        </record>
+
+        <!--
+            KANBAN VIEW
+            Hidden sale price dan cost
+            PRODUCT.TEMPLATE
+        -->
+        <record model="ir.ui.view" id="product_template_kanban_view">
+            <field name="name">product.template.kanban</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_kanban_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//ul/li/field[@name='lst_price']" position="replace">
+                    <field name="lst_price" groups="sales_team.group_sale_manager,sales_team.group_sale_salesman,sales_team.group_sale_salesman_all_leads"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!--
+            KANBAN VIEW
+            Hidden sale price
+            PRODUCT.PRODUCT
+        -->
+        <record model="ir.ui.view" id="product_template_kanban_view_2">
+            <field name="name">product.product.kanban</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_kanban_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//ul/li/field[@name='lst_price']" position="replace">
+                    <field name="lst_price" groups="sales_team.group_sale_manager,sales_team.group_sale_salesman,sales_team.group_sale_salesman_all_leads"/>
                 </xpath>
             </field>
         </record>

@@ -3,10 +3,27 @@
     <data>
 
         <!-- Menu Quality Inspection -->
-        <menuitem name="Quality Inspection" id="sub_menu_quality_inspection"
-              parent="menu_quality_assurance"
-              sequence="11"
+        <menuitem name="Monitoring Produk Tidak Sesuai" id="sub_menu_quality_inspection"
+              parent="menu_quality_root"
+              sequence="114"
               action="quality_inspection_action"></menuitem>
+
+        <!-- Menu Configuration -->
+        <menuitem name="Configuration" id="configuration"
+              parent="menu_quality_root"
+              sequence="115"></menuitem>
+
+        <!-- Sub Menu Problem Tags -->
+        <menuitem name="Assets Problem Tags" id="sub_menu_problem_tags"
+                  parent="configuration"
+                  sequence="116"
+                  action="problem_tags_action"></menuitem>
+
+         <!-- Sub Menu Mesin Tags -->
+        <menuitem name="Assets Machine Tags" id="sub_menu_machine_tags"
+                  parent="configuration"
+                  sequence="117"
+                  action="mesin_tags_action"></menuitem>
 
     </data>
 </odoo>

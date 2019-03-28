@@ -109,11 +109,11 @@
 	                    <field name="name"/>
 	            		<field name="responsible_id"/>
 	                </group>
-	                <notebook>
-	                    <page string="Keterangan">
+	                <notebook name="note">
+	                    <page name="ket" string="Keterangan" groups="mrp.group_mrp_manager">
 	                        <field name="description"/>
 	                    </page>
-	                    <page string="Sesi">
+	                    <page name="sesi" string="Sesi">
 							<field name="session_ids">
 								<tree string="Daftar Sesi" editable="bottom">
 									<field name="name"/>

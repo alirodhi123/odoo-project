@@ -9,7 +9,7 @@
                 <xpath expr="//button[@name='action_confirm'][1]" position="replace">
                     <button name="action_confirm" id="action_confirm"
                         string="Confirm Sale" class="btn-primary" type="object"
-                        attrs="{'invisible': ['|',('state', 'not in', ['sent']),('is_multiquotation', '=', True)]}"/>
+                        attrs="{'invisible': ['|','|',('state', 'not in', ['sent']),('is_multiquotation', '=', True),('is_payment_terms', '=', True)]}"/>
                     <button name="action_multi_quotation_selector"
                         string="Choose Best" type="object" class="btn-primary"
                         attrs="{'invisible': ['|',('state', 'not in', ['sent']),('is_multiquotation', '!=', True)]}"/>
@@ -17,7 +17,7 @@
                 <xpath expr="//button[@name='action_confirm'][2]" position="replace">
                     <button name="action_confirm"
                         string="Confirm Sale" type="object"
-                        attrs="{'invisible': ['|',('state', 'not in', ['draft']),('is_multiquotation', '=', True)]}"/>
+                        attrs="{'invisible': ['|','|',('state', 'not in', ['draft']),('is_multiquotation', '=', True),('is_payment_terms', '=', True)]}"/>
                     <button name="action_multi_quotation_selector"
                         string="Choose Best" type="object"
                         attrs="{'invisible': ['|',('state', 'not in', ['draft']),('is_multiquotation', '!=', True)]}"/>
