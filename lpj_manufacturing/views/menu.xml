@@ -6,5 +6,12 @@
                   parent="mrp.menu_mrp_root"
                   sequence="112"
                   action="action_product_sale_list"></menuitem>
+
+        <!-- Sub menu buffer tags -->
+        <menuitem name="Buffer Tags" id="menu_buffer_tags"
+                  parent="mrp.menu_mrp_configuration"
+                  sequence="114"
+                  action="buffer_tags_action"></menuitem>
+
     </data>
 </odoo>

@@ -27,6 +27,7 @@
         'views/inventory.xml',
         'views/sj_lot.xml',
         'views/lot_workorder.xml',
+        'views/stock_scrap.xml',
         'views/report_sjk.xml',
         'views/report_internal_transfer.xml',
     ],

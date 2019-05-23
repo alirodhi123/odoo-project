@@ -47,5 +47,17 @@
             </field>
         </record>
 
+        <!-- Inherit search view in Purchase Request -->
+        <record id="inherit_purchase_request_search" model="ir.ui.view">
+              <field name="name">purchase.request.search</field>
+              <field name="model">purchase.request</field>
+              <field name="inherit_id" ref="purchase_request.view_purchase_request_search"/>
+              <field name="arch" type="xml">
+                    <field name="state" position="after">
+                        <field name="x_no_ok"></field>
+                    </field>
+              </field>
+        </record>
+
     </data>
 </odoo>

@@ -174,7 +174,7 @@
                                         <b>Analisa Akar Masalah</b>
                                     </p>
                                     <table class="table table-bordered" style="border: 1px solid black;">
-                                        <thead>
+                                        <thead style="display: table-header-group; page-break-inside: avoid">
                                             <tr style="background-color:lightgray;">
                                                 <td class="text-center" style="border: 1px solid black; padding: 1px;">
                                                     <strong>Category</strong>
@@ -199,8 +199,8 @@
                                                 </td>
                                             </tr>
                                         </thead>
-                                        <tbody style="margin-top: 15px; padding-top: 50px;">
-                                            <tr t-foreach="o.x_project_task_line" t-as="row">
+                                        <tbody style="margin-top: 15px; padding-top: 50px; display: table-row-group">
+                                            <tr style="page-break-inside: avoid" t-foreach="o.x_project_task_line" t-as="row">
                                                 <td class="text-center" style="border: 1px solid black; padding: 1px; vertical-align: middle;">
                                                     <span t-field="row.x_category_problem"/>
                                                 </td>

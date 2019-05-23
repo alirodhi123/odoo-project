@@ -211,6 +211,11 @@ class sstock_inventory_lot(models.Model):
                #      self.x_qty_akhir)
           }
 
+class stock_scrap(models.Model):
+     _inherit = 'stock.scrap'
+
+     keterangan = fields.Text(string="Keterangan")
+
 
 
 

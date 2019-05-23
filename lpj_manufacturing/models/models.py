@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 import subprocess
+from datetime import datetime
+
+from dateutil.relativedelta import relativedelta
 
 from odoo import models, fields, api
 import odoo.addons.decimal_precision as dp
@@ -11,6 +14,7 @@ class mrp_production(models.Model):
      def _default_id(self):
          return self.env['sale.order.line'].browse(self._context.get('active_id'))
 
+     x_buffer_tags = fields.Many2many('buffer.tags', string="Material Location")
      x_product_bu = fields.Char(string="Product BU", compute='get_product_bu')
      x_product_label = fields.Char(compute='get_product_bu')
      x_product_laminating = fields.Char(compute='get_product_bu')
@@ -27,6 +31,8 @@ class mrp_production(models.Model):
      orderline = fields.Many2one('sale.order.line', default=_default_id)
      date_planned_start = fields.Datetime('Deadline Start', copy=False, default=fields.Datetime.now,index=True, required=True,
                           states={'confirmed': [('readonly', False)]}, oldname="date_planned", track_visibility='onchange')
+     date_planned_finished = fields.Datetime('Deadline End', copy=False,index=True, compute='onchange_deadline_start',
+                          states={'confirmed': [('readonly', False)]})
 
 
      # ORDER KERJA

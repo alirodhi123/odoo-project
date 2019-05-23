@@ -47,7 +47,7 @@ class data_form(models.Model):
     x_gramature_product = fields.Float(string="Gramature (gsm)", track_visibility='onchange')
     x_thickness_product = fields.Float(string="Thickness (mikron)", track_visibility='onchange')
     x_keterangan_lem = fields.Text(string="Keterangan Lem", track_visibility='onchange')
-    x_material_type_coa = fields.Char(string="Material Type")
+    x_material_type_quality = fields.Char(string="Material Type COA")
     x_length = fields.Float('Length (mm)')
     x_width_variant = fields.Char(string = 'Variant', readonly = True, compute = '_get_variant')
     x_width = fields.Float('Width (mm)', track_visibility='onchange')
@@ -94,6 +94,8 @@ class data_form(models.Model):
     x_notch = fields.Boolean('With Notch')
     x_roll_perbox_ribbon = fields.Integer('Roll Perbox')
     x_material_core = fields.Selection([('paper', 'Paper'), ('plastic', 'Plastic')], string='Material Core')
+    x_colour = fields.Char(string="Colour")
+    x_ink_melting = fields.Char(string="Ink Melting")
     # Code
     x_code = fields.Char("My Code")
 

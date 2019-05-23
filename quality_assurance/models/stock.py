@@ -41,6 +41,7 @@ class StockPicking(models.Model):
     alert_count = fields.Integer(compute='_compute_alert', string='Quality Alerts', default=0)
     alert_ids = fields.Many2many('quality.alert', compute='_compute_alert', string='Quality Alerts', copy=False)
 
+    # Fungsi Create Quality Alert
     @api.multi
     def generate_quality_alert(self):
         '''
@@ -49,7 +50,9 @@ class StockPicking(models.Model):
         quality_alert = self.env['quality.alert']
         quality_measure = self.env['quality.measure']
         for move in self.move_lines:
+            # Cek apakah product sudah ada di quality measure
             measures = quality_measure.search([('product_id', '=', move.product_id.id), ('trigger_time', 'in', self.picking_type_id.id)])
+            alert = quality_alert.search([('product_id', '=', move.product_id.id)])
             if measures:
                 quality_alert.create({
                     'name': self.env['ir.sequence'].next_by_code('quality.alert') or _('New'),
@@ -58,9 +61,39 @@ class StockPicking(models.Model):
                     'origin': self.name,
                     'company_id': self.company_id.id,
                 })
+            # else:
+            #     self.generate_quality_measure()
 
+    #Fungsi dijalankan ketika master quality measure tidak ada
+    @api.multi
+    def generate_quality_measure(self):
+        # Get sequence untuk quality measure
+        for move in self.move_lines:
+            prefix = "QC-"
+            product_product = self.env['product.product']
+            product = product_product.search([('id', '=', move.product_id.id)])
+            default_code = product.default_code  # Get internal code di product
+
+            # Create quality measure jika tidak ada pada master quality measure
+            quality_measure = self.env['quality.measure']
+
+            measures = quality_measure.search(
+                [('product_id', '=', move.product_id.id), ('trigger_time', 'in', self.picking_type_id.id)])
+            if not measures:
+                quality_measure.create({
+                    'name': prefix + default_code,
+                    'product_id': move.product_id.id,
+                    'type': 'quality',
+                    'trigger_time': [[6, 0, [1]]]  # create IDS (6, 0, [ID of one2many]) for many2many
+                })
+                # Setelah create quality measure, diarahkan kembali ke method quality_alert dan create quality alert
+                self.generate_quality_alert()
+
+    # Button Mark As Todo di stock picking
     @api.multi
     def action_confirm(self):
+        # Jika quality alert = 0 dan picking type = Receipt
+        # if self.alert_count == 0 and self.picking_type_id.id == 1:
         if self.alert_count == 0:
             self.generate_quality_alert()
         res = super(StockPicking, self).action_confirm()

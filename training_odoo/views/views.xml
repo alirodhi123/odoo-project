@@ -230,7 +230,7 @@
 		<field name="name">training.sesi.calendar</field>
 		<field name="model">training.sesi</field>
 		<field name="arch" type="xml">
-			<calendar string="Sesi Calendar" date_start="start_date" date_stop="end_date" color="instructor_id" mode="month">
+			<calendar string="Sesi Calendar" date_start="start_date" date_delay="duration" color="instructor_id" mode="month">
 				<field name="name"/>
 			</calendar>
 		</field>

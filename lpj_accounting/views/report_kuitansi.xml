@@ -121,9 +121,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
+                                            <tr t-if="not o.x_diskon_foot">
                                                 <td style="border: 1px solid black; padding: 2px;">Harga Barang</td>
                                                 <td class="text-right" style="border: 1px solid black; padding: 2px;"><span t-field="o.x_untaxed_amount_foot" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"></span></td>
+                                            </tr>
+                                            <tr t-if="o.x_diskon_foot">
+                                                <td style="border: 1px solid black; padding: 2px;">Harga Barang</td>
+                                                <td class="text-right" style="border: 1px solid black; padding: 2px;"><span t-field="o.x_bruto_kwt_foot" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"></span></td>
                                             </tr>
                                             <tr t-if="o.x_total_material_foot">
                                                 <td style="border: 1px solid black; padding: 2px;">Harga Material</td>
@@ -158,7 +162,7 @@
 
                                     <span style="padding-right: 35px; padding-top: 3px;"><b>Bank</b></span>
                                     <span style="padding-right: 10px">:</span>
-                                    <span>BCA Cabang GALAXY</span><br/>
+                                    <span>BCA Cabang GALAXY Surabaya</span><br/>
 
                                     <span style="padding-right: 47.5px;"><b>A/C</b></span>
                                     <span style="padding-right: 10px;">:</span>

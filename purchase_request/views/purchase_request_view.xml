@@ -242,6 +242,7 @@
             action="purchase_request_form_action"/>
 
 
+
         <record id="purchase_request_line_tree" model="ir.ui.view">
             <field name="name">purchase.request.line.tree</field>
             <field name="model">purchase.request.line</field>
@@ -434,6 +435,7 @@
         <menuitem id="parent_menu_purchase_request"
             name="Purchase requests"
             groups="group_purchase_request_user,group_purchase_request_manager"
+            web_icon="purchase_request,static/description/icon.png"
             />
 
         <menuitem id="menu_purchase_request"

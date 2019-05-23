@@ -29,6 +29,7 @@
         # 'views/templates.xml',
         # 'views/sales.xml',
         'views/rtrw.xml',
+        'views/res_partner.xml',
 
     ],
     # only loaded in demonstration mode

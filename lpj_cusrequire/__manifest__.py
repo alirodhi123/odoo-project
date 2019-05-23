@@ -30,6 +30,7 @@
         'views/quotation_cr.xml',
         # 'views/admin_input_product.xml',
         'views/sale_view.xml',
+        # 'views/crm.xml',
         'views/print_quo.xml',
         'views/report_quotation.xml',
         'views/menu.xml',

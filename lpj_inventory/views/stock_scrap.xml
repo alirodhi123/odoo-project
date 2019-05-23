@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="stock_scrap_view_custom">
+            <field name="name">stock.scrap</field>
+            <field name="model">stock.scrap</field>
+            <field name="inherit_id" ref="stock.stock_scrap_form_view"/>
+            <field name="arch" type="xml">
+                <!-- Stock scrap -->
+                <field name="date_expected" position="after">
+                   <field name="keterangan"></field>
+               </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

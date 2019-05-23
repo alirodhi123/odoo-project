@@ -4,14 +4,14 @@
 
         <!-- Menu Quality Inspection -->
         <menuitem name="Monitoring Produk Tidak Sesuai" id="sub_menu_quality_inspection"
-              parent="menu_quality_root"
-              sequence="114"
-              action="quality_inspection_action"></menuitem>
+                  parent="menu_quality_root"
+                  sequence="114"
+                  action="quality_inspection_action"></menuitem>
 
         <!-- Menu Configuration -->
-        <menuitem name="Configuration" id="configuration"
-              parent="menu_quality_root"
-              sequence="115"></menuitem>
+        <menuitem name="Configuration Tags" id="configuration"
+                  parent="menu_quality_root"
+                  sequence="115"></menuitem>
 
         <!-- Sub Menu Problem Tags -->
         <menuitem name="Assets Problem Tags" id="sub_menu_problem_tags"
@@ -19,11 +19,16 @@
                   sequence="116"
                   action="problem_tags_action"></menuitem>
 
-         <!-- Sub Menu Mesin Tags -->
+        <!-- Sub Menu Mesin Tags -->
         <menuitem name="Assets Machine Tags" id="sub_menu_machine_tags"
                   parent="configuration"
                   sequence="117"
                   action="mesin_tags_action"></menuitem>
 
+        <menuitem id="detail_lot_child" name="Master Detail Lot"
+                  parent="menu_quality_assurance" sequence="100"
+                  action="lot_child_form"/>
+
+         <!--<menuitem id="menu_quality_alert" name="Quality Alerts" parent="menu_quality_assurance" action="quality_alert_action"/>-->
     </data>
 </odoo>

@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
+from dateutil.relativedelta import relativedelta
 
 from odoo import models, fields, api
 import odoo.addons.decimal_precision as dp
-from datetime import datetime
+from datetime import datetime, time
+from dateutil.relativedelta import relativedelta
 
 
 class prod_requirement(models.Model):
@@ -10,7 +12,7 @@ class prod_requirement(models.Model):
     _inherit = 'mail.thread'
 
     name = fields.Char(string='Code')
-    x_duedate_drawing = fields.Datetime(string='Due Date Drawing', default=datetime.today())
+    x_duedate_drawing = fields.Datetime(string='Due Date Drawing', default=datetime.now())
     item_description = fields.Char(string='Item Name', required=True, readonly=True,
                                    states={'1': [('readonly', False)]},
                                    track_visibility='always')
@@ -26,24 +28,15 @@ class prod_requirement(models.Model):
     x_product = fields.Many2one('product.product', string='Product Name', domain=[('sale_ok', '=', True)])
     x_product_tmpl = fields.Many2one('product.template', string='Product Template', domain=[('sale_ok', '=', True)])
     x_quotation_id = fields.Many2one('sale.order')
-    x_sale_order_line_ids = fields.One2many('sale.order.line', related='x_product.x_product_sol', readonly=True)
-    x_cusreq = fields.Many2one(string = 'name last SQ', related = 'x_sale_order_line_ids.x_customer_requirement')
+    # x_sale_order_line_ids = fields.One2many('sale.order.line', related='x_product.x_product_sol', readonly=True)
+    # x_cusreq = fields.Many2one(string = 'name last SQ', related = 'x_sale_order_line_ids.x_customer_requirement')
 
-    # x_drawing_sq = fields.Binary(string='Drawing SQ')
-    # x_dwg_sq = fields.Many2one('x.drawing', string = "Drawing SQ")
-    # x_harga_repeat = fields.Integer(compute = )
     x_no_so = fields.Char(string='No. SO')
     x_harga_repeat = fields.Float(readonly=True, string='Harga Repeat')
     x_tamp_tgl = fields.Integer(string='tampungan tanggal untuk loop', readonly=True)
     x_id = fields.Integer(string='tampungan tanggal untuk loop', readonly=True)
-    x_request_date = fields.Date(string='Request Date',store=True, readonly = True)
+    x_request_date = fields.Date(string='Request Date',store=True, readonly = True, default=datetime.now())
     x_print = fields.Boolean(string = 'print', readonly = False)
-
-
-
-        # for x in self.x_sale_order_line_ids:
-        #     if x.id == self.x_tamp_tgl:
-        #         self.x_harga_repeat = x.price_unit
 
     # Pre-Costing
     x_category_foil = fields.Many2one('x.category.finishing.process', string='Category Foil', readonly=True,
@@ -89,8 +82,9 @@ class prod_requirement(models.Model):
     x_propose_profit_low = fields.Float('Porpose Profit Low', readonly=True, digits=dp.get_precision('Prroduct Price'))
     x_propose_profit_high = fields.Float('Porpose Profit High', readonly=True,
                                          digits=dp.get_precision('Prroduct Price'))
-
     compute_field = fields.Boolean(string="check field", compute = "get_user")
+    start_of_date = fields.Date(string='Price Start Date', readonly=True)
+    end_of_date = fields.Date(string="Price End Date", compute='end_date_function')
 
     @api.one
     def get_user(self):
@@ -108,7 +102,6 @@ class prod_requirement(models.Model):
         res_user = self.env['res.users'].search([('id', '=', self._uid)])
         if res_user.has_group('sales_team.group_sale_salesman'):
             self.is_mkt = True
-
         else:
             self.is_mkt = False
 
@@ -167,6 +160,7 @@ class prod_requirement(models.Model):
     x_roll_perbox_ribbon_prd = fields.Integer(related="x_product.x_roll_perbox_ribbon")
     x_material_core_prd = fields.Selection(related="x_product.x_material_core")
 
+
     @api.onchange("x_length", "x_width")
     def check_konversi(self):
         if self.x_length > 0:
@@ -177,7 +171,21 @@ class prod_requirement(models.Model):
     @api.onchange("x_repeat_order")
     def check_repeat(self):
         if self.x_repeat_order == True:
-            self.x_repeat_order = True
+            if self.x_product:
+                self.env.cr.execute("select x_material_type_id, x_length, x_width, x_varnish, x_special_color,"
+                                    " x_ink_coverage, x_mrpwordkcenter_id, x_lamination, x_category_foil from x_cusrequirement where "
+                                    "x_product = '" + str(self.x_product.id) + "'and create_date = (select max(create_date) from x_cusrequirement where x_product = '" + str(self.x_product.id) +"')")
+                z = self.env.cr.fetchone()
+                if z:
+                    self.x_material_type_id = z[0]
+                    self.x_length = z[1]
+                    self.x_width = z[2]
+                    self.x_varnish = z[3]
+                    self.x_special_color = z[4]
+                    self.x_ink_coverage = z[5]
+                    self.x_mrpwordkcenter_id = z[6]
+                    self.x_lamination = z[7]
+                    self.x_category_foil = z[8]
 
     @api.onchange("x_status_cr")
     def check_repeat_a(self):
@@ -231,40 +239,48 @@ class prod_requirement(models.Model):
             vals['state'] = '1'
 
         vals['name'] = self.env['ir.sequence'].next_by_code('x.cusrequirement') or _('New')
+
         result = super(prod_requirement, self).create(vals)
-
+        # Tanggal start date otomatis ambil hari ini
+        result.write({'start_of_date': datetime.now()})
         return result
-
-    @api.onchange('x_product')
-    def repeat_price(self):
-        for a in self.x_sale_order_line_ids:
-            self.x_id = a.product_id
-        self.env.cr.execute("SELECT max(id) FROM sale_order_line where product_id = " + str(self.x_id))
-        self.x_tamp_tgl = self.env.cr.fetchone()[0]
-        for x in self.x_sale_order_line_ids:
-            if x.id == self.x_tamp_tgl:
-                self.x_harga_repeat = x.price_unit
-
-    @api.onchange('x_cusreq', 'x_repeat_order')
-    def repeat_spec(self):
-        if self.x_repeat_order == True:
-            self.x_length = self.x_cusreq.x_length
-            self.x_width = self.x_cusreq.x_width
-            self.x_packing_category_id = self.x_cusreq.x_packing_category_id
-            self.x_supplier_id = self.x_cusreq.x_supplier_id
-            self.x_material_type_id = self.x_cusreq.x_material_type_id
-            self.x_numbers_of_colors = self.x_cusreq.x_numbers_of_colors
-            self.x_varnish = self.x_cusreq.x_varnish
-            self.x_special_color = self.x_cusreq.x_special_color
-            self.x_ink_coverage = self.x_cusreq.x_ink_coverage
-            self.x_mrpwordkcenter_id = self.x_cusreq.x_mrpwordkcenter_id
-            self.x_lamination = self.x_cusreq.x_lamination
-            self.x_category_foil = self.x_cusreq.x_category_foil
 
     @api.multi
     def act_reject(self):
         self.x_status_cr = 'reject'
         self.state = '9'
+        ac = self.env['ir.model.data'].xmlid_to_res_id('lpj_cusrequire.reject_reason_form', raise_if_not_found=True)
+        # for o in self:
+        sq = self.name
+
+        result = {
+            'name': 'Reject Reason',
+            'view_type': 'form',
+            'res_model': 'x.reject.reason',
+            'view_id': ac,
+            'context': {
+                'default_name': sq
+            },
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'target': 'new',
+        }
+        return result
+
+    # Fungsi menambah end date + 60 hari
+    @api.one
+    def end_date_function(self):
+        # Menambah end of date + 60 hari
+        start_date = self.start_of_date
+
+        if start_date != False:
+            jumlah_hari = '90'
+            date_format = '%Y-%m-%d'
+            date = self.start_of_date
+
+            start_date_var = datetime.strptime(str(date), date_format)
+            end_date_var = start_date_var + relativedelta(days=int(jumlah_hari))
+            self.end_of_date = str(end_date_var)
 
 
 class approval_stage(models.Model):
@@ -273,14 +289,18 @@ class approval_stage(models.Model):
     description = fields.Text()
 
 
-#
-class product_sales(models.Model):
-    _inherit = 'product.product'
-    x_product_sol = fields.One2many('sale.order.line', 'product_id', string='product sale order line')
-    # x_prod_cusreq = fields.One2many('x.cusrequirement', 'x_cusreq', string = 'Customer Requirement')
-
 class x_konv_material(models.Model):
     _name = 'x.konversi.material'
     name = fields.Char(string = 'KM_Odoo')
     x_km_precost = fields.Char(string='KM_Precost')
+
+class reject_reason(models.Model):
+    _name = 'x.reject.reason'
+    name = fields.Char(string = 'SQ', readonly = True)
+    x_reject_reason = fields.Many2one('x.master.reason',string='Reason')
+    x_desc = fields.Text(string='Description')
+
+class reject(models.Model):
+    _name = 'x.master.reason'
+    name = fields.Text(string='Reason')
 

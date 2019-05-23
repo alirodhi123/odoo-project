@@ -8,5 +8,6 @@ from . import config_waste
 from . import meter_to_pcs
 from . import sale_order
 from . import refresh_bom
+from . import buffer_tags
 # from . import sj_lot
 

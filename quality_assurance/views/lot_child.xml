@@ -1,0 +1,67 @@
+<odoo>
+    <data>
+        <!--<record model="ir.ui.view" id="lot_workorder_form_view">-->
+        <!--<field name="name">lot.workorder.form</field>-->
+        <!--<field name="model">stock.production.lot</field>-->
+        <!--<field name="inherit_id" ref="stock.view_production_lot_form"/>-->
+        <!--<field name="arch" type="xml">-->
+        <!--<xpath expr="//field[@name='product_qty']" position="after">-->
+        <!--<field name="x_tampungan_qty" invisible='1'/>-->
+        <!--</xpath>-->
+        <!--<notebook>-->
+        <!--<page string="Lot" id="lot_workorder">-->
+        <!--<field name="x_lotworkorder_id">-->
+        <!--<tree editable="bottom">-->
+        <!--<field name='x_internal_lot'/>-->
+        <!--<field name='x_supplier_lot'/>-->
+        <!--<field name='x_qty_lot'/>-->
+        <!--</tree>-->
+        <!--</field>-->
+        <!--</page>-->
+        <!--</notebook>-->
+        <!--</field>-->
+        <!--</record>-->
+        <record model="ir.ui.view" id="detail_lot_child_view">
+            <field name="name">detail.lot.child.search</field>
+            <field name="model">x.lot.workorder</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="x_internal_lot"/>
+                    <!--<field name="responsible_id"/>-->
+                    <!--<field name="description"/>-->
+                    <!--<filter name="my_courses" string="Kursus Saya" domain="[('responsible_id', '=', uid)]"/>-->
+                    <!--<group string="Group By">-->
+                        <!--<filter name="by_responsible" string="Penanggung Jawab"-->
+                                <!--context="{'group_by': 'responsible_id'}"/>-->
+                    <!--</group>-->
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="detail_lot_child_tree">
+            <field name="name">detail.lot.child.tree</field>
+            <field name="model">x.lot.workorder</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <!--<field name="x_production_lot"/>-->
+                    <field name="x_internal_lot" readonly="True" />
+                    <field name="x_supplier_lot"/>
+                    <field name="x_qty_lot" readonly="True"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window"
+                id="lot_child_form">
+            <field name="name">Master Detail Lot</field>
+            <field name="res_model">x.lot.workorder</field>
+            <!--<field name="view_type">form</field>-->
+            <field name="view_mode">tree</field>
+        </record>
+
+
+    </data>
+</odoo>
+
+

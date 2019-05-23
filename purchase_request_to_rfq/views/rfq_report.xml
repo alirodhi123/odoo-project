@@ -30,7 +30,7 @@
             <field name="page_width">0</field>
             <field name="orientation">Portrait</field>
             <field name="margin_top">6</field>
-            <field name="margin_bottom">4</field>
+            <field name="margin_bottom">25</field>
             <field name="margin_left">4</field>
             <field name="margin_right">4</field>
             <field name="header_line" eval="False" />
@@ -47,6 +47,7 @@
                 <t t-call="report.html_container">
                     <t t-foreach="docs" t-as="o">
                         <div class="page">
+                            <!-- CONTENT -->
                             <div class="row">
                                 <div class="col-xs-3">
                                     <img t-if="res_company.logo" t-att-src="'data:image/png;base64,%s' %res_company.logo" style="width: 180%"/>
@@ -119,6 +120,7 @@
                                         <th class="text-center"><strong>Date Req</strong></th>
                                         <th class="text-right"><strong>Qty</strong></th>
                                         <th class="text-right"><strong>Qty(m2)</strong></th>
+                                        <th class="text-right"><strong>Harga(m2)</strong></th>
                                         <th class="text-right"><strong>Unit Price</strong></th>
                                         <th class="text-right"><strong>Net Price</strong></th>
                                     </tr>
@@ -142,7 +144,10 @@
                                             <span t-field="line.x_qty_meterpersegi_po"/>
                                         </td>
                                         <td class="text-right">
-                                            <span t-field="line.price_unit"/>
+                                            <span t-field="line.x_harga_meterpersegi" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"></span>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="line.price_unit" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
                                         </td>
                                         <td class="text-right">
                                             <span t-field="line.price_subtotal" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
@@ -202,15 +207,16 @@
                                 <li style="font-size: 11px">Faktur pajak harus rangkap 2 dan invoice harus dilengkapi materai</li>
                             </ol>
                             <div class="oe_structure"/>
+                        </div> <!-- Tutup page -->
 
-                            <!-- Footer -->
+                        <div class="footer">
                             <div class="row">
-                                <div class="col-xs-12" style="position: fixed; width: 100%; bottom: -1355px;">
-                                    <div class="text-center" style="border-top: 1px solid black;">
+                                <div class="col-xs-12">
+                                    <div class="text-center" style="border-top: 1px solid black; margin-top: 20px;">
                                         <ul t-if="not res_company.custom_footer" style="list-style: none; margin: 0 auto;">
                                             <t t-set="res_company" t-value="res_company.sudo()"/>
                                             <li t-if="res_company.street">Office: <span t-field="res_company.street"/></li>
-                                            <li t-if="res_company.phone">Phone: <span t-field="res_company.phone"/><span>, 99038051, 99038051, 99038064</span> </li>
+                                            <li t-if="res_company.phone">Phone: <span t-field="res_company.phone"/><span>, 99038051, 99038054, 99038064</span> </li>
                                             <li t-if="res_company.fax">Fax: <span t-field="res_company.fax"/></li>
                                             <li t-if="res_company.email">Email: <span t-field="res_company.email"/></li>
                                             <li t-if="res_company.website">Website: <span t-field="res_company.website"></span></li>
@@ -218,9 +224,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Tutup Footer -->
-
-                        </div> <!-- Tutup page -->
+                        </div>
                     </t>
                 </t>
             </t>

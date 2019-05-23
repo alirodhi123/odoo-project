@@ -19,6 +19,14 @@ class sale_custom(models.Model):
      x_time_idsduration = fields.Float(string = 'duration total')
      x_ids_duration = fields.Float(related = 'time_ids.duration')
      x_total_duration = fields.Float(string = 'Total Durasi')
+     x_shift_leader = fields.Many2one('hr.employee', string='Shift Leader')
+     # CALENDAR
+     date_planned_start = fields.Datetime(
+         'Scheduled Date Start',
+         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+     date_planned_finished = fields.Datetime(
+         'Scheduled Date Finished',
+         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
 
 
      @api.onchange('x_qty_meter')
@@ -33,13 +41,6 @@ class sale_custom(models.Model):
      @api.onchange ('x_ids_duration')
      def duration_real(self):
           self.duration = self.duration + self.x_ids_duration
-
-     # @api.one
-     # def summary_time(self):
-     #      self.x_total_duration = 0
-     #      for a in self.time_ids:
-     #           self.x_total_duration = self.x_total_duration + a.duration
-
 
 
 class lot_operation(models.Model):
@@ -59,8 +60,19 @@ class mrp_inherit(models.Model):
     x_kd_mesin = fields.Char(string = 'Kode Mesin')
     x_user = fields.Many2one('hr.employee', string='User 1')
     x_wo_user2 = fields.Many2one('hr.employee', string='User 2')
-    x_wo_lot = fields.Many2many('stock.production.lot', string='Nomor Lot')
+    x_leader = fields.Many2one('hr.employee', string='Shift Leader')
+    x_wo_lot = fields.Char(string='Nomor Lot')
     x_keterangan = fields.Text(string="Keterangan")
     x_qty = fields.Float(string="Qty")
+    # x_total_qty = fields.Float()
+    # x_shift_leader = fields.Many2one('hr.employee', string='Shift Leader')
+
+    # @api.onchange('x_qty')
+    # def total_qty(self):
+    #     self.x_total_qty = 0
+    #     for x in self.time_ids:
+    #         self.x_total_qty = self.x_total_qty + x.x_qty
+
+
 
 

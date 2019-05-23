@@ -69,7 +69,7 @@
                             </div>
                             <div t-if="o.date_planned_start" class="col-xs-2" style="margin-top: -35px">
                                 <strong>Scheduled Date:</strong><br/>
-                                <span t-field="o.date_planned_start" t-field-options='{"format": "d/MM/y"}'/><span t-if="o.date_planned_finished"> - <br/><span t-field="o.date_planned_finished" t-field-options='{"format": "d/MM/y"}'/></span>
+                                <span t-field="o.date_planned_start"/><span t-if="o.date_planned_finished"> - <br/><span t-field="o.date_planned_finished"/></span>
                             </div>
                         </div>
 

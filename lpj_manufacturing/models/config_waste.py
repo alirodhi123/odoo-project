@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 import subprocess
+
+from dateutil.relativedelta import relativedelta
 
 from odoo import models, fields, api
 import odoo.addons.decimal_precision as dp
@@ -29,16 +32,65 @@ class config_waste(models.Model):
      x_keb_config = fields.Float(string = 'kebutuhan konfigurasi')
      x_product_uom_qty = fields.Float(string="To consume max", compute='get_max_to_consume')
      product_uom_qty_first = fields.Float(string="To consume min", compute='get_min_to_consume')
+     x_duration_view = fields.Float(string="Duration (minutes)", digits=(12,0), compute='get_duration_minutes')
+     x_duration = fields.Float(string="Duration (hours)")
 
 
      @api.multi
      def call_move_raw(self):
+          for manufacturing in self:
+               # Perhitungan duration pada manufacturing order
+               start_date = manufacturing.date_planned_start
+               format = "%Y-%m-%d %H:%M:%S"
+               work_order = self.env['mrp.workorder'].search([('production_id', '=', manufacturing.id)])
+               if work_order:
+                    i = 0
+                    for lines in work_order:
+                         if i == 0:
+                              start_date_var = datetime.strptime(str(start_date), format)
+                              # Tampilkan ke OK dalam satuan menit
+                              # expected_duration_minutes = lines.duration_expected
+                              # manufacturing.x_duration_view = expected_duration_minutes
+                              expected_duration = lines.duration_expected
+                              # Ubah menit ke dalam jam
+                              expected_duration = expected_duration / 60
+                              # Tambahkan jam dengan tanggal deadline start
+                              end_date_val = start_date_var + relativedelta(hours=float(expected_duration))
+                              manufacturing.x_duration = expected_duration
+                              manufacturing.write({'date_planned_finished': end_date_val})
+
+                         i += 1
+
           if self.x_trial_produksi == 'trial':
                self.x_value_trial = self.x_std_trial
           else:
                self.x_value_trial = 0
+
           self.x_keb_config = (( self.x_length_prod * self.x_width_prod * self.product_qty)/(1 - (self.x_waste_config/100)))/self.x_lb_config
           self.x_waste_prod = self.x_std_fixed + ((self.x_std_var / 100) * self.x_keb_config) + self.x_value_trial
+
+     # Onchange deadline start ditambah dengan duration
+     @api.model
+     def onchange_deadline_start(self):
+          for manufacturing in self:
+               # Dikonversi dari minutes to hours
+               duration_hour = manufacturing.x_duration
+               finish_date = manufacturing.date_planned_start
+               format = "%Y-%m-%d %H:%M:%S"
+
+               finish_date_var = datetime.strptime(str(finish_date), format)
+               end_date_val = finish_date_var + relativedelta(hours=float(duration_hour))
+               manufacturing.update({'date_planned_finished': end_date_val})
+
+     # Konversi dari hours ke minutes
+     @api.model
+     def get_duration_minutes(self):
+          for manufacturing in self:
+               duration_hour = manufacturing.x_duration
+               # Konversi ke minutes
+               duration_minutes = duration_hour * 60
+               manufacturing.x_duration_view = duration_minutes
+
 
      @api.multi
      def confirm_waste(self):
@@ -48,7 +100,8 @@ class config_waste(models.Model):
                        x.product_tmpl_id.categ_id.name == 'BU' or \
                        x.product_tmpl_id.categ_id.name == 'Laminating 20micr' or \
                        x.product_tmpl_id.categ_id.name == 'Pita' or \
-                       x.product_tmpl_id.categ_id.name == 'Hot Foil':
+                       x.product_tmpl_id.categ_id.name == 'Hot Foil' or \
+                       x.product_tmpl_id.categ_id.name == 'HP (Hot Print)':
 
                     x.product_uom_qty = x.product_uom_qty + self.x_confirm_waste
                     # To Consume untuk (REPORT)
@@ -71,7 +124,8 @@ class config_waste(models.Model):
                             x.product_tmpl_id.categ_id.name == 'BU' or \
                             x.product_tmpl_id.categ_id.name == 'Laminating 20micr' or \
                             x.product_tmpl_id.categ_id.name == 'Pita' or \
-                            x.product_tmpl_id.categ_id.name == 'Hot Foil':
+                            x.product_tmpl_id.categ_id.name == 'Hot Foil' or \
+                            x.product_tmpl_id.categ_id.name == 'HP (Hot Print)':
                          x.product_uom_qty = x.product_uom_qty + self.x_confirm_waste
                          # To Consume untuk (REPORT)
                          product_uom_qty_temp = x.product_uom_qty
@@ -93,12 +147,21 @@ class config_waste(models.Model):
                if category == 'Label' or \
                        category == 'BU' or \
                        category == 'Laminating 20micr' or \
-                       category == 'Pita' or \
-                       category == 'Hot Foil':
+                       category == 'Pita':
                     product_uom_qty_temp = o.product_uom_qty
                     product_uom_qty_first = product_uom_qty_temp - self.x_confirm_waste
                     # Simpan dalam variable baru
                     self.product_uom_qty_first = product_uom_qty_first
+
+               elif category == 'Hot Foil':
+                    product_uom_qty_temp = 0
+                    min_bahan_hotfoil = o.product_uom_qty
+
+                    if min_bahan_hotfoil != product_uom_qty_temp:
+                         # Set bahan hot foil = bahan utama
+                         min_bahan_hotfoil = self.x_product_uom_qty
+                         # Simpan dalam variable baru
+                         self.product_uom_qty_first = min_bahan_hotfoil - self.x_confirm_waste
 
 
      # Untuk simpan BU To consume pada move_raw_ids (REPORT) MAXIMAL
@@ -109,11 +172,18 @@ class config_waste(models.Model):
                if category == 'Label' or \
                        category == 'BU' or \
                        category == 'Laminating 20micr' or \
-                       category == 'Pita' or \
-                       category == 'Hot Foil':
+                       category == 'Pita':
                     product_uom_qty_temp = o.product_uom_qty
-                    # Simpan dalam variable baru
                     self.x_product_uom_qty = product_uom_qty_temp
+
+               elif category == 'Hot Foil':
+                    product_uom_qty_temp = 0
+                    max_bahan_hotfoil = o.product_uom_qty
+                    if max_bahan_hotfoil != product_uom_qty_temp:
+                         # Set bahan hot foil = bahan utama
+                         max_bahan_hotfoil = self.x_product_uom_qty
+                         # Simpan dalam variable baru
+                         self.x_product_uom_qty = max_bahan_hotfoil
 
 
 

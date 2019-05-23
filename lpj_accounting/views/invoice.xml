@@ -12,7 +12,8 @@
                 </field>
                 <field name="payment_term_id" position="after">
                     <field name="x_no_faktur"/>
-                    <field name="x_no_sjk" domain="[('state', '=', 'done'), ('partner_id', '=', partner_shipping_id), ('is_responsible', '=', False), ('x_group_id_so', '=', origin)]"/>
+                    <field name="x_no_sjk" domain="[('state', '=', 'done'), ('partner_id', '=', partner_shipping_id),
+                                                    ('is_responsible', '=', False), ('x_group_id_so', '=', origin), ('picking_type_id', '=', 4)]"/>
                     <field name="x_no_po"></field>
                     <field name="x_tanggal_sjk" invisible="1"></field>
                     <field name="amount_to_text" invisible="1"></field>
@@ -44,8 +45,8 @@
 
                 <field name="amount_total" position="after">
                     <field name="x_amount_total" invisible="1"></field>
-                    <field name="x_total_jasa" invisible="1"></field>
-                    <field name="x_total_material" invisible="1"></field>
+                    <field name="x_total_jasa"></field>
+                    <field name="x_total_material"></field>
                 </field>
             </field>
         </record>
@@ -61,6 +62,11 @@
                         <field name="x_no_faktur"></field>
                         <field name="x_no_sjk"></field>
                     </field>
+
+                    <!-- Replace due date -->
+                    <field name="date_due" position="replace">
+                        <field name="x_due_date_pembayaran"></field>
+                    </field>
                 </field>
             </record>
 
@@ -71,14 +77,29 @@
                 <field name="inherit_id" ref="account.invoice_form"></field>
                 <field name="arch" type="xml">
                     <field name="price_unit" position="after">
-                        <field name="x_harga_jasa" invisible="1"></field>
-                        <field name="x_harga_material" invisible="1"></field>
-                        <field name="x_qty_done_sjk" invisible="1"></field>
-                        <field name="x_value_jasa" invisible="1"></field>
-                        <field name="x_value_material" invisible="1"></field>
+                        <field name="x_harga_jasa"></field>
+                        <field name="x_harga_material"></field>
+                        <field name="x_qty_done_sjk"></field>
+                        <field name="x_value_jasa"></field>
+                        <field name="x_value_material"></field>
                         <field name="x_price_subtotal" invisible="1"></field>
+                        <field name="x_price_unit_include" invisible="1"></field>
                     </field>
                 </field>
+            </record>
+
+            <!-- Inherit search view invoice -->
+            <record id="inherit_account_invoice_search" model="ir.ui.view">
+                  <field name="name">account.invoice.search</field>
+                  <field name="model">account.invoice</field>
+                  <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+                  <field name="arch" type="xml">
+                        <field name="number" position="after">
+                            <field name="x_no_faktur"></field>
+                            <field name="x_no_sjk"></field>
+                            <field name="x_no_po"></field>
+                        </field>
+                  </field>
             </record>
 
     </data>

@@ -13,13 +13,3 @@ class sale_order(models.Model):
     _inherit = 'sale.order'
 
     is_responsible = fields.Boolean(string="DP Status", default=False)
-
-    @api.model
-    def create(self, vals):
-        res = super(sale_order, self).create(vals)
-
-        id_cus = vals['partner_id']
-        customer = self.env['x.due.date.pembayaran'].search([('x_customer', '=', id_cus)])
-
-
-        return res

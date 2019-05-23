@@ -1,0 +1,22 @@
+<odoo>
+  <data>
+    <record id="inherit_hr_attendance" model="ir.ui.view">
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+
+            <field name="check_out" position="after">
+                 <button class="oe_highlight"
+                         name="open_second_class"
+                         string="Create Kuitansi"
+                         type="object"
+                         help="calls python function"
+                         target="new">
+                 </button>
+            </field>
+
+        </field>
+    </record>
+
+  </data>
+</odoo>

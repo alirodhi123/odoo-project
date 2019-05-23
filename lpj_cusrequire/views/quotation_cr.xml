@@ -6,14 +6,23 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_id']" position="after">
+                   <field name="is_block"></field>
                    <field name="x_po_cust"/>
                    <field name="x_is_pkp"/>
                 </xpath>
 
                 <xpath expr="//field[@name='payment_term_id']" position="after">
-                   <field name="x_internal_quotation" domain="[('x_cust','=', partner_id)]"/>
-                   <field name="x_sales_external"/>
-                   <field name="x_customer_trust" invisible="1"></field>
+                    <field name="x_sales_external"/>
+                    <label for="x_internal_quotation"></label>
+                    <div class="o_row">
+                        <field name="x_internal_quotation" domain="[('x_cust','=', partner_id), ('is_responsible', '=', False),
+                                                                    ('end_date_value', '&gt;=', current_date)]"/>
+                        <button name="insert_sq"
+                                type="object"
+                                string="Insert SQ"
+                                class="oe_stat_button"
+                                attrs="{'invisible': [('state', 'in', ['sale', 'done'])]}"/>
+                    </div>
                 </xpath>
 
                 <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='product_id']"
@@ -42,37 +51,6 @@
                            attrs="{'invisible': [('x_pecah_harga', '!=', 'yes')]}"
                            groups="sales_team.group_sale_manager,sales_team.group_sale_salesman"/>
                 </xpath>
-            </field>
-        </record>
-
-        <!-- Inherit Sale Order untuk header button Confirm Sale -->
-        <record model="ir.ui.view" id="sales_form_view_confirm_sale">
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_form"/>
-            <field name="arch" type="xml">
-                <data>
-                    <header position="replace">
-                        <header position="inside">
-                            <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
-                                type="action" class="btn-primary"
-                                attrs="{'invisible': [('invoice_status', '!=', 'to invoice')]}"/>
-                            <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
-                                type="action" context="{'default_advance_payment_method': 'percentage'}"
-                                attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
-                            <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary"/>
-                            <button name="print_quotation" string="Print" type="object" states="draft" class="btn-primary"/>
-                            <button name="action_confirm" string="Confirm Sale" class="btn-primary o_sale_confirm" type="object" attrs="{'invisible': ['|', ('x_customer_trust', '=', True),('state', '=', 'done')]}"/>
-                            <!--<button name="action_confirm" string="Confirm Sale" class="o_sale_confirm" type="object" attrs="{'invisible': [('x_customer_trust', '=', True)]}"/>-->
-                            <button name="print_quotation" string="Print" type="object" states="sent,sale"/>
-                            <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale"/>
-                            <button name="action_cancel" states="draft,sent,sale" type="object" string="Cancel"/>
-                            <button name="action_draft" states="cancel" type="object" string="Set to Quotation"/>
-                            <button name="action_done" type="object" string="Lock" states="sale"
-                                help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver."/>
-                            <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
-                        </header>
-                    </header>
-                </data>
             </field>
         </record>
     </data>

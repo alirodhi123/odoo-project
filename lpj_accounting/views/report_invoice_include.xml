@@ -225,7 +225,7 @@
                                 <ul t-if="not res_company.custom_footer" style="list-style: none; margin: 0 auto;">
                                     <t t-set="res_company" t-value="res_company.sudo()"/>
                                     <li t-if="res_company.street">Office: <span t-field="res_company.street"/></li>
-                                    <li t-if="res_company.phone">Phone: <span t-field="res_company.phone"/><span>, 99038051, 99038051, 99038064</span> • Fax: <span t-field="res_company.fax"/> </li>
+                                    <li t-if="res_company.phone">Phone: <span t-field="res_company.phone"/><span>, 99038051, 99038054, 99038064</span> • Fax: <span t-field="res_company.fax"/> </li>
                                     <li t-if="res_company.email">Email: <span t-field="res_company.email"/> • Website: <span t-field="res_company.website"></span></li>
                                 </ul>
                             </div>

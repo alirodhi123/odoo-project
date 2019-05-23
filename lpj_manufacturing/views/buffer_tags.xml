@@ -1,0 +1,40 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="buffer_tags_tree_view">
+            <field name="name">Buffer Tags</field>
+            <field name="model">buffer.tags</field>
+            <field name="arch" type="xml">
+                <tree string="List Buffer Tags">
+                    <field name="name"></field>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Category Masalah -->
+        <record model="ir.ui.view" id="buffer_tags_form_view">
+            <field name="name">Buffer Tags</field>
+            <field name="model">buffer.tags</field>
+            <field name="arch" type="xml">
+                <form string="Buffer Tags">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="buffer_tags_action" model="ir.actions.act_window">
+            <field name="name">Tags</field>
+            <field name="res_model">buffer.tags</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new tag.
+              </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

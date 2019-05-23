@@ -61,5 +61,39 @@
             </field>
         </record>
 
+        <!--
+            SALE ORDER
+            Replace Button from Sale Order
+         -->
+        <record model="ir.ui.view" id="sale_form_view_custom">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"></field>
+            <field name="arch" type="xml">
+                <header position="replace">
+                    <header position="inside">
+                        <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
+                        type="action" class="btn-primary"
+                        attrs="{'invisible': [('invoice_status', '!=', 'to invoice')]}"/>
+                        <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
+                            type="action" context="{'default_advance_payment_method': 'percentage'}"
+                            attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
+                        <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary"/>
+                        <button name="print_quotation" string="Print" type="object" states="draft" class="btn-primary"/>
+                        <button name="action_confirm" states="sent" string="Confirm Sale" class="btn-primary o_sale_confirm" type="object" />
+                        <button name="action_confirm" string="Confirm Sale" class="o_sale_confirm" type="object"
+                                attrs="{'invisible': ['|','|', ('is_block', '=', 'no'),('is_block', '=', False),('state', 'in', ['sale', 'done', 'cancel'])]}"/>
+                        <button name="print_quotation" string="Print" type="object" states="sent,sale"/>
+                        <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale"/>
+                        <button name="action_cancel" states="draft,sent,sale" type="object" string="Cancel"/>
+                        <button name="action_draft" states="cancel" type="object" string="Set to Quotation"/>
+                        <button name="action_done" type="object" string="Lock" states="sale"
+                            help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver."/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
+                    </header>
+                </header>
+            </field>
+        </record>
+
     </data>
 </odoo>

@@ -12,6 +12,7 @@
                         <field name="x_config_factor"/>
                         <field name="x_waste_prod"/>
                         <field name="x_confirm_waste"/>
+                        <field name="x_buffer_tags" widget="many2many_tags" options="{'no_create_edit': True}"/>
                         <field name="x_lb_config" invisible = '1'/>
                         <field name="x_keb_config" invisible= '1'/>
                         <field name="x_product_uom_qty" invisible="1"></field>
@@ -38,7 +39,7 @@
             <field name="model">mrp.production</field>
             <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
             <field name="arch" type="xml">
-                <field name="x_confirm_waste" position="after">
+                <field name="x_buffer_tags" position="after">
                     <group class="oe_inline">
                         <button name="call_move_raw" type="object" string="Calculate" class="oe_highlight oe_inline"/>
                         <button name="confirm_move_raw" type="object" string="Confirm Waste" class="oe_highlight oe_inline"/>

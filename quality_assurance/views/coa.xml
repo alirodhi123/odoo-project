@@ -40,13 +40,14 @@
                                 <field name="x_jumlah"></field>
                                 <field name="x_keterangan"></field>
                                 <field name="x_kode_material"></field>
+                                <field name="x_category_produk" invisible="1"></field>
                                 <field name="stock_id" invisible="1"></field>
                             </group>
                         </group>
 
                         <!-- Notes -->
                         <notebook>
-                            <page string="Notes">
+                            <page string="Notes" attrs="{'invisible':[('x_category_produk', '=', 'RBN')]}">
                                 <group>
                                     <group>
                                         <field name="x_gramature"></field>
@@ -61,6 +62,23 @@
                                     </group>
                                 </group>
                             </page>
+
+                            <!-- Notes Ribbon -->
+                            <page string="Notes RBN" attrs="{'invisible':[('x_category_produk', '!=', 'RBN')]}">
+                                <group>
+                                    <group>
+                                       <field name="x_ink_ribbon_type"></field>
+                                       <field name="x_thickness_rbn"></field>
+                                       <field name="x_apperance_rbn"></field>
+                                       <field name="x_colour_rbn"></field>
+                                       <field name="x_ink_melting"></field>
+                                       <field name="x_lenght_rbn"></field>
+                                       <field name="x_width_rbn"></field>
+                                       <field name="x_shelflife_rbn"></field>
+                                    </group>
+                                </group>
+                            </page>
+
                             <page string="Lot Number">
                                 <field name="coa_line_ids">
                                     <tree editable="bottom">

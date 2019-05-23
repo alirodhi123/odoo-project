@@ -11,19 +11,14 @@
                     <field name="x_pkp"/>
                 </field>
 
-                <!--<field name="trust" position="after">-->
-                    <!--<field name="trust_custom"></field>-->
-                <!--</field>-->
+                <field name='parent_id' position="after">
+                    <field name="x_kode_customer" placeholder="Kode Customer"/>
+                </field>
 
-                <!--<group name="acc_sale" position="inside">-->
-                    <!--<field name="trust_custom"></field>-->
-                <!--</group>-->
+                <field name='category_id' position="after">
+                    <field name="x_customer_service"/>
+                </field>
 
-                <!--<xpath expr="/form/sheet/notebook/page[@name='accounting']" position="inside">-->
-                    <!--<group name="acc_sale" position="inside">-->
-                        <!--<field name="trust_custom"/>-->
-                    <!--</group>-->
-                <!--</xpath>-->
             </field>
         </record>
     </data>

@@ -27,8 +27,8 @@
                             <group string="Quality Information">
                                 <field name="x_gramature_product"/>
                                 <field name="x_thickness_product"/>
-                                <field name="x_material_type_coa"></field>
                                 <field name="x_keterangan_lem"/>
+                                <field name="x_material_type_quality"/>
                             </group>
                         </group>
                     </page>

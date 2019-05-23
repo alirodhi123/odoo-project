@@ -114,6 +114,33 @@
                                 </field>
                             </group>
                         </group>
+
+                        <group>
+                            <field name="x_layout_product_ids">
+                                <tree editable="bottom">
+                                    <field name="x_type"/>
+                                    <field name="x_size"/>
+                                    <field name="x_space"/>
+                                    <field name="x_druk"/>
+                                    <field name="x_number"/>
+                                    <field name="x_std_afalan"/>
+                                    <field name="x_jumlah"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group>
+                            <field name="x_layout_plong_ids">
+                                <tree editable="bottom">
+                                    <field name="x_plong_type"/>
+                                    <field name="x_plong_size"/>
+                                    <field name="x_plong_space"/>
+                                    <field name="x_plong_druk"/>
+                                    <field name="x_plong_number"/>
+                                    <field name="x_plongstd_afalan"/>
+                                    <field name="x_plong_jumlah"/>
+                                </tree>
+                            </field>
+                        </group>
                     </page>
                     <page name="ribbon" string="Ribbon" attrs="{'invisible':[('sale_ok','!=',True)]}">
                         <group>
@@ -122,12 +149,14 @@
                                 <field name="x_face_ink"/>
                                 <field name="x_id_core"/>
                                 <field name="x_od_core"/>
+                                <field name="x_core_type"/>
                             </group>
                             <group>
-                                <field name="x_core_type"/>
                                 <field name="x_notch"/>
                                 <field name="x_roll_perbox_ribbon"/>
                                 <field name="x_material_core"/>
+                                <field name="x_colour"/>
+                                <field name="x_ink_melting"/>
                             </group>
                         </group>
                     </page>
@@ -198,49 +227,6 @@
                     <field name="x_length"></field>
                     <field name="x_width"></field>
                 </field>
-            </field>
-        </record>
-
-         <!--
-            PLDC INFORMATION
-            Untuk tab PLDC Information (Khusus untuk orang PDE)
-         -->
-        <record id="pde_product_template_form_view" model="ir.ui.view">
-            <field name="inherit_id" ref="product.product_template_form_view"/>
-            <field name="model">product.template</field>
-            <field name="arch" type="xml">
-                <page name="quality" position="after">
-                    <page name="pldc_information"
-                          string="Layout Information"
-                          groups="lpj_product.group_pde_user,lpj_product.group_pde_manager,lpj_product.group_pde_supervisor">
-                        <group>
-                            <field name="x_layout_product_ids">
-                                <tree editable="bottom">
-                                    <field name="x_type"/>
-                                    <field name="x_size"/>
-                                    <field name="x_space"/>
-                                    <field name="x_druk"/>
-                                    <field name="x_number"/>
-                                    <field name="x_std_afalan"/>
-                                    <field name="x_jumlah"/>
-                                </tree>
-                            </field>
-                        </group>
-                        <group>
-                            <field name="x_layout_plong_ids">
-                                <tree editable="bottom">
-                                    <field name="x_plong_type"/>
-                                    <field name="x_plong_size"/>
-                                    <field name="x_plong_space"/>
-                                    <field name="x_plong_druk"/>
-                                    <field name="x_plong_number"/>
-                                    <field name="x_plongstd_afalan"/>
-                                    <field name="x_plong_jumlah"/>
-                                </tree>
-                            </field>
-                        </group>
-                    </page>
-                </page>
             </field>
         </record>
     </data>

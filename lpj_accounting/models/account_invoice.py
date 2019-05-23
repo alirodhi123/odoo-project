@@ -200,159 +200,79 @@ class account_invoice(models.Model):
         self.sent = True
         return self.env['report'].get_action(self, 'lpj_accounting.report_invoice')
 
+
     # Due Date invoice
-    @api.onchange('date_invoice', 'x_tanda_terima')
+    @api.onchange('x_tanda_terima')
     def due_date(self):
-        if self.date_invoice:
-            date = self.date_invoice
-
         date_tanda_terima = self.x_tanda_terima
+        if date_tanda_terima != False:
 
-        id_cus = self.partner_id
-        id_cus_due_date = self.env['x.due.date.pembayaran'].search([('x_customer', '=', id_cus.id)])
+            id_cus = self.partner_id
+            id_cus_due_date = self.env['x.due.date.pembayaran'].search([('x_customer', '=', id_cus.id)])
+            if id_cus_due_date:
+                # Mengambil field yang ada pada tabel x.due.date.pembayaran
+                for i in id_cus_due_date:
+                    customer = i.x_customer
+                    categ = i.x_category
+                    jumlah_hari = i.x_jml_hari
+                    type = i.x_type
 
-        # Mengambil field yang ada pada tabel x.due.date.pembayaran
-        for i in id_cus_due_date:
-            customer = i.x_customer
-            categ = i.x_category
-            jumlah_hari = i.x_jml_hari
-            type = i.x_type
+                    if customer:
+                        date_format = '%Y-%m-%d'
 
-            if customer:
-                date_format = '%Y-%m-%d'
+                        if jumlah_hari == '7':
+                            start_date = datetime.strptime(str(date_tanda_terima), date_format)
+                            end_date = start_date + relativedelta(days=int(jumlah_hari))
 
-                # Cek apakah kategori = sjk
-                if categ == 'sjk':
-                    if type == 'after_sjk':
+                            self.x_due_date_pembayaran = end_date
+                            self.date_due = end_date
+
                         if jumlah_hari == '15':
-                            start_date = datetime.strptime(str(date), date_format)
+                            start_date = datetime.strptime(str(date_tanda_terima), date_format)
                             end_date = start_date + relativedelta(days=int(jumlah_hari))
 
                             self.x_due_date_pembayaran = end_date
                             self.date_due = end_date
 
                         elif jumlah_hari == '30':
-                            start_date = datetime.strptime(str(date), date_format)
+                            start_date = datetime.strptime(str(date_tanda_terima), date_format)
                             end_date = start_date + relativedelta(days=int(jumlah_hari))
 
                             self.x_due_date_pembayaran = end_date
                             self.date_due = end_date
 
                         elif jumlah_hari == '45':
-                            start_date = datetime.strptime(str(date), date_format)
+                            start_date = datetime.strptime(str(date_tanda_terima), date_format)
                             end_date = start_date + relativedelta(days=int(jumlah_hari))
 
                             self.x_due_date_pembayaran = end_date
                             self.date_due = end_date
 
                         elif jumlah_hari == '60':
-                            start_date = datetime.strptime(str(date), date_format)
+                            start_date = datetime.strptime(str(date_tanda_terima), date_format)
                             end_date = start_date + relativedelta(days=int(jumlah_hari))
 
                             self.x_due_date_pembayaran = end_date
                             self.date_due = end_date
 
                         elif jumlah_hari == '90':
-                            start_date = datetime.strptime(str(date), date_format)
+                            start_date = datetime.strptime(str(date_tanda_terima), date_format)
                             end_date = start_date + relativedelta(days=int(jumlah_hari))
 
                             self.x_due_date_pembayaran = end_date
                             self.date_due = end_date
 
                         elif jumlah_hari == '14':
-                            start_date = datetime.strptime(str(date), date_format)
+                            start_date = datetime.strptime(str(date_tanda_terima), date_format)
                             end_date = start_date + relativedelta(days=int(jumlah_hari))
 
                             self.x_due_date_pembayaran = end_date
                             self.date_due = end_date
 
                         else:
-                            print "INVALID DATE!"
+                            self.x_due_date_pembayaran = date_tanda_terima
+                            self.date_due = date_tanda_terima
 
-                    # Cek apakah tipe pembayaran sebelum sjk
-                    elif type == 'before_sjk':
-                        start_date = datetime.strptime(str(date), date_format)
-                        if jumlah_hari == '0':
-                            self.x_due_date_pembayaran = start_date
-                            self.date_due = start_date
-
-                    elif type == 'bg':
-                        if jumlah_hari == '30':
-                            start_date = datetime.strptime(str(date), date_format)
-                            end_date = start_date + relativedelta(days=int(jumlah_hari))
-
-                            self.x_due_date_pembayaran = end_date
-                            self.date_due = end_date
-
-                        elif jumlah_hari == '45':
-                            start_date = datetime.strptime(str(date), date_format)
-                            end_date = start_date + relativedelta(days=int(jumlah_hari))
-
-                            self.x_due_date_pembayaran = end_date
-                            self.date_due = end_date
-
-                    elif type == 'dp':
-                        start_date = datetime.strptime(str(date), date_format)
-                        if jumlah_hari == '0':
-                            self.x_due_date_pembayaran = start_date
-                            self.date_due = start_date
-
-                # Cek apakah date tanda terima tidak kosong, jika kosong maka akan lanjut pada kondisi berikutnya
-                if date_tanda_terima != False:
-                    if categ == 'tt':
-                        if type == 'after_tt':
-                            if jumlah_hari == '15':
-                                start_date = datetime.strptime(str(date_tanda_terima), date_format)
-                                end_date = start_date + relativedelta(days=int(jumlah_hari))
-
-                                self.x_due_date_pembayaran = end_date
-                                self.date_due = end_date
-
-                            elif jumlah_hari == '30':
-                                start_date = datetime.strptime(str(date_tanda_terima), date_format)
-                                end_date = start_date + relativedelta(days=int(jumlah_hari))
-
-                                self.x_due_date_pembayaran = end_date
-                                self.date_due = end_date
-
-                            elif jumlah_hari == '45':
-                                start_date = datetime.strptime(str(date_tanda_terima), date_format)
-                                end_date = start_date + relativedelta(days=int(jumlah_hari))
-
-                                self.x_due_date_pembayaran = end_date
-                                self.date_due = end_date
-
-                            elif jumlah_hari == '60':
-                                start_date = datetime.strptime(str(date_tanda_terima), date_format)
-                                end_date = start_date + relativedelta(days=int(jumlah_hari))
-
-                                self.x_due_date_pembayaran = end_date
-                                self.date_due = end_date
-
-                            elif jumlah_hari == '90':
-                                start_date = datetime.strptime(str(date_tanda_terima), date_format)
-                                end_date = start_date + relativedelta(days=int(jumlah_hari))
-
-                                self.x_due_date_pembayaran = end_date
-                                self.date_due = end_date
-
-                            elif jumlah_hari == '14':
-                                start_date = datetime.strptime(str(date_tanda_terima), date_format)
-                                end_date = start_date + relativedelta(days=int(jumlah_hari))
-
-                                self.x_due_date_pembayaran = end_date
-                                self.date_due = end_date
-
-                            else:
-                                print "INVALID DATE!"
-
-
-                elif categ == 'cod':
-                    if type == 'cod':
-                        start_date = datetime.strptime(str(date), date_format)
-                        if jumlah_hari == '0':
-                            self.x_due_date_pembayaran = start_date
-                            self.date_due = start_date
 
     # Fungsi mengirim data pada object lain
     @api.multi
@@ -398,6 +318,7 @@ class account_invoice(models.Model):
 
     # Menghitung Harga jasa dan harga material
     @api.one
+    @api.depends('invoice_line_ids.x_value_jasa', 'invoice_line_ids.x_value_material')
     def get_value_jasa_material(self):
         harga_material = 0
         harga_jasa = 0
@@ -419,6 +340,7 @@ class account_invoice_line(models.Model):
     x_value_jasa = fields.Float(compute='calculate_harga_jasa_material')
     x_value_material = fields.Float(compute='calculate_harga_jasa_material')
     x_price_subtotal = fields.Monetary(compute='compute_price_subtotal')
+    x_price_unit_include = fields.Float(compute='compute_price_unit_include')
 
     # Harga jasa dan harga material
     @api.one
@@ -428,7 +350,7 @@ class account_invoice_line(models.Model):
         origin = self.invoice_id.origin
         po_cus = self.invoice_id.x_no_po
 
-        sales_order = self.env['sale.order'].search([('name', '=', origin),('partner_id', '=', partner.id),('x_po_cust', '=', po_cus)])
+        sales_order = self.env['sale.order'].search([('name', '=', origin),('partner_invoice_id', '=', partner.id),('x_po_cust', '=', po_cus)])
         if sales_order:
             for o in sales_order.order_line:
                 if o.product_id == self.product_id and o.x_pecah_harga == "yes":
@@ -441,20 +363,19 @@ class account_invoice_line(models.Model):
     # Get qty done yg ada di SJK
     @api.one
     def get_qty_sjk(self):
-        product_id = self.product_id.id
-        partner = self.invoice_id.partner_id
+        partner = self.invoice_id.partner_shipping_id
         origin = self.invoice_id.origin
         id = self.invoice_id.x_no_sjk
 
-        sjk = self.env['stock.picking'].search([('id', '=', id.id),('partner_id', '=', partner.id),('origin', '=', origin)])
-        for row in sjk:
-            if sjk:
+        sjk = self.env['stock.picking'].search([('id', '=', id.id),('partner_id', '=', partner.id),('x_group_id_so', '=', origin)])
+        if sjk:
+            for row in sjk:
                 for o in row.pack_operation_product_ids:
                     if o.product_id == self.product_id:
                         qty_done = o.qty_done
                         self.x_qty_done_sjk = qty_done
 
-
+    # Calculate Harga jasa dan material
     @api.one
     def calculate_harga_jasa_material(self):
 
@@ -474,6 +395,14 @@ class account_invoice_line(models.Model):
 
         tempPrice = self.quantity * self.price_unit
         self.x_price_subtotal = tempPrice
+
+    # Untuk mencari price unit dengan type tax include
+    @api.one
+    def compute_price_unit_include(self):
+        price_unit = self.price_unit
+
+        price_unit_include = price_unit / 1.1
+        self.x_price_unit_include = price_unit_include
 
 
 

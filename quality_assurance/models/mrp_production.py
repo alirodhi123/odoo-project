@@ -50,7 +50,7 @@ class mrp(models.Model):
                 # Setelah create quality measure, diarahkan kembali ke method quality_alert dan create quality alert
                 self.generate_quality_alert()
 
-
+    # Button Create Work Order
     @api.multi
     def button_plan(self):
         if self.alert_count == 0:

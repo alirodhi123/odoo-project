@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+
+from dateutil.relativedelta import relativedelta
 
 from odoo import models, fields, api
 import odoo.addons.decimal_precision as dp
@@ -15,6 +18,9 @@ class print_quotation(models.Model):
     x_cusreq_quo = fields.Many2one(related = 'x_quo_line.x_cusreq')
     x_untaxed_amount = fields.Float(string='Total Harga',compute = 'total_harga' ,readonly=True, track_visibility='always')
     currency_id = fields.Many2one('res.currency')
+    is_responsible = fields.Boolean(default=False, string="SPH Closed")
+    start_date = fields.Date(string="Start Date", store=True, readonly=True)
+    end_date_value = fields.Date(string="End Date SQ", compute='end_date_function')
 
     @api.one
     def total_harga(self):
@@ -24,19 +30,41 @@ class print_quotation(models.Model):
             ab += a.x_total_price
         self.x_untaxed_amount = ab
 
+
     @api.model
     def create(self, vals):
-        vals['name'] = self.env['ir.sequence'].next_by_code('x.print.quo') or ('New')
         result = super(print_quotation, self).create(vals)
+
+        sequence = self.env['ir.sequence'].next_by_code('x.print.quo') or ('New')
+        result.write({'name': sequence})
+
+        result.write({'start_date': datetime.now()})
+
         return result
 
+
+    # Fungsi menambah end date + 60 hari
+    @api.one
+    def end_date_function(self):
+        # Menambah end of date + 60 hari
+        end_date = self.start_date
+
+        if end_date != False:
+
+            jumlah_hari = '90'
+            date_format = '%Y-%m-%d'
+            date = self.start_date
+
+            start_date_var = datetime.strptime(str(date), date_format)
+            end_date_var = start_date_var + relativedelta(days=int(jumlah_hari))
+            self.end_date_value = str(end_date_var)
 
 
 class print_quotation_line(models.Model):
     _name = 'x.print.quo.line'
     _inherit = 'mail.thread'
 
-    x_quo = fields.Many2one('x.print.quo', string = 'cusreq quotation',track_visibility='always')
+    x_quo = fields.Many2one('x.print.quo', string = 'cusreq quotation',track_visibility='always', ondelete='cascade')
     x_cusreq = fields.Many2one('x.cusrequirement',string = 'Sales Quotation Code', required=True, track_visibility='always')
     x_item_desc = fields.Char(related = 'x_cusreq.item_description', track_visibility='onchange')
     x_prod = fields.Many2one(related = 'x_cusreq.x_product')

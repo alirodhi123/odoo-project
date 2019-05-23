@@ -44,6 +44,7 @@
         'views/report.xml',
         'views/report_bom.xml',
         'views/report_ok_non_sticker.xml',
+        'views/buffer_tags.xml',
         'views/menu.xml',
 
     ],

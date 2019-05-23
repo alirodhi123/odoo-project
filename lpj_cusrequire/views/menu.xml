@@ -1,7 +1,7 @@
 <odoo>
     <data>
 
-        <menuitem id="main_approval_odoo_menu" name="PDE"/>
+        <menuitem id="main_approval_odoo_menu" name="PDE" web_icon="lpj_cusrequire,static/icon.png"/>
 
         <menuitem id="approval_odoo_menu"
                   parent="main_approval_odoo_menu" name="Approval" sequence="5"/>

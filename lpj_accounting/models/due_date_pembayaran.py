@@ -9,7 +9,8 @@ class Pembayaran(models.Model):
     x_customer = fields.Many2one('res.partner', string="Customer")
     x_lama_pembayaran = fields.Text(string="Lama Pembayaran")
     x_keterangan = fields.Text(string="Keterangan")
-    x_jml_hari = fields.Selection(string="Jumlah Hari", selection = [('15', '15 Hari'),
+    x_jml_hari = fields.Selection(string="Jumlah Hari", selection = [('7', '7 Hari'),
+                                                                     ('15', '15 Hari'),
                                                                      ('30', '30 Hari'),
                                                                      ('45', '45 Hari'),
                                                                      ('60', '60 Hari'),
@@ -20,8 +21,8 @@ class Pembayaran(models.Model):
                                                                              ('tt', 'TT'),
                                                                              ('cod', 'COD')])
     x_type = fields.Selection(string="Type Pembayaran", selection = [('after_sjk', 'Pelunasan Setelah SJK'),
-                                                                     ('after_tt', 'Penulasan Setelah TT'),
-                                                                     ('before_sjk', 'Penulasan Sebelum SJK'),
+                                                                     ('after_tt', 'Pelunasan Setelah TT'),
+                                                                     ('before_sjk', 'Pelunasan Sebelum SJK'),
                                                                      ('bg', 'BG Mundur'),
                                                                      ('cod', 'COD'),
                                                                      ('dp', 'DP')])

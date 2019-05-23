@@ -33,6 +33,8 @@
                  <field name = "date_start" position = "after">
                      <field name = "x_ids_duration" widget="float_time" invisible = "1"/>
                  </field>
+
+
                 <field name="time_ids" position = "replace">
                     <field name="time_ids" nolabel="1">
                         <tree editable="bottom">
@@ -44,8 +46,9 @@
                             <field name="user_id" string="User 1" invisible="1"/>
                             <field name="x_user"></field>
                             <field name="x_wo_user2"></field>
-                            <field name="x_wo_lot" widget="many2many_tags"></field>
-                            <field name="x_qty"></field>
+                            <field name="x_leader"></field>
+                            <field name="x_wo_lot"></field>
+                            <field name="x_qty" sum="Total Quantity"></field>
                             <field name="x_keterangan"></field>
                         </tree>
                         <form>

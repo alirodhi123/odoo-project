@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+         <report
+            id="account_invoices_include_new_report"
+            model="account.invoice"
+            string="Invoices Include New"
+            report_type="qweb-pdf"
+            name="lpj_accounting.report_invoice_include_new"
+            file="lpj_accounting.report_invoice_include_new"
+        />
+
+
+        <record id="paperformat_invoice_include_new" model="report.paperformat">
+            <field name="name">European A4 low margin</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">6</field>
+            <field name="margin_bottom">4</field>
+            <field name="margin_left">6</field>
+            <field name="margin_right">6</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field> <!-- Jika ingin header muncul ubah nilai - 0 -->
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="lpj_accounting.account_invoices_include_new_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="lpj_accounting.paperformat_invoice_include_new" />
+        </record>
+
+
+        <template id="report_invoice_document_include_new">
+            <t t-call="report.html_container">
+                <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})" />
+                <div class="page">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <img t-if="res_company.logo" t-att-src="'data:image/png;base64,%s' %res_company.logo" style="width: 180%"/>
+                        </div>
+                    </div>
+                    <br></br>
+
+                    <!-- Untuk garis horizontal-->
+                    <div class="row zero_min_height">
+                        <div class="col-xs-12">
+                            <div style="border-bottom: 1px solid black;"/>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 text-center">
+                        <div class="col-xs-12 text-center">
+                             <h3>
+                                 <span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice</span>
+                                 <span t-if="o.type == 'out_invoice' and o.state == 'proforma2'">PRO-FORMA</span>
+                                 <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
+                                 <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
+                                 <span t-if="o.type == 'out_refund'">Refund</span>
+                                 <span t-if="o.type == 'in_refund'">Vendor Refund</span>
+                                 <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
+                             </h3>
+                             <t t-if="o.number" class="text-center">
+                                 <h4 t-field="o.number"></h4>
+                             </t>
+                        </div>
+                    </div>
+
+                    <!-- Row customer -->
+                    <div class="row">
+                        <div class="col-xs-6" style="margin-top: 15px;">
+                            <strong t-if="o.partner_shipping_id == o.partner_id" style="font-size: 16px">Invoicing and shipping address:</strong>
+                            <strong t-if="o.partner_shipping_id != o.partner_id" style="font-size: 16px">Invoicing address:</strong>
+                            <div name="invoice_address">
+                                <address style="font-size: 16px" t-field="o.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: True}"/>
+                                <span t-if="o.partner_id.vat">TIN: <span t-field="o.partner_id.vat"/></span>
+                            </div>
+                        </div> <!-- Tutup Row invoicing and shipping address -->
+
+                        <!-- Kolom kedua sebelah kanan -->
+                        <div class="col-xs-6" style="margin-top: 15px;">
+                            <table>
+                                <tr t-if="o.x_no_po">
+                                    <td style="padding-right: 35px; padding-bottom: 5px; font-size: 16px;"><b>No. PO</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px; font-size: 16px;">:</td>
+                                    <td style="font-size: 16px; padding-bottom: 5px;"><span t-field="o.x_no_po"></span></td>
+                                </tr>
+                                <tr t-if="o.payment_term_id">
+                                    <td style="padding-right: 35px; padding-bottom: 5px; font-size: 16px;"><b>Termin Pembayaran</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px; font-size: 16px;">:</td>
+                                    <td style="font-size: 16px; padding-bottom: 5px;"><span t-field="o.payment_term_id"></span></td>
+                                </tr>
+                                <tr t-if="o.date_invoice">
+                                    <td style="padding-right: 35px; padding-bottom: 5px; font-size: 16px;"><b>Tgl. Invoice</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px; font-size: 16px;">:</td>
+                                    <td style="font-size: 16px; padding-bottom: 5px;"><span t-field="o.date_invoice" t-field-options='{"format": "d/MM/y"}'></span></td>
+                                </tr>
+                                <tr t-if="o.date_due">
+                                    <td style="padding-right: 35px; padding-bottom: 5px; font-size: 16px;"><b>Due Date</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px; font-size: 16px;">:</td>
+                                    <td style="font-size: 16px; padding-bottom: 5px;"><span t-field="o.date_due" t-field-options='{"format": "d/MM/y"}'></span></td>
+                                </tr>
+                                <tr t-if="o.x_no_sjk">
+                                    <td style="padding-right: 35px; padding-bottom: 5px; font-size: 16px;"><b>No. Surat Jalan</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px; font-size: 16px;">:</td>
+                                    <td style="font-size: 16px; padding-bottom: 5px;"><span t-field="o.x_no_sjk"></span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div> <!-- Tutup row invoicing -->
+
+                    <!-- Is there a discount on at least one line? -->
+                    <div class="row">
+                        <div class="col-xs-12" style="margin-top: 17px">
+                            <t t-set="display_discount" t-value="any([l.discount for l in o.invoice_line_ids])"/>
+                            <table class="table table-bordered" style="border: 1px solid black;">
+                                <thead>
+                                    <tr>
+                                        <th style="border: 1px solid black; font-size: 16px;" class="text-center">No</th>
+                                        <th style="border: 1px solid black; font-size: 16px;" class="text-center">Description</th>
+                                        <th style="border: 1px solid black; font-size: 16px;" class="hidden">Source Document</th>
+                                        <th style="border: 1px solid black; font-size: 16px;" class="text-center">Quantity</th>
+                                        <th style="border: 1px solid black; font-size: 16px;" class="text-center">Unit Price</th>
+                                        <th style="border: 1px solid black; font-size: 16px;" t-if="display_discount" class="text-center">Disc.(%)</th>
+                                        <th style="border: 1px solid black; font-size: 16px;" class="text-center">Net Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="invoice_tbody">
+                                    <t t-set="i" t-value="1"/>
+                                    <tr t-foreach="o.invoice_line_ids" t-as="l">
+                                        <td class="text-center" style="border: 1px solid black; font-size: 16px;"><span t-esc="i"></span></td>
+                                        <td style="border: 1px solid black; font-size: 16px;"><span t-field="l.product_id.name"/></td>
+                                        <td style="border: 1px solid black; font-size: 16px;" class="hidden"><span t-field="l.origin"/></td>
+                                        <td style="border: 1px solid black; font-size: 16px;" class="text-right">
+                                            <span t-field="l.quantity"/>
+                                            <span t-field="l.uom_id" groups="product.group_uom"/>
+                                        </td>
+                                        <td style="border: 1px solid black; font-size: 16px;" class="text-right">
+                                            <span t-field="l.x_price_unit_include" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                        </td>
+                                        <td style="border: 1px solid black; font-size: 16px;" t-if="display_discount" class="text-right">
+                                            <span t-field="l.discount"/>
+                                        </td>
+                                        <td style="border: 1px solid black; font-size: 16px;" class="text-right">
+                                            <span t-field="l.price_subtotal" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                        </td>
+
+                                         <t t-set="i" t-value="i+1"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> <!-- Tutup tabel -->
+                    </div>
+
+                    <!-- Footer Harga -->
+                    <div class="row">
+                        <div class="col-xs-4 pull-right">
+                            <!-- Jika Kolom diskon tidak diisi -->
+                            <div>
+                                <table class="table table-condensed">
+                                    <tr>
+                                        <td style="font-size: 16px;"><strong>Bruto</strong></td>
+                                        <td style="font-size: 16px;" class="text-right">
+                                            <span t-field="o.amount_untaxed" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size: 16px;"><strong>Diskon</strong></td>
+                                        <td style="font-size: 16px;" class="text-right">
+                                            <span t-field="o.x_discount_foot" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                        </td>
+                                    </tr>
+                                    <!-- Jika diskon kosong -->
+                                    <tr t-if="o.x_discount_foot == 0">
+                                        <td style="font-size: 16px;"><strong>DPP</strong></td>
+                                        <td style="font-size: 16px;" class="text-right">
+                                            <span t-field="o.amount_untaxed" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                        </td>
+                                    </tr>
+                                    <t t-if="o.x_discount_foot != 0">
+                                        <tr t-if="o.x_discount_foot != 0">
+                                            <td style="font-size: 16px;"><strong>DPP</strong></td>
+                                            <td style="font-size: 16px;" class="text-right">
+                                                <span t-field="o.amount_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+
+                                    <t t-foreach="o._get_tax_amount_by_group()" t-as="amount_by_group">
+                                        <tr t-if="o.amount_tax">
+                                            <td style="font-size: 16px;"> PPN <span t-esc="amount_by_group[0] if len(o.tax_line_ids) &gt; 1 else (o.tax_line_ids.tax_id.description or o.tax_line_ids.tax_id.name)"/></td>
+                                            <td style="font-size: 16px;" class="text-right">
+                                                <span t-esc="amount_by_group[2]"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+
+                                    <!-- Jika diskon tidak diisi -->
+                                    <tr t-if="o.amount_total" class="border-black">
+                                        <td style="font-size: 16px;"><strong>Netto</strong></td>
+                                        <td style="font-size: 16px;" class="text-right">
+                                             <span t-field="o.amount_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div> <!-- Tutup footer harga -->
+
+                    <p t-if="o.comment">
+                        <strong>Comment:</strong>
+                        <span t-field="o.comment"/>
+                    </p>
+
+                    <div style="float: left; text-align: center;">
+                        <span style="font-size: 16px">Hormat Kami,</span>
+                        <br></br>
+                        <br></br>
+                        <br></br>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        .................................
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="row">
+                        <div class="col-xs-12" style="position: fixed; width: 100%; bottom: -1355px;">
+                            <div class="text-center" style="border-top: 1px solid black;">
+                                <ul t-if="not res_company.custom_footer" style="list-style: none; margin: 0 auto;">
+                                    <t t-set="res_company" t-value="res_company.sudo()"/>
+                                    <li t-if="res_company.street">Office: <span t-field="res_company.street"/></li>
+                                    <li t-if="res_company.phone">Phone: <span t-field="res_company.phone"/><span>, 99038051, 99038054, 99038064</span> • Fax: <span t-field="res_company.fax"/> </li>
+                                    <li t-if="res_company.email">Email: <span t-field="res_company.email"/> • Website: <span t-field="res_company.website"></span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Tutup Footer -->
+
+                </div> <!-- Tutup page -->
+            </t>
+        </template>
+
+        <template id="report_invoice_include_new">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="lpj_accounting.report_invoice_document_include_new" t-lang="o.partner_id.lang"/>
+                </t>
+            </t>
+        </template>
+
+        <template id="account_invoice_report_duplicate_main">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="account.account_invoice_report_duplicate" t-lang="o.partner_id.lang"/>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

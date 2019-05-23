@@ -53,10 +53,17 @@ class stock_pickingi_ids(models.Model):
             lenght = o.product_id.x_length
             gramature = o.product_id.x_gramature_product
             thickness = o.product_id.x_thickness_product
+            thickness_rbn = o.product_id.x_thickness_product
             shelflife = o.product_id.life_time
             unit_of_measure = o.product_uom_id.name
             keterangan_lem = o.product_id.x_keterangan_lem
-            material_type = o.product_id.x_material_type_coa
+            material_type = o.product_id.x_material_type_quality
+            ribbon_type = o.product_id.x_ribbon
+            colour_rbn = o.product_id.x_colour
+            ink_melting = o.product_id.x_ink_melting
+            lenght_rbn = o.product_id.x_length
+            width_rbn = o.product_id.x_width
+            shelflife_rbn = o.product_id.life_time
 
             # Looping for one2many value
             lot = ""
@@ -65,6 +72,10 @@ class stock_pickingi_ids(models.Model):
                     lot += ", " + x.lot_id.name
                 else:
                     lot = x.lot_id.name
+
+            # Looping product untuk mencari category dan material type
+            for row_product in o.product_id:
+                category_produk = row_product.categ_id.name
 
             # Looping untuk partner
             nama_partner = ""
@@ -101,7 +112,14 @@ class stock_pickingi_ids(models.Model):
                 'default_x_uom': unit_of_measure,
                 'default_x_keterangan': keterangan_lem,
                 'default_x_kode_material': material_type,
-
+                'default_x_category_produk': category_produk,
+                'default_x_ink_ribbon_type': ribbon_type.name,
+                'default_x_colour_rbn': colour_rbn,
+                'default_x_ink_melting': ink_melting,
+                'default_x_thickness_rbn': thickness_rbn,
+                'default_x_lenght_rbn': lenght_rbn,
+                'default_x_width_rbn': width_rbn,
+                'default_x_shelflife_rbn': shelflife_rbn,
             },
             'type': 'ir.actions.act_window',
             'view_mode': 'form'
@@ -126,7 +144,7 @@ class coa(models.Model):
     stock_id = fields.Many2one('stock.pack.operation', string="Stock IDS", default = _default_pack)
     x_customer = fields.Char(string="Partner", readonly=True)
     x_tanggal_pemeriksaan = fields.Datetime(string="Tanggal Pemeriksaan", readonly=True)
-    x_kode_material = fields.Char(string="Kode Material", readonly=True)
+    x_kode_material = fields.Char(string="Kode Material")
     x_po_customer = fields.Char(string="No PO Customer", readonly=True)
     x_jumlah = fields.Integer(string="Jumlah", readonly=True )
     x_no_sjk = fields.Char(string="No SJK", readonly=True)
@@ -137,7 +155,7 @@ class coa(models.Model):
     x_uom = fields.Char()
     x_lot = fields.Char(string="No Batch")
     x_keterangan = fields.Text(string="Keterangan Lem")
-
+    x_category_produk = fields.Char(string="Category Produk", readonly=True)
 
     # Notes field
     product_template_id = fields.Many2one('product.template')
@@ -154,6 +172,17 @@ class coa(models.Model):
     x_lenght = fields.Float(string="Lenght (+/-1 mm)")
     x_width = fields.Float(string="Width (+/-1 mm)")
     x_shelflife = fields.Char(string="Shelf Life (months)")
+
+    # Notes Fields Ribbon
+    x_ink_ribbon_type = fields.Char(string="Ribbon Type (Ink)")
+    x_colour_rbn = fields.Char(string="Colour")
+    x_ink_melting = fields.Char(string="Ink Melting Point")
+    x_thickness_rbn = fields.Char(string="Thickness (mikron)")
+    x_lenght_rbn = fields.Char(string="Lenght (+/-1 mm)")
+    x_width_rbn = fields.Char(string="Width (+/-1 mm)")
+    x_shelflife_rbn = fields.Char(string="Shelf Life (months)")
+    x_apperance_rbn = fields.Selection([('good', 'Good'), ('average', 'Average'), ('bad', 'Bad')],
+                                   string="Apperance", default='good', store=True)
 
     # Get lot
     @api.model

@@ -38,6 +38,20 @@
             </field>
         </record>
 
+        <!-- Filter untuk kuitansi -->
+        <record model="ir.ui.view" id="due_date_search_view">
+          <field name="name">due.date.search</field>
+          <field name="model">x.due.date.pembayaran</field>
+          <field name="arch" type="xml">
+             <search>
+                 <field name="x_customer"/>
+                 <field name="x_jml_hari"/>
+                 <field name="x_type"/>
+                 <field name="x_category"/>
+             </search>
+          </field>
+        </record>
+
 
           <record model="ir.actions.act_window" id="due_date_pembayaran_action">
           <field name="name">Due Date Pembayaran</field>

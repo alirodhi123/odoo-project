@@ -50,7 +50,7 @@ class Sesi(models.Model):
     _name = 'training.sesi'
     
     name = fields.Char('Nama', required=True)
-    start_date = fields.Date('Tanggal Mulai', default=fields.Date.today)
+    start_date = fields.Datetime('Tanggal Mulai')
     duration = fields.Float('Durasi Hari', digits=(6, 2), help="Durasi Hari")
     seats = fields.Integer(string="Jumlah Kursi")
     instructor_id = fields.Many2one('res.partner', string="Instruktur", domain=['|', ('instructor', '=', True), ('category_id.name', 'ilike', "Pengajar")])
@@ -58,7 +58,7 @@ class Sesi(models.Model):
     attendee_ids = fields.Many2many('res.partner', string="Peserta", domain=[('instructor', '=', False)])
 
     taken_seats = fields.Float(string="Kursi Terisi", compute='_taken_seats')    
-    end_date = fields.Date(string="Tanggal Selesai", store=True, compute='_get_end_date', inverse='_set_end_date')
+    end_date = fields.Datetime(string="Tanggal Selesai", store=True, compute='_get_end_date', inverse='_set_end_date')
     hours = fields.Float(string="Durasi Jam", compute='_get_hours', inverse='_set_hours')
     attendees_count = fields.Integer(string="Jumlah Peserta", compute='_get_attendees_count', store=True)
 
