@@ -1,0 +1,29 @@
+<odoo>
+    <data>
+
+        <menuitem name="List Attendance Data From Finger" id="sub_menu_absensi"
+              parent="menu_absensi"
+              sequence="23" action="attendance_temp_action_new"></menuitem>
+
+        <menuitem name="Fingerprint" id="menu_absensi"
+              parent="hr_attendance.menu_hr_attendance_root"
+              sequence="21"></menuitem>
+
+        <menuitem name="Get Attendance Data From Finger" id="menu_get_absensi"
+              parent="menu_absensi"
+              sequence="22" action="action_get_attendance_sheet_custom"></menuitem>
+
+        <menuitem name="Input Range Tanggal" id="sub_menu_get_employee"
+              parent="hr_attendance.menu_hr_attendance_root"
+              sequence="24" action="action_get_employee_sheet_custom"></menuitem>
+
+        <menuitem name="Attendance Data Temporary" id="sub_menu_absensi_new"
+              parent="hr_attendance.menu_hr_attendance_manage_attendances"
+              sequence="1" action="attendance_attendance_action"></menuitem>
+
+        <!-- Remove menu from module attendance -->
+        <delete model="ir.ui.menu" id="hr_attendance.menu_hr_attendance_my_attendances"/>
+        <delete model="ir.ui.menu" id="hr_attendance.menu_hr_attendance_kiosk_mode"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,80 @@
+<odoo>
+    <data>
+
+        <record id="view_attendance_tree" model="ir.ui.view">
+            <field name="name">attendance.temp.tree</field>
+            <field name="model">x.attendance</field>
+            <field name="arch" type="xml">
+                <tree string="Employee attendances">
+                    <field name="x_employee"/>
+                    <field name="x_checkin_view"/>
+                    <field name="x_selisih_masuk"/>
+                    <field name="x_checkout_view"/>
+                    <field name="x_selisih_pulang"/>
+                    <field name="x_categ_in"/>
+                    <field name="x_categ_out"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_attendance_view_form" model="ir.ui.view">
+            <field name="name">attendance.temp.form</field>
+            <field name="model">x.attendance</field>
+            <field name="arch" type="xml">
+                <form string="Employee attendances">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="x_employee" readonly="1"/>
+                                <field name="x_checkin_view" readonly="1"/>
+                                <field name="x_selisih_masuk" readonly="1"/>
+                                <field name="x_checkout_view" readonly="1"/>
+                                <field name="x_selisih_pulang" readonly="1"/>
+                                <field name="x_categ_in" readonly="1"/>
+                                <field name="x_categ_out" readonly="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_attendance_filter" model="ir.ui.view">
+            <field name="name">Filter Attendance</field>
+            <field name="model">x.attendance</field>
+            <field name="arch" type="xml">
+                <search string="Attendance">
+                    <separator/>
+                    <field name="x_employee"></field>
+                    <field name="x_checkin"></field>
+                    <field name="x_checkout"></field>
+                    <field name="x_categ_in"></field>
+                    <field name="x_categ_out"></field>
+                    <group expand="0" string="Group By">
+                        <filter string="Employee" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'x_employee'}"/>
+                        <filter string="Category In" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'x_categ_in'}"/>
+                        <filter string="Category Out" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'x_categ_out'}"/>
+
+                    </group>
+                </search>
+            </field>
+         </record>
+
+        <record model="ir.actions.act_window" id="attendance_temp_action_new">
+          <field name="name">Attendance From Finger</field>
+          <field name="res_model">x.attendance</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree</field>
+          <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Attendance</p>
+          </field>
+        </record>
+
+    </data>
+</odoo>

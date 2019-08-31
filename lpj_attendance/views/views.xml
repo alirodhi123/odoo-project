@@ -1,22 +1,77 @@
 <odoo>
   <data>
-    <record id="inherit_hr_attendance" model="ir.ui.view">
-        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+
+
+      <!--
+           INHERITE
+           TREE VIEW ATTENDANCE
+       -->
+
+      <record id="inherit_hr_attendance_tree" model="ir.ui.view">
         <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
         <field name="arch" type="xml">
 
-            <field name="check_out" position="after">
-                 <button class="oe_highlight"
-                         name="open_second_class"
-                         string="Create Kuitansi"
-                         type="object"
-                         help="calls python function"
-                         target="new">
-                 </button>
+            <field name="check_in" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+
+            <field name="check_out" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+
+            <field name="employee_id" position="after">
+                <field name="x_department_hr"></field>
+                <field name="x_contract_type_hr"></field>
+                <field name="x_format_tanggal_hr"></field>
+                <field name="x_checkin_view_hr"></field>
+                <field name="x_selisih_masuk_hr"></field>
+                <field name="x_checkout_view_hr"></field>
+                <field name="x_selisih_pulang_hr"></field>
+                <field name="x_categ_in_hr"></field>
+                <field name="x_categ_out_hr"></field>
             </field>
 
         </field>
-    </record>
+      </record>
 
+
+      <!--
+            INHERITE
+            FORM VIEW ATTENDANCE
+      -->
+      <record id="inherit_hr_attendance" model="ir.ui.view">
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Menghilangkan attribute require -->
+            <field name="check_in" position="attributes">
+                <attribute name="required">0</attribute>
+                <attribute name="invisible">1</attribute>
+            </field>
+
+            <!-- Invisible check out -->
+            <field name="check_out" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+
+            <!-- Menghilangkan attribute require -->
+            <field name="employee_id" position="attributes">
+                <attribute name="required">0</attribute>
+            </field>
+
+            <field name="check_out" position="after">
+                <field name="x_checkin_view_hr"></field>
+                <field name="x_checkout_view_hr"></field>
+                <field name="x_categ_in_hr"></field>
+                <field name="x_categ_out_hr"></field>
+                <field name="x_selisih_masuk_hr"></field>
+                <field name="x_selisih_pulang_hr"></field>
+            </field>
+
+        </field>
+      </record>
+      
   </data>
 </odoo>

@@ -1,0 +1,72 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="attendance_tree_view_kanban">
+              <field name="name">Attendance List</field>
+              <field name="model">x.attendance.kanban</field>
+              <field name="arch" type="xml">
+                 <tree>
+                      <field name="name"/>
+                 </tree>
+              </field>
+        </record>
+
+        <record model="ir.ui.view" id="attendance_kanban_form_view">
+              <field name="name">Attendance Form</field>
+              <field name="model">x.attendance.kanban</field>
+              <field name="arch" type="xml">
+                 <form>
+                     <sheet>
+                         <group>
+                             <group>
+                                 <field name="name"></field>
+                             </group>
+                         </group>
+                     </sheet>
+                 </form>
+              </field>
+        </record>
+
+        <record id="view_attendance_kanban" model="ir.ui.view">
+            <field name="name">Attendance Kanban</field>
+            <field name="model">x.attendance.kanban</field>
+            <field name="arch" type="xml">
+                <kanban class="oe_background_grey o_kanban_dashboard o_hr_recruitment_kanban">
+
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <div class="o_kanban_card_header">
+                                    <div class="o_kanban_manage_button_section">
+                                        <field name="name"></field>
+                                    </div>
+                                </div>
+                                <div class="container o_kanban_card_content o_visible">
+                                    <t>
+                                        <div class="row">
+                                            <div class="col-xs-6 o_kanban_primary_left">
+                                                <button class="btn btn-primary" name="%(attendance_temp_action)d" type="action">View Data</button>
+                                            </div>
+                                            <div class="col-xs-6 o_kanban_primary_right">
+                                                <button class="btn btn-primary" name="get_data_attendance" type="object">Get Data</button>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+
+         <record model="ir.actions.act_window" id="action_attendance_kanban_custom">
+            <field name="name">Attendance Kanban</field>
+            <field name="res_model">x.attendance.kanban</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+    </data>
+</odoo>

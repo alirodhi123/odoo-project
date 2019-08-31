@@ -1,0 +1,41 @@
+<odoo>
+    <data>
+
+         <record id="view_attendance_sheet_custom" model="ir.ui.view">
+            <field name="name">x.popup.absensi.form</field>
+            <field name="model">x.popup.absensi</field>
+            <field name="arch" type="xml">
+                <form string="Get Attendance Data">
+                    <sheet>
+                        <group string="Connection to Finger">
+                            <group>
+                                <field name="name" readonly="1"></field>
+                                <field name="x_db_server" readonly="1"></field>
+                                <field name="x_db_name" readonly="1"></field>
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button class="oe_highlight" string="Get Attendance From Finger" name="open_url" type="object" />
+                        <button class="oe_link" special="cancel" string="Cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action Of Form View Of Get Attendance Data -->
+
+        <record id="action_get_attendance_sheet_custom" model="ir.actions.act_window">
+            <field name="name">Get Attendance Data</field>
+            <field name="res_model">x.popup.absensi</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_attendance_sheet_custom" />
+            <field name="target">new</field>
+            <field name="help">
+                Display the Monthly Attendance Sheet.
+            </field>
+        </record>
+
+    </data>
+</odoo>

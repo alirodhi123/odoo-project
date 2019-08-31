@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template xml:space="preserve">
+    <t t-name="PresenceIndicator">
+        <div class="oe_hr_attendance_status fa fa-user">
+        </div>
+    </t>
+
+    <t t-name="HrAttendanceMyMainMenu">
+        <div class="o_hr_attendance_kiosk_mode_container">
+            <div class="o_hr_attendance_kiosk_mode">
+                <t t-if="widget.employee">
+                    <h1>Absensi</h1>
+                    <h2>Click to Get Data</h2>
+                    <i class="fa fa-cloud-download btn-primary o_hr_attendance_download_icon"/>
+                </t>
+                <t t-if="!widget.employee">
+                    Error : Could not find employee linked to user.
+                </t>
+            </div>
+        </div>
+    </t>
+
+</template>

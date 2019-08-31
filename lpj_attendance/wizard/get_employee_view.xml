@@ -1,0 +1,38 @@
+<odoo>
+    <data>
+
+        <!-- Model(file.py) ada di sale_order.py-->
+         <record id="pop_message_employee_wizard_view_form" model="ir.ui.view">
+            <field name="name">x.popup.get.employee</field>
+            <field name="model">x.popup.get.employee</field>
+            <field name="arch" type="xml">
+                <form string="Message">
+                    <group>
+                        <label for="x_date_start" string="Date"/>
+                        <div class="o_row">
+                            from <field name="x_date_start"/>
+                            to<field name="x_date_end"/>
+                        </div>
+                    </group>
+                    <footer>
+                       <button class="oe_highlight" string="Get Data" name="get_employee_not_here" type="object" />
+                       <button string="Discard" special="cancel"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_get_employee_sheet_custom" model="ir.actions.act_window">
+            <field name="name">Get Attendance Data</field>
+            <field name="res_model">x.popup.get.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="pop_message_employee_wizard_view_form" />
+            <field name="target">new</field>
+            <field name="help">
+                Display the Monthly Attendance Sheet.
+            </field>
+        </record>
+
+    </data>
+</odoo>

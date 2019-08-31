@@ -1,0 +1,77 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="wizard_form_view_validate_absensi">
+            <field name="name">x.popup.validate.form</field>
+            <field name="model">x.popup.validate</field>
+            <field name="arch" type="xml">
+                <form string="Validate Absensi">
+                    <group>
+                        <label for="x_count_data"/>
+                        <div>
+                            <field name="x_count_data"
+                                   class="oe_inline"></field>
+                            Data
+                        </div>
+                    </group>
+                    <newline/>
+                    <group>
+                        <field name="x_popup_validate_ids" nolabel="1" colspan="2">
+                            <tree create="false" editable="bottom">
+                                <field name="x_employee_validate"></field>
+                                <field name="x_dept_validate"></field>
+                                <field name="x_contract_type_validate"></field>
+                                <field name="x_format_tanggal_validate"></field>
+                                <field name="x_checkin_validate_view"></field>
+                                <field name="x_selisih_masuk_validate"></field>
+                                <field name="x_checkout_validate_view"></field>
+                                <field name="x_selisih_pulang_validate"></field>
+                                <field name="x_categ_in_validate"></field>
+                                <field name="x_categ_out_validate"></field>
+                                <field name="x_state_validate"></field>
+                                <field name="x_checkin_validate" invisible="1"></field>
+                                <field name="x_checkout_validate" invisible="1"></field>
+                            </tree>
+                        </field>
+                    </group>
+
+                    <newline/>
+                    <footer>
+                        <button class="oe_highlight"
+                                 name="validate_absensi"
+                                 string="Validate"
+                                 type="object"
+                                 help="calls python function"
+                                 target="new">
+                         </button>
+                        <button special="cancel" string="Discard"/>
+                    </footer>
+                </form>
+            </field>
+         </record>
+
+
+        <!-- POP UP MESSAGE VALIDATE -->
+        <record id="custom_pop_message_validate_view_form" model="ir.ui.view">
+            <field name="name">Pop Message</field>
+            <field name="model">x.popup.validate.message</field>
+            <field name="arch" type="xml">
+                <form string="POP Message">
+                    <field name="name" readonly="1"/>
+                    <footer>
+                       <button string="Oke" class="oe_highlight" special="cancel"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <act_window id="launch_session_wizard"
+                name="Validate"
+                src_model="x.attendance.attendance"
+                res_model="x.popup.validate"
+                view_mode="form"
+                target="new"
+                key2="client_action_multi"/>
+
+    </data>
+</odoo>
