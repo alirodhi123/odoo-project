@@ -22,5 +22,61 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="work_order_lines">
+            <field name="name">mrp.workorder.lines</field>
+            <field name="model">mrp.workorder</field>
+            <field name="inherit_id" ref="mrp.mrp_production_workcenter_form_view_inherit"/>
+            <field name="arch" type="xml">
+                <button name="button_scrap" position="after">
+                    <button class="oe_highlight"
+                        string="Get Lot"
+                        name="generate_lot_reference"
+                        type="object"
+                        help="calls python function"
+                        options="{'reload_on_button': true}"
+                        attrs="{'invisible': [('state', '=', 'done')]}">
+                    </button>
+                </button>
+
+                <field name="quantity" position="after">
+                    <field name="x_lot_reference"></field>
+                </field>
+
+                <!-- Menambahkan domain pada lot yang ada di workorder -->
+                <field name="lot_id" position="attributes">
+                    <attribute name="domain">['|', '|', ('quant_ids.location_id', '=', 22),
+                        ('quant_ids.location_id', '=', 23),
+                        ('product_id', '=', product_id)]
+                    </attribute>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="mrp_workcenter_create_date_tree">
+            <field name="name">mrp.workorder.create.date.tree</field>
+            <field name="model">mrp.workorder</field>
+            <field name="inherit_id" ref="mrp.mrp_production_workcenter_tree_view_inherit"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_planned_start']" position="after">
+                    <field name = "date_planned_finished"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!--
+            CALENDAR VIEW WORK ORDER
+            MENAMBAHKAN PRODUCT ID PADA CALENDAR DI WO
+        -->
+        <record model="ir.ui.view" id="workcenter_line_calendar_inherit">
+            <field name="name">Calendar Work Order</field>
+            <field name="model">mrp.workorder</field>
+            <field name="inherit_id" ref="mrp.workcenter_line_calendar"/>
+            <field name="arch" type="xml">
+                <field name="production_id" position="after">
+                    <field name="product_id"></field>
+                </field>
+            </field>
+        </record>
+
     </data>
 </odoo>

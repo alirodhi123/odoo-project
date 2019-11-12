@@ -1,0 +1,84 @@
+<odoo>
+    <data>
+
+        <record id="view_shift_employee" model="ir.ui.view">
+            <field name="name">attendance.attendance.tree</field>
+            <field name="model">x.shift.employee</field>
+            <field name="arch" type="xml">
+                <tree string="Employee attendances">
+                    <field name="x_employee"></field>
+                    <field name="x_start_date"></field>
+                    <field name="x_end_date"></field>
+
+                </tree>
+            </field>
+        </record>
+
+        <record id="shift_employee_view_form" model="ir.ui.view">
+            <field name="name">attendance.attendance.form</field>
+            <field name="model">x.shift.employee</field>
+            <field name="arch" type="xml">
+                <form string="Employee attendances">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="x_employee"></field>
+                                <label for="x_start_date" string="Periode Date"/>
+                                <div class="o_row">
+                                    from <field name="x_start_date"/>
+                                        to
+                                        <field name="x_end_date"/>
+                                </div>
+                                <button name="insert_shift"
+                                    type="object"
+                                    string="Insert Shift"
+                                    class="oe_highlight"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Shift Line">
+                              <field name="x_shift_employee_ids">
+                                <tree editable="bottom">
+                                    <field name="x_date"></field>
+                                    <field name="x_shift_id"></field>
+                                    <field name="x_mesin_id"></field>
+                                </tree>
+                              </field>
+
+                            </page>
+                          </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_shift_employee_filter" model="ir.ui.view">
+            <field name="name">Filter Shift Employee</field>
+            <field name="model">x.shift.employee</field>
+            <field name="arch" type="xml">
+                <search string="Attendance">
+                    <separator/>
+                    <field name="x_employee"></field>
+
+                    <group expand="0" string="Group By">
+                        <filter string="Employee" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'x_employee'}"/>
+
+                    </group>
+                </search>
+            </field>
+         </record>
+
+        <record model="ir.actions.act_window" id="shift_employee_action">
+          <field name="name">Shift Employee</field>
+          <field name="res_model">x.shift.employee</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Shift Employee</p>
+          </field>
+        </record>
+
+    </data>
+</odoo>

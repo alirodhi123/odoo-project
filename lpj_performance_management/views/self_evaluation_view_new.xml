@@ -1,0 +1,138 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="self_eval_tree_view_new">
+              <field name="name">Self Evaluation List</field>
+              <field name="model">x.self.eval</field>
+              <field name="arch" type="xml">
+                 <tree>
+                      <field name="name"/>
+                      <field name="x_employee_id"></field>
+                      <field name="x_department_id"></field>
+                      <field name="x_periode_id"></field>
+                      <field name="x_tanggal_penilaian"></field>
+                      <field name="x_periode_penilaian_from"></field>
+                      <field name="x_periode_penilaian_to"></field>
+                 </tree>
+              </field>
+        </record>
+
+        <record model="ir.ui.view" id="self_eval_form_view_new">
+              <field name="name">Self Evaluation Form</field>
+              <field name="model">x.self.eval</field>
+              <field name="arch" type="xml">
+                 <form>
+                     <sheet>
+                         <div class="oe_title">
+                            <h2><field name="name" placeholder="Name" readonly="1"/></h2>
+                        </div>
+                         <group>
+                             <group>
+                                 <label for="x_master_se_eval"></label>
+                                    <div class="o_row">
+                                        <field name="x_master_se_eval" options="{'no_create': True, 'no_create_edit': True}"></field>
+                                        <button name="main_function_generate_question"
+                                                type="object"
+                                                class="oe_stat_button"
+                                                string="Generate Question"/>
+                                    </div>
+                                 <field name="x_employee_id"></field>
+                                 <field name="x_department_id"></field>
+                             </group>
+                             <group>
+                                <field name="x_periode_id"></field>
+                                <field name="x_tanggal_penilaian"></field>
+                                <label for="x_periode_penilaian_from" string="Periode Date"/>
+                                <div class="o_row">
+                                    from <field name="x_periode_penilaian_from"/>
+                                    to<field name="x_periode_penilaian_to"/>
+                                </div>
+                             </group>
+                         </group>
+                         <notebook>
+                             <page name="question_se" string="Detail Questions">
+                                 <field name="x_self_eval_ids">
+                                     <tree editable="bottom">
+                                         <field name="x_se_question"></field>
+                                         <field name="x_se_answer"></field>
+                                     </tree>
+                                 </field>
+
+                                 <div string="Note">
+                                     <p>
+                                         Untuk pengisian soal no 7, pilihlah salah satu dari uraian dibawah <br/>
+                                             A. Melebihi yang diharapkan <br/>
+                                             B. Sesuai dengan yang diharapkan <br/>
+                                             C. Dibawah yang diharapkan <br/>
+                                             D. Mengecewakan
+                                     </p>
+                                 </div>
+                             </page>
+                         </notebook>
+                     </sheet>
+
+                     <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                 </form>
+              </field>
+        </record>
+
+        <record id="view_self_eval_filter_new" model="ir.ui.view">
+            <field name="name">Filter Self Evaluation</field>
+            <field name="model">x.self.eval</field>
+            <field name="arch" type="xml">
+                <search string="Self Evaluation">
+                    <field name="name"></field>
+                    <separator/>
+                    <field name="x_department_id"/>
+                    <field name="x_employee_id"></field>
+                    <field name="x_periode_id"></field>
+                    <group expand="0" string="Group By">
+                        <filter string="Employee" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'x_employee_id'}"/>
+
+                        <filter string="Department" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'x_department_id'}"/>
+
+                        <filter string="Periode Bulan" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'x_periode_id'}"/>
+
+                    </group>
+                </search>
+            </field>
+         </record>
+
+        <!-- actions opening views on models -->
+        <record model="ir.actions.act_window" id="self_evaluation_action_window_new_new">
+          <field name="name">Self Evaluation</field>
+          <field name="res_model">x.self.eval</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="context">{"search_default_x_periode_id": [active_id], 'default_x_periode_id': active_id}</field>
+          <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Self Evaluation ...</p>
+          </field>
+        </record>
+
+
+        <!--
+            ACTION OPENING VIEW
+            UNTUK  SELF EVALUATION DI HR EMPLOYEE
+        -->
+        <record model="ir.actions.act_window" id="self_eval_action_window_hr_employee">
+          <field name="name">Self Evaluation</field>
+          <field name="res_model">x.self.eval</field>
+          <field name="view_mode">tree,form</field>
+          <field name="context">{"search_default_x_employee_id": [active_id], 'default_x_employee_id': active_id}</field>
+          <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Buatlah kursus pertamamu ...</p>
+          </field>
+        </record>
+
+    </data>
+</odoo>

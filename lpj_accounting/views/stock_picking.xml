@@ -11,5 +11,65 @@
                     </tree>
                 </field>
         </record>
+
+        <!-- Menambahkan flagging ke dalam form view stock.picking -->
+        <record model="ir.ui.view" id="stock_operations_form_view_inherit">
+                <field name="name">stock.picking.form</field>
+                <field name="model">stock.picking</field>
+                <field name="inherit_id" ref="stock.view_picking_form"></field>
+                <field name="arch" type="xml">
+                    <field name="min_date" position="after">
+                        <field name="x_confirmation_sjk" attrs="{'invisible': [('picking_type_id', '!=', 4)]}"></field>
+                    </field>
+                </field>
+        </record>
+
+        <!-- Tree view stock picking custom untuk tampilan di accounting -->
+        <record id="vpicktree_custom" model="ir.ui.view">
+            <field name="name">stock.picking.tree</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" decoration-danger="state not in ('cancel', 'done') and min_date &lt; current_date" string="Picking list">
+                    <field name="name"/>
+                    <field name="location_dest_id"/>
+                    <field name="partner_id"/>
+                    <field name="date" invisible="1"/>
+                    <field name="min_date"/>
+                    <field name="origin"/>
+                    <field name="x_tkr_guling"></field>
+                    <field name="group_id" invisible="1"/>
+                    <field name="backorder_id"/>
+                    <field name="state"/>
+                    <field name="priority" invisible="1"/>
+                    <field name="picking_type_id" invisible="1"/>
+                    <button class="oe_highlight"
+                             name="sjk_confirmatipn"
+                             string="Confirmation"
+                             type="object"
+                             groups="account.group_account_invoice"
+                             help="calls python function"
+                             attrs="{'invisible': ['|', ('x_confirmation_sjk', '=', 'yes'),
+                                                        ('x_send_to_fac', '=', 'no')]}">
+                      </button>
+                      <field name="x_send_to_fac" invisible="1"></field>
+                      <field name="x_confirmation_sjk" invisible="1"></field>
+                </tree>
+            </field>
+        </record>
+
+        <!--
+            ACTION
+            SERAH TERIMA SJK
+         -->
+        <record id="serah_terima_sjk_accounting" model="ir.actions.act_window">
+            <field name="name">SJK Need Confirmation</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="vpicktree_custom"/>
+            <field name="domain">['|',
+                ('x_send_to_fac', 'in', ['yes']), ('is_delivery', '=', True)]
+            </field>
+        </record>
     </data>
 </odoo>

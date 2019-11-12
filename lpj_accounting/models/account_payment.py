@@ -117,6 +117,8 @@ class account_payment(models.Model):
 
     x_amount_total = fields.Monetary(compute='_amount_in_word')
     kode = fields.Char(compute='get_account')
+    x_perkiraan_journal = fields.Char(compute='get_perkiraan_journal')
+
 
     # Untuk fungsi terbilang
     @api.one
@@ -138,6 +140,18 @@ class account_payment(models.Model):
             self.kode = "101501"
         else:
             self.kode = "101401"
+
+    @api.one
+    def get_perkiraan_journal(self):
+        for o in self.move_line_ids:
+            if o.full_reconcile_id:
+                account_id = o.account_id
+
+                for row in account_id:
+                    code = row.code
+                    name = row.name
+
+        self.x_perkiraan_journal = code + " " + name
 
 
 

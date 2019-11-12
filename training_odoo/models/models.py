@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from datetime import datetime
 from datetime import timedelta
 from odoo import models, fields, api, exceptions
 
@@ -23,13 +24,29 @@ class Kursus(models.Model):
     description = fields.Text()
     session_ids = fields.One2many('training.sesi', 'course_id', string="Sesi")
     responsible_id = fields.Many2one('res.users', ondelete='set null', string="Penanggung Jawab", index=True)
+    date_start = fields.Datetime(string="Date start")
+    date_now = fields.Datetime(default=datetime.now())
+    hasil_date = fields.Char()
     
     _sql_constraints = [
                     ('name_description_cek', 'CHECK(name != description)', 'Judul kursus dan keterangan tidak boleh sama '),
                     ('name_unik', 'UNIQUE(name)', 'Judul kursus harus unik')
     ]
-    
-    
+
+    @api.onchange('date_start')
+    def hasil_date_val(self):
+        format = "%Y-%m-%d %H:%M:%S"
+        date_start_val = self.date_start
+        date_now_val = self.date_now
+        if date_start_val != False:
+
+            date_start =  datetime.strptime(str(date_start_val), format)
+            date_now_val2 = datetime.strptime(str(date_now_val), format)
+
+            val = date_start - date_now_val2
+            self.hasil_date = val
+
+
     @api.multi
     def copy(self, default=None):
         default = dict(default or {})

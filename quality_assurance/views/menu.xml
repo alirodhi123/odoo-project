@@ -29,6 +29,11 @@
                   parent="menu_quality_assurance" sequence="100"
                   action="lot_child_form"/>
 
+        <!--<menuitem id="menu_color_range" name="Color Range"-->
+                  <!--parent="menu_quality_assurance" sequence="170"-->
+                  <!--action="color_range_action"-->
+                  <!--/>-->
+
          <!--<menuitem id="menu_quality_alert" name="Quality Alerts" parent="menu_quality_assurance" action="quality_alert_action"/>-->
     </data>
 </odoo>

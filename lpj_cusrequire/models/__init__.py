@@ -3,4 +3,6 @@
 from . import models
 from . import quotation_cr
 from . import print_quo
-# from . import crm
+from . import crm
+from . import sq
+

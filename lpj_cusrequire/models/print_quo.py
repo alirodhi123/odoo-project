@@ -4,6 +4,8 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import models, fields, api
+
+import base64
 import odoo.addons.decimal_precision as dp
 
 
@@ -15,7 +17,7 @@ class print_quotation(models.Model):
     name = fields.Char(string = 'Quotation', track_visibility='always')
     x_cust = fields.Many2one('res.partner', string = 'Customer')
     x_quo_line = fields.One2many('x.print.quo.line', 'x_quo', required=True, track_visibility='always')
-    x_cusreq_quo = fields.Many2one(related = 'x_quo_line.x_cusreq')
+    x_cusreq_quo = fields.Many2one(related = 'x_quo_line.x_sq')
     x_untaxed_amount = fields.Float(string='Total Harga',compute = 'total_harga' ,readonly=True, track_visibility='always')
     currency_id = fields.Many2one('res.currency')
     is_responsible = fields.Boolean(default=False, string="SPH Closed")
@@ -59,21 +61,111 @@ class print_quotation(models.Model):
             end_date_var = start_date_var + relativedelta(days=int(jumlah_hari))
             self.end_date_value = str(end_date_var)
 
+    def x_send_quotation(self):
+        '''
+                This function opens a window to compose an email, with the edi sale template message loaded by default
+                '''
+        self.ensure_one()
+        ir_model_data = self.env['ir.model.data']
+        try:
+            template_id = ir_model_data.get_object_reference('lpj_cusrequire', 'mail_template_sph')[1]
+        except ValueError:
+            template_id = False
+        try:
+            compose_form_id = ir_model_data.get_object_reference('mail', 'email_compose_message_wizard_form')[1]
+        except ValueError:
+            compose_form_id = False
+        ctx = dict()
+        ctx.update({
+            'default_model': 'x.print.quo',
+            'default_res_id': self.ids[0],
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_composition_mode': 'comment',
+            'mark_so_as_sent': True,
+            'custom_layout': "lpj_cusrequire.mail_template_data_notification_email_sph"
+        })
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form_id, 'form')],
+            'view_id': compose_form_id,
+            'target': 'new',
+            'context': ctx,
+        }
+        # self.ensure_one()
+        # attachment = {
+        #     'name': ("%s" % self.filename),
+        #     'datas': self.get_file_data(),
+        #     'datas_fname': self.filename,
+        #     'res_model': 'x.print.quo',
+        #     'type': 'binary'
+        # }
+        # id = self.env['ir.attachment'].create(attachment)
+        # email_template = self.env.ref('my.email_template_example')
+        # email_template.attachment_ids = False
+        # email_template.attachment_ids = [(4, id.id)]
+        #
+        # ir_model_data = self.env['ir.model.data']
+        # try:
+        #     template_id = ir_model_data.get_object_reference('my', 'email_template_example')[1]
+        # except ValueError:
+        #     template_id = False
+        # try:
+        #     compose_form_id = ir_model_data.get_object_reference('mail', 'email_compose_message_wizard_form')[1]
+        # except ValueError:
+        #     compose_form_id = False
+        # ctx = dict()
+        # ctx.update({
+        #     'default_model': 'x.print.quo',
+        #     'default_res_id': self.ids[0],
+        #     'default_use_template': bool(template_id),
+        #     'default_template_id': template_id,
+        #     'default_composition_mode': 'comment',
+        #     'attachment_ids': [(4, id.id)],
+        # })
+        # return {
+        #     'type': 'ir.actions.act_window',
+        #     'view_type': 'form',
+        #     'view_mode': 'form',
+        #     'res_model': 'mail.compose.message',
+        #     'views': [(compose_form_id, 'form')],
+        #     'view_id': compose_form_id,
+        #     'target': 'new',
+        #     'context': ctx,
+        # }
+
+
+        # CREATE ATTACHMENT OTOMATIS
+        # pdf = self.env['report'].sudo().get_pdf([self.id], 'lpj_cusrequire.report_document_quo')
+        # self.env['ir.attachment'].create({
+        #     'name': 'Cats',
+        #     'type': 'binary',
+        #     'datas': base64.encodestring(pdf),
+        #     'res_model': 'x.print.quo',
+        #     'res_id': self.id,
+        #     'mimetype': 'application/x-pdf'
+        # })
 
 class print_quotation_line(models.Model):
     _name = 'x.print.quo.line'
     _inherit = 'mail.thread'
 
     x_quo = fields.Many2one('x.print.quo', string = 'cusreq quotation',track_visibility='always', ondelete='cascade')
-    x_cusreq = fields.Many2one('x.cusrequirement',string = 'Sales Quotation Code', required=True, track_visibility='always')
-    x_item_desc = fields.Char(related = 'x_cusreq.item_description', track_visibility='onchange')
-    x_prod = fields.Many2one(related = 'x_cusreq.x_product')
-    x_qty = fields.Integer(string = 'Quantity', track_visibility='onchange')
-    x_flag = fields.Boolean(related = 'x_cusreq.x_flag_quo')
-    x_price_pcs = fields.Float(string = 'Harga Pcs',readonly = False, track_visibility='always')
-    x_total_price = fields.Float(string = 'Total Harga')
-    currency_id = fields.Many2one("res.currency", related='x_quo.currency_id', string="Currency", readonly=True,
-                                  required=True)
+    x_sq = fields.Many2one('x.sales.quotation',string = 'Sales Quotation Code', track_visibility='always')
+    x_item_desc = fields.Char(related = 'x_sq.item_description', track_visibility='onchange')
+    x_prod = fields.Many2one(related = 'x_sq.x_product', readonly = True)
+    x_qty = fields.Integer(string = 'Quantity', track_visibility='onchange', related = 'x_sq.x_qty', readonly = True)
+    x_width= fields.Float(string='Width', track_visibility='onchange', related='x_sq.x_width', readonly=True)
+    x_length = fields.Float(string='Length', track_visibility='onchange', related='x_sq.x_length', readonly=True)
+    x_material_type_id = fields.Many2one('product.template', 'Material Type',related='x_sq.x_material_type_id',readonly=True)
+
+    x_flag = fields.Boolean(related = 'x_sq.x_flag_quo')
+    x_price_pcs = fields.Float(string = 'Harga Pcs',readonly = True, track_visibility='always', related = 'x_sq.x_price_fix')
+    x_total_price = fields.Float(string = 'Total Harga',  readonly = True)
+    currency_id = fields.Many2one("res.currency", related='x_quo.currency_id', string="Currency", readonly=True,required=True)
 
     @api.model
     def create(self, vals):
@@ -84,15 +176,16 @@ class print_quotation_line(models.Model):
 
     @api.onchange('x_price_pcs','x_qty')
     def harga(self):
+        self.x_qty = self.x_sq.x_qty
         self.x_total_price = self.x_price_pcs * self.x_qty
 
 
 class flag_quo(models.Model):
-    _inherit = 'x.cusrequirement'
+    _inherit = 'x.sales.quotation'
 
     x_flag_quo = fields.Boolean(string ='Internal Quotation', default = False)
     x_internal_code = fields.Char(string = 'Internal Code')
-    x_quo_line_id = fields.One2many('x.print.quo.line','x_cusreq', string = 'Print Quo Line')
+    x_quo_line_id = fields.One2many('x.print.quo.line','x_sq', string = 'Print Quo Line')
     x_quo_parent = fields.Many2one('x.print.quo', related = 'x_quo_line_id.x_quo')
 
 

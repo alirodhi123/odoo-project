@@ -2,9 +2,9 @@
     <data>
 
         <!--
-        SALE ORDER
-        INHERIT
-        Sale Order Inherite View
+            SALE ORDER
+            INHERIT
+            Sale Order Inherite View
         -->
         <record model="ir.ui.view" id="sale_order_line_inherit_view">
             <field name="name">sale.order.line</field>
@@ -12,13 +12,15 @@
             <field name="inherit_id" ref="sale.view_order_line_tree"/>
             <field name="arch" type="xml">
                  <xpath expr="/tree/field[@name='price_subtotal']" position="after">
-                    <button class="oe_highlight"
-                            name="open_ok_form"
-                            string="Create OK"
-                            type="object"
-                            attrs="{'invisible': ['|', ('x_flag_mo', '=', True), ('state', '!=', 'done')]}"
-                            help="calls python function"/>
+                     <field name="x_status_product"></field>
 
+                     <button name="pop_message_ok"
+                             string="Create OK"
+                             type="object"
+                             attrs="{'invisible': ['|', ('x_flag_mo', '=', True), ('state', '!=', 'done')]}"
+                             help="calls python function"/>
+
+                     <field name="x_locked_product_so" invisible="1"></field>
                      <field name="state" invisible="1"></field>
                      <field name="x_flag_mo" invisible="1"></field>
                  </xpath>
@@ -37,6 +39,48 @@
                     <field name="x_duedate_kirim"></field>
                  </xpath>
 
+                <!-- Menambahkan field toleransi pada open SO -->
+                <xpath expr="/tree/field[@name='product_uom_qty']" position="after">
+                    <field name="x_toleransi"></field>
+                 </xpath>
+
+                <!-- Menambahkan field produced ok pada open SO -->
+<!--                <xpath expr="/tree/field[@name='qty_invoiced']" position="after">-->
+<!--                    <field name="x_qty_produced_ok"></field>-->
+<!--                 </xpath>-->
+
+            </field>
+        </record>
+
+        <!--
+            INHERIT SALE ORDER
+            MENAMBAHKAN PRODUCED QTY DI SALE ORDER LINE
+        -->
+<!--        <record model="ir.ui.view" id="sale_order_inherit_view_custom">-->
+<!--            <field name="name">sale.order</field>-->
+<!--            <field name="model">sale.order</field>-->
+<!--            <field name="inherit_id" ref="sale.view_order_form"/>-->
+<!--            <field name="arch" type="xml">-->
+
+<!--                <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='qty_invoiced']" position="after">-->
+<!--                    <field name="x_qty_produced_ok"></field>-->
+<!--                </xpath>-->
+
+<!--            </field>-->
+<!--        </record>-->
+
+        <record id="view_sale_order_line_search_inherit" model="ir.ui.view">
+            <field name="name">sale.order.line.list.select</field>
+            <field name="model">sale.order.line</field>
+            <field name="inherit_id" ref="sale.view_sales_order_line_filter"></field>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                    <group expand="0" string="Group By...">
+                        <filter string="Locked Product" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'x_locked_product_so'}"/>
+                    </group>
+                </xpath>
             </field>
         </record>
 
@@ -44,9 +88,7 @@
             <field name="name">Open SO</field>
             <field name="res_model">sale.order.line</field>
             <field name="view_mode">tree</field>
-            <!--<field name="groups_id" eval="[(6,0, [ref('account.group_account_user,account.group_account_manager')])]"/>-->
-            <!--<field name="context">{'search_default_product_id': [active_id], 'default_product_id': active_id}</field>-->
-            <field name="domain">[('state', 'in', ['sale', 'done'])]</field>
+            <field name="domain">[('state', 'in', ['done'])]</field>
         </record>
 
     </data>

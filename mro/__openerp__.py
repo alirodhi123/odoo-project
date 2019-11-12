@@ -48,7 +48,7 @@ Required modules:
         'mro_request_workflow.xml',
         'mro_sequence.xml',
         'mro_data.xml',
-        'mro_view.xml',
+        'views/mro_view.xml',
         'mro_report.xml',
         'views/report_mro_order.xml',
         'views/report_mro_request.xml',

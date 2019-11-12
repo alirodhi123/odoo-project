@@ -21,7 +21,7 @@
                         <field name="qa_id">
                                 <tree editable="bottom">
                                     <field name="x_user_qa_bahan" string="Created by"/>
-                                    <field name="x_waktu_qa_bahan" string="Last Updated on" />
+                                    <field name="x_waktu_qa_bahan" string="Last Updated on" invisible="1"/>
                                     <field name="x_ukuran" string="Ukuran Bahan" />
                                     <field name="x_grammatur_top" />
                                     <field name="x_grammatur_release" />
@@ -31,8 +31,6 @@
                                     <field name="x_tdk_ngelokor" />
                                     <field name="x_tdk_gembos" />
                                     <field name="x_tdk_penyok" />
-
-
                                 </tree>
                             </field>
 

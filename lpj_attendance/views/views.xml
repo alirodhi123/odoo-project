@@ -30,6 +30,7 @@
                 <field name="x_selisih_pulang_hr"></field>
                 <field name="x_categ_in_hr"></field>
                 <field name="x_categ_out_hr"></field>
+                <field name="x_state_hr"></field>
             </field>
 
         </field>
@@ -68,6 +69,7 @@
                 <field name="x_categ_out_hr"></field>
                 <field name="x_selisih_masuk_hr"></field>
                 <field name="x_selisih_pulang_hr"></field>
+                <field name="x_state_hr"></field>
             </field>
 
         </field>

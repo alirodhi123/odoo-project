@@ -14,5 +14,41 @@
                </form>
             </field>
         </record>
+
+        <!-- Model(file.py) ada di sale_order.py-->
+         <record id="pop_message_ok_wizard_view_form" model="ir.ui.view">
+            <field name="name">custom.pop.message.form</field>
+            <field name="model">pop.message.ok</field>
+            <field name="arch" type="xml">
+                <form string="Custom POP Message">
+                    <field name="name" readonly="1"/>
+                    <group>
+                        <field name="x_sale_order" invisible="1" readonly="1"></field>
+                        <field name="x_sale_order_char" readonly="1"></field>
+                        <field name="x_sale_order_line" readonly="1"></field>
+                    </group>
+                    <footer>
+                       <button name="create_ok" string="Create OK" class="oe_highlight" type="object"></button>
+                       <button name="dont_need_ok" string="Don't Need OK" type="object"></button>
+                       <button string="Discard" special="cancel"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <!-- Model(file.py) ada di refresh_bom.py-->
+         <record id="pop_message_lock_product_form" model="ir.ui.view">
+            <field name="name">custom.pop.message.form_second</field>
+            <field name="model">pop.message.lock.ok</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="name" readonly="1"/> <br/>
+                    <field name="name_second" readonly="1"/>
+                    <footer>
+                       <button string="Oke" class="oe_highlight" special="cancel"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
     </data>
 </odoo>

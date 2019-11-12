@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+
+        <!-- Form View Of Student Attendance By Month -->
+
+        <record id="view_student_attendance_by_month_form" model="ir.ui.view">
+            <field name="name">Monthly Attendances Report</field>
+            <field name="model">student.attendance.by.month</field>
+            <field name="arch" type="xml">
+                <form string="Student Monthly Attendance Report">
+                    <separator string="Student Monthly Attendance Report" colspan="4" />
+                    <group col="4" colspan="2">
+                        <field name="year" width="200" required="1" widget="selection"/>
+                        <field name="month" width="200" domain="[('year_id','=',year)]" required="1" widget="selection"/>
+                    </group>
+                    <footer>
+                    <group colspan="4">
+                        <button name="print_report" class="fa fa-check" string="Print" type="object" colspan="1" />
+                        <button class="fa fa-ban" special="cancel" string="Cancel" colspan="1" />
+                    </group>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action Of Form View Of Student Attendance By Month -->
+
+        <record id="action_student_attendance_by_month" model="ir.actions.act_window">
+            <field name="name">Student Attendances By Month</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">student.attendance.by.month</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="student_attendance_by_month_values" model="ir.values">
+            <field name="model_id" ref="school.model_student_student" />
+            <field name="object" eval="1" />
+            <field name="name">Student Attendances By Month</field>
+            <field name="key2">client_print_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_student_attendance_by_month'))" />
+            <field name="key">action</field>
+            <field name="model">student.student</field>
+        </record>
+        
+
+</odoo>

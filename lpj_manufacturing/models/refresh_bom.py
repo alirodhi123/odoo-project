@@ -99,6 +99,7 @@ class refresh_bom(models.Model):
 
                 return self.update({'move_raw_ids': bom_ids_line})
 
+
     # Funsgi tampilkan pop up pesan
     @api.multi
     def my_custom_button_function_for_another_wizard(self):

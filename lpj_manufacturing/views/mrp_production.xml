@@ -10,6 +10,11 @@
                 <field name="name" position="after">
                     <field name="create_date" ></field>
                 </field>
+
+                <!-- Menambahkan x_due_date SQ pada tree MO -->
+                <field name="product_id" position="after">
+                    <field name="x_due_kirim"></field>
+                </field>
             </field>
         </record>
 
@@ -21,12 +26,10 @@
             <field name="arch" type="xml">
                 <field name="routing_id" position="after">
                     <field name="production_id" attrs="{'invisible': ['|', ('x_type_mo', '=', 'stc'),('x_type_mo', '=', False)]}"></field>
-                    <field name="panjang_bahan_bu_tinta" invisible="1"></field>
-                    <field name="panjang_bahan_label_tinta" invisible="1"></field>
-                    <field name="panjang_bahan_laminating_tinta" invisible="1"></field>
-                    <field name="panjang_bahan_pita_tinta" invisible="1"></field>
-                    <field name="panjang_bahan_hot_foil_tinta" invisible="1"></field>
+                    <field name="panjang_bahan_bu" invisible="1"></field>
                     <field name="panjang_bahan_max" invisible="1"></field>
+                    <field name="x_tampungan_bu" invisible="1"></field>
+                    <field name="x_is_administrator" invisible="1"></field>
                 </field>
             </field>
         </record>
@@ -41,11 +44,27 @@
                     <field name="date_planned_finished"></field>
                 </field>
 
-                <!-- Add Field duration -->
-                <field name="date_planned_finished" position="after">
-                    <field name="x_duration_view"></field>
-                    <field name="x_duration" invisible="1"></field>
+                <!--
+                    Menambahkan domain pada product yang ada di OK
+                    id 3 = PL&DC
+                -->
+                <field name="product_id" position="attributes">
+                    <attribute name="domain">['|', '|',
+                        ('x_locked_ok', '=', False),
+                        ('categ_id.sts_bhn_utama.name', '=', 'Tinta'),
+                        ('categ_id.sts_bhn_utama.id', '=', 3)]</attribute>
                 </field>
+
+                <!-- Menambahkan groups pada button POST INVENTORY -->
+                <button name="post_inventory" position="attributes">
+                    <attribute name="groups">mrp.group_mrp_manager</attribute>
+                </button>
+
+                <!-- Menambahkan groups pada button CANCEL OK -->
+                <button name="action_cancel" position="attributes">
+                    <attribute name="attrs">{'invisible': [
+                        ('x_is_administrator', '=', False)]}</attribute>
+                </button>
             </field>
         </record>
 
@@ -62,5 +81,27 @@
                 </calendar>
             </field>
         </record>
+
+        <!-- Add create color range di Manufacturing -->
+        <record model="ir.ui.view" id="mrp_production_CR_view">
+            <field name="name">mrp.production.form.cr</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='routing_id']" position="after">
+                    <label for="x_color_range_name"></label>
+                    <div class="o_row">
+                        <field name = "x_color_range_name"/>
+                        <button name="btn_color_range"
+                                type="object"
+                                string="Create CR"
+                                class="oe_highlight oe_inline"
+                                attrs="{'invisible':['|', ('x_cek_cr', '!=', True),('x_color_range_name','!=', False)]}" />
+                    </div>
+                    <field name = "x_cek_cr" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </odoo>

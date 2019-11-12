@@ -1,0 +1,21 @@
+<odoo>
+    <data>
+
+        <record id="custom_pop_message_view_form" model="ir.ui.view">
+            <field name="name">Pop Message</field>
+            <field name="model">x.pop.message</field>
+            <field name="arch" type="xml">
+                <form string="POP Message">
+                    <group>
+                        <field name="training_schedule_id" readonly="1"/>
+                        <field name="name" readonly="1"/>
+                    </group>
+                    <footer>
+                       <button string="Oke" class="oe_highlight" special="cancel"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

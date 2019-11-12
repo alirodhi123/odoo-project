@@ -1,0 +1,22 @@
+<odoo>
+    <data>
+
+        <record id="view_hr_employee_form_inherited_se" model="ir.ui.view">
+            <field name="name">Inherited Form View For training</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='toggle_active']" position="after">
+                    <button
+                        name="%(self_eval_action_window_hr_employee)d"
+                        type="action"
+                        class="oe_stat_button"
+                        icon="fa-file-text ">
+                     <field string="Self Evaluation" name="se_count_employee" widget="statinfo"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

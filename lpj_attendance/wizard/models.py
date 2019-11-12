@@ -32,19 +32,7 @@ class WizardAbsensi(models.Model):
             'res_model': 'ir.actions.act_url',
             'type': 'ir.actions.act_url',
             'view_mode': 'form',
-            'url': 'http://127.0.0.1:8000/',
+            'url': 'http://192.168.1.195:8038/',
         }
         return result
 
-    @api.multi
-    def get_employee_not_here(self):
-        for attendance in self:
-            attendance.env.cr.execute("SELECT he.name_related, attend.x_checkin "
-                                      "FROM hr_employee he "
-                                      "LEFT JOIN x_attendance attend on attend.x_employee = he.id "
-                                      "WHERE he.id = '" + str(employee.id) + "'")
-            var = attendance.env.cr.fetchall()
-            if var:
-                for row in var:
-                    employee_name = row[0]
-                    checkin_checkin = row[1]

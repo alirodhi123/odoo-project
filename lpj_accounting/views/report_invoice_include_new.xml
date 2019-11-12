@@ -5,7 +5,7 @@
          <report
             id="account_invoices_include_new_report"
             model="account.invoice"
-            string="Invoices Include New"
+            string="Invoices Include PPN"
             report_type="qweb-pdf"
             name="lpj_accounting.report_invoice_include_new"
             file="lpj_accounting.report_invoice_include_new"
@@ -82,6 +82,11 @@
                         <!-- Kolom kedua sebelah kanan -->
                         <div class="col-xs-6" style="margin-top: 15px;">
                             <table>
+                                <tr t-if="o.x_no_faktur">
+                                    <td style="padding-right: 35px; padding-bottom: 5px; font-size: 16px;"><b>No. Faktur</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px; font-size: 16px;">:</td>
+                                    <td style="font-size: 16px; padding-bottom: 5px;"><span t-field="o.x_no_faktur"></span></td>
+                                </tr>
                                 <tr t-if="o.x_no_po">
                                     <td style="padding-right: 35px; padding-bottom: 5px; font-size: 16px;"><b>No. PO</b></td>
                                     <td style="padding-right: 10px; padding-bottom: 5px; font-size: 16px;">:</td>

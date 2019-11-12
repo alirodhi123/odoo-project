@@ -74,21 +74,6 @@
                                     <td style="padding-right: 10px; padding-bottom: 5px;">:</td>
                                     <td style="padding-bottom: 5px;"><span t-field="o.payment_date" t-field-options='{"format": "d/MM/y"}'></span></td>
                                 </tr>
-                                <tr t-if="o.payment_type">
-                                    <td style="padding-right: 35px; padding-bottom: 5px;"><b>Payment Type</b></td>
-                                    <td style="padding-right: 10px; padding-bottom: 5px;">:</td>
-                                    <td style="padding-bottom: 5px;"><span t-field="o.payment_type"/></td>
-                                </tr>
-                                <tr>
-                                    <td style="padding-right: 35px; padding-bottom: 5px;"><b>Payment Journal</b></td>
-                                    <td style="padding-right: 10px; padding-bottom: 5px;">:</td>
-                                     <td style="padding-bottom: 5px;">
-                                       <span>
-                                           <span t-field="o.kode"></span> -
-                                           <span t-field="o.journal_id"></span>
-                                       </span>
-                                   </td>
-                                </tr>
                                 <tr t-if="o.communication">
                                     <td style="padding-right: 35px; padding-bottom: 5px;"><b>Memo</b></td>
                                     <td style="padding-right: 10px; padding-bottom: 5px;">:</td>
@@ -106,38 +91,53 @@
                     <!-- Tabel transaksi -->
                     <div class="row">
                         <div class="col-xs-12">
-                            <t t-foreach="o.invoice_ids" t-as="line">
-                                <table style="border: 1px solid; width: 100%;">
-                                   <tr>
-                                       <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px;">Bank</th>
-                                       <th class="text-center" style="border: 1px solid; width: 40%; padding: 5px;">Uraian</th>
-                                       <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px;">Perkiraan</th>
-                                       <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px;">Jumlah</th>
-                                   </tr>
-                                   <tr t-foreach="line.invoice_line_ids" t-as="row">
+                            <table style="border: 1px solid; width: 100%;">
+                               <tr>
+                                   <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px;">Bank</th>
+                                   <th class="text-center" style="border: 1px solid; width: 40%; padding: 5px;">Uraian</th>
+                                   <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px;">Perkiraan</th>
+                                   <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px;">Jumlah</th>
+                               </tr>
+
+                                <tr t-foreach="o.invoice_ids" t-as="line">
+<!--                                   <tr t-foreach="line.invoice_line_ids" t-as="row">-->
                                        <td class="text-center" style="border: 1px solid; width: 20%; padding: 5px; vertical-align: middle;">
                                            <span>
-                                               <span t-field="o.kode"></span> -
                                                <span t-field="o.journal_id"></span>
                                            </span>
                                        </td>
-                                       <td style="border: 1px solid; width: 40%; padding: 5px;"><span t-field="row.name"></span></td>
-                                       <td class="text-center" style="border: 1px solid; width: 20%; padding: 5px; vertical-align: middle;"><span t-field="row.account_id"></span></td>
+                                       <td style="border: 1px solid; width: 40%; padding: 5px;"><span t-field="line.number"></span> - <span t-field="line.x_no_faktur"></span></td>
+                                       <td class="text-center" style="border: 1px solid; width: 20%; padding: 5px; vertical-align: middle;"><span t-field="o.x_perkiraan_journal"></span></td>
                                        <td class="text-right" style="border: 1px solid; width: 20%; padding: 5px; vertical-align: middle;">
-                                            <span t-field="row.price_subtotal"></span>
+                                            <span t-field="line.amount_total"></span>
                                        </td>
-                                   </tr>
-                                    <tr>
-                                        <td class="text-right" style="border: 1px solid; padding: 5px;" colspan="3"><b>TAX</b></td>
-                                        <td class="text-right" style="border: 1px solid; padding: 5px;"><span t-field="line.amount_tax"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-right" style="border: 1px solid; padding: 5px;" colspan="3"><b>TOTAL</b></td>
-                                        <td class="text-right" style="border: 1px solid; padding: 5px;"><span t-field="line.amount_total"></span></td>
-                                    </tr>
-                               </table>
-                            </t>
+<!--                                   </tr>-->
+                                </tr>
+                                <tr>
+                                   <td class="text-center" style="border: 1px solid; width: 20%; padding: 25px;"></td>
+                                   <td class="text-center" style="border: 1px solid; width: 40%; padding: 25px;"></td>
+                                   <td class="text-center" style="border: 1px solid; width: 20%; padding: 25px;"></td>
+                                   <td class="text-center" style="border: 1px solid; width: 20%; padding: 25px;"></td>
+                               </tr>
+                                <tr>
+                                   <td class="text-center" style="border: 1px solid; width: 20%; padding: 25px;"></td>
+                                   <td class="text-center" style="border: 1px solid; width: 40%; padding: 25px;"></td>
+                                   <td class="text-center" style="border: 1px solid; width: 20%; padding: 25px;"></td>
+                                   <td class="text-center" style="border: 1px solid; width: 20%; padding: 25px;"></td>
+                               </tr>
+                           </table>
                         </div> <!-- Tutup table transaksi -->
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <table style="border: 1px solid; width: 100%;">
+                                 <tr>
+                                    <td class="text-right" style="border: 1px solid; padding: 5px;" colspan="3"><b>TOTAL</b></td>
+                                    <td class="text-right" style="border: 1px solid; padding: 5px;"><span t-field="o.amount"></span></td>
+                                </tr>
+                           </table>
+                        </div>
                     </div>
 
                     <!-- Tabel verifikasi -->

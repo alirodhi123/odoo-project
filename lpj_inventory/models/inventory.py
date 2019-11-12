@@ -17,6 +17,14 @@ class lot_barang(models.Model):
      is_delivery = fields.Boolean(default=False)
      x_po_cus = fields.Char(compute='get_po_cus')
      x_group_id_so = fields.Char(compute='get_procurement_group_so')
+     x_tkr_guling = fields.Selection([
+          ('full', 'Full Delivery'),
+          ('partial', 'Partial  Delivery'),
+          ('exchange', 'Exchange  Delivery')
+     ], string='Delivery Type', default = 'full' , required=True, track_visibility='onchange')
+     x_send_to_fac = fields.Selection([('yes', 'Yes'),('no', 'No')],
+                                      string='Send to FAC',
+                                      default = 'no' , readonly=True, track_visibility='onchange')
 
 
      # Button print SJK
@@ -186,6 +194,12 @@ class lot_barang(models.Model):
                     # Masukkan ke dalam variable baru
                     self.x_group_id_so = name
 
+     # Button untuk kirim sjk ke FAC (Update field)
+     @api.multi
+     def send_action_fac(self):
+          for picking in self:
+              return picking.update({'x_send_to_fac': 'yes'})
+
 
 class stock_line(models.Model):
      _inherit = 'stock.pack.operation'
@@ -215,7 +229,3 @@ class stock_scrap(models.Model):
      _inherit = 'stock.scrap'
 
      keterangan = fields.Text(string="Keterangan")
-
-
-
-

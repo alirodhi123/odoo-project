@@ -15,6 +15,7 @@ class purchase_request_inherit(models.Model):
     x_bom = fields.Many2one('mrp.production')
     x_product = fields.Char(string="Product")
 
+
     # Function untuk flagging create PR
     @api.model
     def create(self, vals):
@@ -46,6 +47,8 @@ class purchase_request_line(models.Model):
 
     bom_line_ids = fields.Many2one('mrp.bom.line', string="Product")
     catatan_barang = fields.Text(string="Notes")
+
+
 
 
 

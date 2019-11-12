@@ -1,23 +1,359 @@
 <odoo>
     <data>
+        <record id="next_activity_calendar" model="ir.ui.view">
+       <field name="name">next.activity.calendar</field>
+       <field name="model">res.partner</field>
+       <field eval="2" name="priority"/>
+       <field name="arch" type="xml">
+           <calendar color="user_id" date_start="x_partnerdate_deadline" string="Tasks" mode="month">
+               <field name="name"/>
+               <field name="x_partnernext_activity_id" string = "Next Activity"/>
+               <field name="x_partnertitle_action"/>
+           </calendar>
+
+       </field>
+
+    </record>
+
+        <record model="ir.ui.view" id="stage_form_view">
+            <field name="name">stage.view.form</field>
+            <field name="model">crm.stage</field>
+            <field name="inherit_id" ref="crm.crm_stage_form"/>
+            <field name="arch" type="xml">
+                <field name="fold" position = "after">
+                    <field name="x_order"/>
+                </field>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_qualified_lead">
+            <field name="name">is.qualified.form</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_leads"/>
+            <field name="arch" type="xml">
+                <!--<xpath expr="//button[@name='%(crm.action_crm_lead2opportunity_partner)d']" position="before">-->
+                    <!--<button name="is_qualified" string="Mark as Not-Qualified" type="action" class="oe_highlight"/>-->
+                <!--</xpath>-->
+
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="x_is_qualified"/>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="before">
+                    <field name="x_status_job"/>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="x_cs_lead"/>
+                </xpath>
+            </field>
+        </record>
+
+         <record model="ir.ui.view" id="x_status_job">
+            <field name="name">status.job.form</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="before">
+                    <field name="x_status_job"/>
+                </xpath>
+                 <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="x_cs_lead"/>
+                 </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="x_stype_activity">
+            <field name="name">type.activity.form</field>
+            <field name="model">crm.activity</field>
+            <field name="inherit_id" ref="crm.crm_activity_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='default']" position="before">
+                    <field name="x_type_activity"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!--<record model="ir.ui.view" id="tree_view_custom_lead">-->
+            <!--<field name="name">crm.lead</field>-->
+            <!--<field name="model">crm.lead</field>-->
+            <!--<field name="inherit_id" ref="crm.crm_case_tree_view_leads"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<xpath expr="/tree/field[@name='contact_name']" position="before">-->
+                    <!--<field name="x_is_qualified"></field>-->
+                <!--</xpath>-->
+            <!--</field>-->
+        <!--</record>-->
+
+
         <record model="ir.ui.view" id="crm_form_view">
             <field name="name">crm.view.form</field>
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
             <field name="arch" type="xml">
+                 <!--<notebook>-->
+                    <!--<page string="Activity" id="next_activity_inlead">-->
+                        <!--<group>-->
+                            <!--<group>-->
+                                <!--<field name="x_next_activity" string = 'Next Activity'/>-->
+                                <!--<field name="x_deadline_nextactivity" string = 'Next Activity Execution date'/>-->
+                                <!--<field name="x_purpose_nextactivity" string = 'Purpose of next activity'/>-->
+                                <!--<field name="x_respartner_mailmessage"/>-->
+                                <!--&lt;!&ndash;<button name="action_log_res" string="Next Activity" type="object" class="btn btn-primary"/>&ndash;&gt;-->
+                            <!--</group>-->
+                        <!--</group>-->
+                    <!--</page>-->
+                <!--</notebook>-->
+
                 <xpath expr="//button[@name='action_set_won']" position="before">
-                    <field name="x_flag_sq"/>
-                    <button class="oe_highlight"
-                        string="Create SQ"
-                        name="crm_sq"
-                        type="object"
-                        help="Create Sales Quotation based your CRM activities"
-                        attrs="{'invisible': ['|', ('x_flag_sq', '=', True),('stage_id', '=', 6),('stage_id', '=', 7)]}"
-                        >
-                    </button>
+                    <field name="x_flag_sq" invisible = "1"/>
+                    <!--<button class="oe_highlight"-->
+                        <!--string="Create SQ"-->
+                        <!--name="crm_sq"-->
+                        <!--type="object"-->
+                        <!--help="Create Sales Quotation based your CRM activities"-->
+                        <!--attrs="{'invisible': ['|', ('x_flag_sq', '=', True),('stage_id', '=', 6),('stage_id', '=', 7)]}"-->
+                        <!--&gt;-->
+                    <!--</button>-->
                 </xpath>
+                 <xpath expr="//button[@name='%(crm.crm_activity_log_action)d']" position="replace">
+                     <button name="%(crm.crm_activity_log_action)d" string="Log Activity" type="action" class="btn-link"
+                            invisible = '1'/>
+                 </xpath>
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="x_type_company"/>
+                </xpath>
+                <page name="lead" position="after">
+                    <page name="product" string="Estimated Product">
+                        <field name="x_estimated_product">
+                            <tree editable = 'bottom'>
+                                <field name="x_product_product_crm"/>
+                                <field name="x_qty"/>
+                                <field name="x_uom"/>
+                                <field name="x_desc"/>
+                                <field name="x_flag_harga" invisible = '1'/>
+                                <button class="oe_highlight"
+                                    string="Create SQ"
+                                    name="crm_sq"
+                                    type="object"
+                                    help="Create Sales Quotation based your CRM activities"
+                                    attrs="{'invisible': [('x_flag_harga', '=', True)]}"/>
+
+
+                            </tree>
+                        </field>
+                    </page>
+                </page>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="crm_product_form_view">
+            <field name="name">crm.product.view.form</field>
+            <field name="model">x.product.product.crm</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="x_name" string = 'Product Name'/>
+                    <field name="x_length" string = 'Length (mm)'/>
+                    <field name="x_width" string = 'Width (mm)'/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="stage_form_crm_view">
+            <field name="name">product.crm.form</field>
+            <field name="model">x.product.product.crm</field>
+            <field name="arch" type="xml">
+                <form string="Product CRM Form">
+                    <sheet>
+                        <group>
+                            <field name="x_name" string = 'Product Name'/>
+                            <field name="x_length" string = 'Length (mm)'/>
+                            <field name="x_width" string = 'Width (mm)'/>
+                            <field name="x_sample_product" String = 'Sample' widget="image"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="rtrw_partner_view">
+            <field name="name">res.partner.rtrw</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name='parent_id' position="after">
+                    <!--<field name="x_kode_customer" placeholder="Kode Customer"/>-->
+                    <field name="x_pipeline_customer" placeholder="x_pipeline"/>
+                </field>
+                <notebook>
+                    <page string="Activity" id="next_activity">
+                        <group>
+                            <group>
+                                <field name="x_partnernext_activity_id" string = 'Next Activity'/>
+                                <field name="x_partnerdate_deadline" string = 'Next Activity Execution date'/>
+                                <field name="x_partnertitle_action" string = 'Purpose of next activity'/>
+                                <field name="x_PIC_action" string = 'PIC action'/>
+                                <button name="action_log_res" string="Next Activity" type="object" class="btn btn-primary"/>
+<!--                                <field name="x_lead"/>-->
+                            </group>
+                            <group>
+                                <button name="%(crm.crm_activity_log_action)d" string="Log Activity" type="action" class="btn btn-primary"/> <!-- *dwi awalnya btn-link-->
+                                <field name="x_mail_message">
+                                    <tree limit = "10">
+                                        <field name="create_date"/>
+                                        <field name="x_execute_activity"/>
+                                        <field name="x_type_activity"/>
+                                        <field name="subject"/>
+                                        <field name="x_PIC" string = "PIC action"/>
+                                        <field name="x_contact" string = "PIC yang ditemui" placeholder="Nama Yang Ditemui"/>
+                                        <field name="x_contact_dept" string = "Dept yang ditemui" placeholder="e.g. Purchasing"/>
+                                        <field name="x_contact_phone" string = "Contact yang ditemui" placeholder="e.g. 08100080000"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </group>
+
+                                <!--<field name="x_history_activity" string = 'history activity'/>-->
+                                <!--<field name="x_history_summary" string = 'history summary'/>-->
+                                <!--<field name="x_history_description" string = 'desc'/>-->
+                                <!--<field name="x_exec_date" string = 'execution date'/>-->
+                                <!--<field name="x_deadline" string = 'deadline'/>-->
+                                <!--<field name="x_next_actv" string = 'next act'/>-->
+                                <!--<field name="x_date_action" string = 'date action'/>-->
+
+
+
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+
+
+        <record model="ir.actions.act_window"
+                id="crm_list_action">
+            <field name="name">Product CRM</field>
+            <field name="res_model">x.product.product.crm</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
+        </record>
+
+
+         <!--Menu next activity-->
+         <record model="ir.ui.view" id="sale_order_line_inherit_view">
+            <field name="name">res.partner</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="/tree/field[@name='display_name']" position="after">
+                    <field name="x_PIC_action" string = 'PIC action'></field>
+                    <field name="x_partnernext_activity_id"></field>
+                    <field name="x_partnerdate_deadline"></field>
+                    <field name="x_partnertitle_action"></field>
+                    <field name="x_partnerplanned_revenue"></field>
+                 </xpath>
+
+            </field>
+         </record>
+       <!--<record model="ir.ui.view" id="nextactivity_treeview_custom">-->
+            <!--<field name="name">Next Activities</field>-->
+            <!--<field name="model">res.partner</field>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<tree string="aaaaaaa">-->
+                    <!--<field name="name"></field>-->
+                    <!--<field name="x_partnernext_activity_id"></field>-->
+                    <!--<field name="x_partnerdate_deadline"></field>-->
+                    <!--<field name="x_partnertitle_action"></field>-->
+                    <!--<field name="x_partnerplanned_revenue"></field>-->
+                <!--</tree>-->
+            <!--</field>-->
+        <!--</record>-->
+
+        <record id="x_next_activitypartner" model="ir.actions.act_window">
+            <field name="name">Next Activities</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain">[('x_partnernext_activity_id', '!=', False)]</field>
+            <!--<field name="search_view_id" ref="nextactivity_treeview_custom"/>-->
+        </record>
+
+       
+        <!-- Menu history activity -->
+         <record model="ir.ui.view" id="mail_message_tree_view_custom">
+            <field name="name">History Activity</field>
+            <field name="model">mail.message</field>
+            <field name="arch" type="xml">
+                <tree string="History Activity">
+                    <field name="x_partner"></field>
+                    <field name="create_date"></field>
+                    <field name="x_type_activity"></field>
+                    <field name="create_uid"></field>
+                    <field name="x_next_activity"></field>
+                    <field name="subject"></field>
+                </tree>
+            </field>
+        </record>
+
+        <record id="x_message_tree" model="ir.actions.act_window">
+            <field name="name">History Activity</field>
+            <field name="res_model">mail.message</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('x_type_activity', '!=', False)]</field>
+            <field name="search_view_id" ref="mail_message_tree_view_custom"/>
+        </record>
+
+        <record id="popup_notifcation_appoinment" model="ir.ui.view">
+            <field name="name">popup.notifcation.appoinment.form</field>
+            <field name="model">res.partner</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Notification on Appoinment">
+                    <group>
+                        <!--<field name="x_sementara"></field>-->
+                        <p>Apakah anda ingin mengirimkan notifikasi ke Customer atas appoinment yang telah anda buat ?</p>
+                    </group>
+                    <footer>
+                        <button name="send_notif_apoin" string="Yes" type="object"/>
+                        <button name="cancel" string="No" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+            <record model="mail.template" id="template_mail_test_employee">
+			<field name="name">Template Email Notification on Appoinment</field>
+			<!--<field name="email_from">alamat_email_pengirim</field>-->
+			<field name="subject">Notification on Appoinment</field>
+			<field name="email_to">${object.email}</field>
+			<field name="email_cc"/>
+			<field name="model_id" ref="base.model_res_partner"/>
+			<field name="auto_delete" eval="False"/>
+			<field name="lang"/>
+			<field name="copyvalue"/>
+			<field name="body_html">
+                <![CDATA[
+                <p>Kepada Yth.${object.name},</p>
+
+                <p>
+                Dengan Hormat,
+                    ${object.id}Dengan ini kami memberitahukan bahwa tim kami ${object.x_PIC_action.name} dari PT.Laprint Jaya akan melakukan kunjungan pada tanggal
+                    ${object.x_partnerdate_deadline} dengan agenda ${object.x_partnertitle_action}. Demikian atas perhaiannya kami ucapkan Terimakasih.
+
+                Best Regards,
+
+                PT.Laprint Jaya
+                Pergudangan Sinar Gedangan Blok B06
+                031 990 38048
+
+                </p>
+
+                <p>Terima kasih.</p>
+                ]]>
+			</field>
+		</record>
+       
+
 
     </data>
 </odoo>

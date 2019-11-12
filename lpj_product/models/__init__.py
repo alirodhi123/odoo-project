@@ -6,3 +6,5 @@ from . import tds
 from . import precosting_manufac
 from . import quality_assurance
 from . import product_barcode
+from . import color_range
+from . import product_category

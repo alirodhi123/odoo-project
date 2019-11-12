@@ -13,5 +13,10 @@
                   sequence="114"
                   action="buffer_tags_action"></menuitem>
 
+        <!-- Sub menu Approval Duedate Kirim -->
+        <menuitem id="sub_menu_appdk_mrp" name="Approval Duedate Kirim"
+                  parent="mrp.menu_mrp_root" sequence="113"
+                  action="x_app_dk"/>
+
     </data>
 </odoo>

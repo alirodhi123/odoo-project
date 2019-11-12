@@ -1,7 +1,5 @@
 <odoo>
     <data>
-
-
         <record model="ir.ui.view" id="mrp_routing_workcenter_view">
             <field name="name">routing.mrp.routing.workcenter</field>
             <field name="model">mrp.routing.workcenter</field>
@@ -10,6 +8,26 @@
                 <xpath expr="//field[@name='time_mode'][not(ancestor::field)]" position="after">
                     <field name="x_tcm_second"/> Second
                 </xpath>
+                <xpath expr="//field[@name='sequence']" position="after">
+                    <field name="x_speed_per_mnt" class="oe_inline"/> meter
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="mrp_routing_tree_view">
+            <field name="name">mrp.routing.workcenter.tree</field>
+            <field name="model">mrp.routing</field>
+            <field name="inherit_id" ref="mrp.mrp_routing_form_view"/>
+            <field name="arch" type="xml">
+                <field name="operation_ids" position="replace">
+                    <field name="operation_ids">
+                        <tree>
+                            <field name="name"/>
+                            <field name="workcenter_id"/>
+                            <field name="x_speed_per_mnt"/>
+                        </tree>
+                    </field>
+                </field>
             </field>
         </record>
     </data>

@@ -20,7 +20,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'product', 'mrp', 'lpj_product', 'mail', 'sale'],
+    'depends': ['base', 'product', 'mrp', 'lpj_product', 'mail', 'sale', 'crm', 'sale_crm'],
 
     # always loaded
     'data': [
@@ -28,12 +28,18 @@
         # 'security/security_pde.xml',
         'views/approval_product.xml',
         'views/quotation_cr.xml',
+        'views/sq.xml',
+        'views/report_sph.xml',
+        'views/mail_template_sph.xml',
+        'views/sph_report_template.xml',
+
         # 'views/admin_input_product.xml',
         'views/sale_view.xml',
-        # 'views/crm.xml',
+        'views/crm.xml',
         'views/print_quo.xml',
         'views/report_quotation.xml',
         'views/menu.xml',
+
 
     ],
     # only loaded in demonstration mode

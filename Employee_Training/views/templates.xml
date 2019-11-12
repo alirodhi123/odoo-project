@@ -1,0 +1,19 @@
+<odoo>
+    <data>
+        <!-- Inherit Form View to Modify it -->
+        <record id="view_partner_form_inherited_is_open" model="ir.ui.view">
+            <field name="name">Inherited Form View For Is Open</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+                <field name="arch" type="xml">
+
+                    <xpath expr="//field[@name='fax']" position="after">
+                    <!-- Add your fields or attributes here -->
+                        <field name="active" default="False"/>
+                    </xpath>
+
+
+            </field>
+        </record>
+    </data>
+</odoo>

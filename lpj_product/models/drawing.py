@@ -9,14 +9,31 @@ class _drawing(models.Model):
     _inherit = 'mail.thread'
     _description = 'Drawing'
 
+
+    def _default_drawing(self):
+        return self.env['res.partner'].browse(self._context.get('active_id'))
+
+
     name = fields.Char(string='Code')
     x_file = fields.Binary(string = 'Image',track_visibility='onchange')
     x_file_template = fields.Binary("Drawing with template", attachment=True,track_visibility='onchange', help="Upload file drawing with template (will send to customer)")
-    x_description = fields.Char(string='description', copy=False,track_visibility='onchange')
+    x_description = fields.Char(string='Description', copy=False,track_visibility='onchange')
+    x_partner = fields.Many2one('res.partner', string="Customer", track_visibility='onchange')
 
     @api.model
     def create(self, vals):
-        vals['name'] = self.env['ir.sequence'].next_by_code('x.drawing') or _('New')
+        seq = self.env['ir.sequence'].next_by_code('x.drawing') or _('New')
+        customer_id = vals['x_partner']
 
-        result = super(_drawing, self).create(vals)
-        return result
+        partner = self.env['res.partner'].search([('id', '=', customer_id)])
+        if partner:
+            for row in partner:
+                kode_customer = row.x_kode_customer
+
+                if kode_customer:
+                    vals['name'] = "DWG" + "-" + kode_customer + seq
+                else:
+                    vals['name'] = "DWG" + seq
+
+                result = super(_drawing, self).create(vals)
+                return result

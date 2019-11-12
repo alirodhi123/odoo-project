@@ -1,0 +1,128 @@
+<odoo>
+    <data>
+
+        <!--
+            ============================================
+                          TRAINING.TRAINING
+         -->
+
+        <!-- Inherit page training TREE View -->
+        <record id="training_employee_view" model="ir.ui.view">
+            <field name="name">Training Details Employee View</field>
+            <field name="model">training.training</field>
+            <field name="inherit_id" ref="Employee_Training.training_training_form_view"/>
+            <field name="arch" type="xml">
+                <page name="content" position="before">
+                    <page name="employee_details" string="Employee Details">
+                        <field name="x_employee_training_ids">
+                            <tree editable="bottom">
+<!--                                <field name="x_training_id"></field>-->
+                                <field name="x_name_employee"></field>
+                                <field name="x_work_email"></field>
+                                <field name="x_department"></field>
+                                <field name="x_job_tittle"></field>
+                                <field name="x_manager"></field>
+                            </tree>
+                        </field>
+                    </page>
+                </page>
+            </field>
+        </record>
+
+        <!-- Inherit training.training FORM View -->
+        <record id="training_training_form_inherit" model="ir.ui.view">
+            <field name="name">Training Training View</field>
+            <field name="model">training.training</field>
+            <field name="inherit_id" ref="Employee_Training.training_training_form_view"/>
+            <field name="arch" type="xml">
+
+                <!-- Menambahkan field department -->
+                <field name="employee_id" position="after">
+                    <label for="x_department"></label>
+                    <div class="o_row">
+                        <field name="x_department"></field>
+                        <button name="function_details_employee"
+                                type="object"
+                                class="oe_stat_button"
+                                string="Insert Employee"
+                                states="new"/>
+                    </div>
+
+                    <field name="x_training_name" placeholder="Ex: Training Odoo"></field>
+                </field>
+
+                <!-- Menambahkan field category training -->
+                <field name="price_id" position="after">
+                    <!-- <field name="x_category_training" widget="many2many_tags" options="{'no_create_edit': True}"></field> -->
+                    <field name="x_category_training"></field>
+                </field>
+
+                <!-- Hidden Button Training.Training -->
+                <button name="action_hrman" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </button>
+
+                <button name="action_approve" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </button>
+
+                <button name="action_in_progress" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </button>
+
+                <button name="done" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </button>
+
+            </field>
+        </record>
+
+        <!-- Inherit Form View to Modify it -->
+        <record id="view_hr_employee_form_inherited_is_open" model="ir.ui.view">
+            <field name="name">Inherited Form View For training</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='toggle_active']" position="after">
+                    <button name="%(training_training_action)d"
+                        type="action"
+                        domain="[('employee_id.user_id','=',uid)]"
+                        class="oe_stat_button"
+                        icon="fa-trophy "
+                        help="Remaining Courses">
+                    <field string="Training" name="cour_ids" widget="statinfo"/>
+                </button>
+                </xpath>
+            </field>
+        </record>
+
+
+        <!--
+            CUSTOM VIEW
+            TRAINING TO APPROVE
+        -->
+        <record id="training_to_approve_action" model="ir.actions.act_window">
+            <field name="name">Training to Approve</field>
+            <field name="res_model">training.training</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state', 'in', ['hod'])]</field>
+            <field name="context">{"search_default_today":1}</field>
+            <field name="view_mode">tree,form,pivot</field>
+        </record>
+
+
+        <!--
+            CUSTOM VIEW
+            TOP MANAGEMENT APPROVE
+        -->
+        <record id="training_top_management_approve_action" model="ir.actions.act_window">
+            <field name="name">Top Management to Approve</field>
+            <field name="res_model">training.training</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state', 'in', ['hrman'])]</field>
+            <field name="context">{"search_default_today":1}</field>
+            <field name="view_mode">tree,form,pivot</field>
+        </record>
+
+    </data>
+</odoo>

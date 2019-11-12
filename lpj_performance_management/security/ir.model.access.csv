@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_lpj_performance_management_lpj_performance_management,lpj_performance_management.lpj_performance_management,model_lpj_performance_management_lpj_performance_management,,1,0,0,0

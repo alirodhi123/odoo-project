@@ -36,20 +36,23 @@ class x_attendance(models.Model):
                     else:
                         pass
 
-    @api.constrains('x_employee')
-    def _check_double_data(self):
-        for attendance in self:
-            employee = attendance.x_employee
-            checkin = attendance.x_checkin
-            date_format = "%Y-%m-%d"
-
-            self.env.cr.execute("SELECT * FROM x_attendance "
-                                "WHERE x_employee = '"+ str(employee.id) +"' "
-                                "AND to_char(x_checkin, 'YYYY-MM-DD') = to_char('"+ str(checkin) +"', 'YYYY-MM-DD')")
-
-            data = self.env.cr.fetchone()
-            if data:
-                var = "SUKSES"
+    # @api.constrains('x_employee')
+    # def _check_double_data(self):
+    #     for attendance in self:
+    #         employee = attendance.x_employee
+    #         checkin = attendance.x_checkin
+    #         date_format = "%Y-%m-%d"
+    #
+    #         self.env.cr.execute("SELECT x_employee, x_checkin, x_checkout "
+    #                             "FROM x_attendance "
+    #                             "WHERE x_employee = '"+ str(employee.id) +"' "
+    #                             "AND to_char(x_checkin, 'YYYY-MM-DD') = to_char(current_date, 'YYYY-MM-DD')")
+    #
+    #         data = self.env.cr.fetchone()
+    #         if data:
+    #             var_employee_id = data[0]
+    #             var_checkin = data[1]
+    #             var_checkout = data[2]
 
 
 

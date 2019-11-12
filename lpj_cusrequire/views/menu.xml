@@ -9,9 +9,30 @@
         <menuitem id="approval_menu" name="Dashboard"
                   parent="main_approval_odoo_menu" action="approval_list_action" sequence="5"/>
 
-        <menuitem id="requirement_menu" name="Customer Req"
+        <menuitem id="requirement_menu" name="Request Drawing"
                   parent="sales_team.menu_sales" sequence="10"
                   action="requirement_list_action"/>
+
+	 <menuitem id="x_crm_menu" name="CRM"
+		          parent="sales_team.menu_base_partner" sequence="2"/>
+
+	<menuitem id="requirement_crm" name="Product CRM"
+                 parent="lpj_cusrequire.x_crm_menu" sequence="100"
+                action="crm_list_action"/>
+
+	 <menuitem id="x_next_activity" name="Next Activities"
+                  parent="lpj_cusrequire.x_crm_menu" sequence="108"
+                  action="x_next_activitypartner"/>
+
+	 <menuitem id="x_history_activity" name="History Activities"
+                  parent="lpj_cusrequire.x_crm_menu" sequence="109"
+                  action="x_message_tree"/>
+
+
+         <!--<menuitem id="customer_crm" name="Job Potential"-->
+                 <!--parent="sales_team.menu_sales" sequence="100"-->
+                <!--action="job_potental_action"/>-->
+
 
         <!--<menuitem id="monitoring_input_menu" name="Monitoring Input"-->
                   <!--parent="main_approval_odoo_menu" action="edit_product_action" sequence="11"/>-->

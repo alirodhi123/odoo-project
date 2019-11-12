@@ -246,11 +246,7 @@
                             <div class="col-xs-6">
                                 <div>
                                     <h5><b>Bahan Utama</b></h5>
-                                    <span t-if="o.x_product_bu" style="font-size: 15px;" t-field="o.x_product_bu"></span>
-                                    <span t-if="o.x_product_label" style="font-size: 15px;" t-field="o.x_product_label"></span>
-                                    <span t-if="o.x_product_laminating" style="font-size: 15px;" t-field="o.x_product_laminating"></span>
-                                    <span t-if="o.x_product_pita" style="font-size: 15px;" t-field="o.x_product_pita"></span>
-                                    <span t-if="o.x_product_hot_foil" style="font-size: 15px;" t-field="o.x_product_hot_foil"></span>
+                                    <span t-if="o.x_tampungan_bu" style="font-size: 15px;" t-field="o.x_tampungan_bu"></span>
                                 </div>
                             </div>
                         </div>

@@ -20,7 +20,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'hr_attendance', 'web'],
+    'depends': ['base', 'hr_attendance', 'web', 'mrp'],
 
     # always loaded
     'data': [
@@ -28,6 +28,10 @@
         'views/views.xml',
         'views/attendance_temp.xml',
         'views/attendance_attendance_view.xml',
+        'views/shift_employee_view.xml',
+        'views/shift_master_view.xml',
+        'views/detail_mesin_shift_view.xml',
+        'views/shift_employee_report.xml',
         'wizard/wizard_view.xml',
         'wizard/get_employee_view.xml',
         'wizard/validate_view.xml',

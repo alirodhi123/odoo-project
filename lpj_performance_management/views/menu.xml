@@ -1,0 +1,30 @@
+<odoo>
+    <data>
+
+        <!---<Judul Menu>-->
+        <menuitem name="Performance Management" id="performance_management_main_menu" sequence="100" web_icon="lpj_performance_management,static/logo-pm2.png"/>
+
+        <!-- SELF EVALUATION -->
+        <menuitem name="Self Evaluation" id="self_eval_menu_kanban" sequence="1"
+                  parent="performance_management_main_menu" action="action_self_eval_kanban_custom"/>
+
+        <!-- GOAL SETTING -->
+        <menuitem name="Goal Setting" id="goal_setting_menu" sequence="2"
+                  parent="performance_management_main_menu" action="action_gs_kanban_custom"/>
+
+
+        <!-- CONFIGURATION -->
+        <menuitem name="Configuration" id="configuration_main_menu" sequence="102" parent="performance_management_main_menu"/>
+
+        <menuitem name="Master Question SE" id="configuration_self_evaluation" sequence="103" groups="hr.group_hr_manager"
+                  parent="configuration_main_menu" action="master_self_evaluation_action_window"/>
+
+        <menuitem name="Periode Bulan SE" id="configuration_periode_bulan" sequence="104" groups="hr.group_hr_manager"
+                  parent="configuration_main_menu" action="self_evaluation_periode_action_window"/>
+
+        <menuitem name="Periode Bulan Goal Setting" id="configuration_periode_bulan_gs" sequence="105" groups="hr.group_hr_manager"
+                  parent="configuration_main_menu" action="gs_periode_action_window"/>
+
+
+    </data>
+</odoo>

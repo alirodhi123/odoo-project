@@ -108,6 +108,9 @@
 	                <group>
 	                    <field name="name"/>
 	            		<field name="responsible_id"/>
+						<field name="date_start"></field>
+						<field name="date_now"></field>
+						<field name="hasil_date"></field>
 	                </group>
 	                <notebook name="note">
 	                    <page name="ket" string="Keterangan" groups="mrp.group_mrp_manager">
@@ -165,9 +168,6 @@
 	<!-- ### Membuat Sub Menu Kursus ### -->
 
 	<menuitem id="kursus_menu" name="Kursus" parent="training_odoo_menu" action="kursus_list_action"/>
-
-
-
 
 
 	
@@ -322,10 +322,6 @@
 			</kanban>
 		</field>
 	</record>
-
-
-
-
 
 
 	<!-- ### Membuat Action/Event Object Sesi ### -->

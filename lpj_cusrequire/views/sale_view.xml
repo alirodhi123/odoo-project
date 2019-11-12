@@ -70,6 +70,11 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"></field>
             <field name="arch" type="xml">
+
+                        <div class="oe_button_box" name="button_box">
+                        <button name="action_quotation_send" string="Send SO" type="object" class="oe_stat_button" icon="fa-paper-plane"/>
+                    </div>
+
                 <header position="replace">
                     <header position="inside">
                         <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
@@ -81,17 +86,24 @@
                         <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary"/>
                         <button name="print_quotation" string="Print" type="object" states="draft" class="btn-primary"/>
                         <button name="action_confirm" states="sent" string="Confirm Sale" class="btn-primary o_sale_confirm" type="object" />
+                        <field name="x_duedatekirim_sol" invisible = "1"/>
                         <button name="action_confirm" string="Confirm Sale" class="o_sale_confirm" type="object"
-                                attrs="{'invisible': ['|','|', ('is_block', '=', 'no'),('is_block', '=', False),('state', 'in', ['sale', 'done', 'cancel'])]}"/>
+                                attrs="{'invisible': ['|','|', '|',('x_duedatekirim_sol', '=', False),('is_block', '=', 'no'),('is_block', '=', False),('state', 'in', ['sale', 'done', 'cancel'])]}"/>
                         <button name="print_quotation" string="Print" type="object" states="sent,sale"/>
                         <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale"/>
                         <button name="action_cancel" states="draft,sent,sale" type="object" string="Cancel"/>
                         <button name="action_draft" states="cancel" type="object" string="Set to Quotation"/>
                         <button name="action_done" type="object" string="Lock" states="sale"
                             help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver."/>
+                        <button name="unlock_so" string="Unlock" type="object" groups="base.group_system" states="done"></button>
                         <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
                     </header>
                 </header>
+
+                <!-- Hidden button send by mail yang ada di sale order -->
+                <button name="action_quotation_send" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </button>
             </field>
         </record>
 

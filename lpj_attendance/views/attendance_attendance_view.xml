@@ -18,6 +18,8 @@
                     <field name="x_categ_in_attend"/>
                     <field name="x_categ_out_attend"/>
                     <field name="state_attend"/>
+                    <field name="x_check_in_attend" invisible="1"/>
+                    <field name="x_check_out_attend" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -32,8 +34,8 @@
                             <group>
                                 <field name="x_id_attend" invisible="1"/>
                                 <field name="x_employee_attend" readonly="1"/>
-                                <field name="x_check_in_attend" readonly="1"/>
-                                <field name="x_check_out_attend" readonly="1"/>
+                                <field name="x_check_in_attend" />
+                                <field name="x_check_out_attend" />
                                 <field name="x_check_in_view_attend"/>
                                 <field name="x_check_out_view_attend"/>
                                 <field name="x_categ_in_attend" readonly="1"/>
@@ -89,6 +91,9 @@
           <field name="res_model">x.attendance.attendance</field>
           <field name="view_type">form</field>
           <field name="view_mode">tree</field>
+          <field name="domain">[
+              ('state_attend', '=', 'draft')]
+          </field>
           <field name="help" type="html">
               <p class="oe_view_nocontent_create">Attendance</p>
           </field>

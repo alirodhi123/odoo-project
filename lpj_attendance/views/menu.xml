@@ -21,6 +21,22 @@
               parent="hr_attendance.menu_hr_attendance_manage_attendances"
               sequence="1" action="attendance_attendance_action"></menuitem>
 
+        <menuitem name="Shift" id="menu_shift"
+              parent="hr_attendance.menu_hr_attendance_root"
+              sequence="25"></menuitem>
+
+        <menuitem name="Shift Employee" id="menu_shift_employee"
+              parent="menu_shift"
+              sequence="26" action="shift_employee_action"></menuitem>
+
+        <menuitem name="Master Shift" id="menu_master_shift_employee"
+              parent="menu_shift"
+              sequence="27" action="master_shift_employee_action"></menuitem>
+
+        <menuitem name="Master Mesin" id="menu_master_mesin"
+              parent="menu_shift"
+              sequence="28" action="shift_detail_mesin_action"></menuitem>
+
         <!-- Remove menu from module attendance -->
         <delete model="ir.ui.menu" id="hr_attendance.menu_hr_attendance_my_attendances"/>
         <delete model="ir.ui.menu" id="hr_attendance.menu_hr_attendance_kiosk_mode"/>

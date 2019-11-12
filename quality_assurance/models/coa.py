@@ -64,6 +64,11 @@ class stock_pickingi_ids(models.Model):
             lenght_rbn = o.product_id.x_length
             width_rbn = o.product_id.x_width
             shelflife_rbn = o.product_id.life_time
+            # Shrink
+            gramature_shrink = o.product_id.x_gramature_product
+            thickness_shrink = o.product_id.x_thickness_product
+            width_shrink = o.product_id.x_width
+            lenght_shrink = o.product_id.x_length
 
             # Looping for one2many value
             lot = ""
@@ -120,6 +125,10 @@ class stock_pickingi_ids(models.Model):
                 'default_x_lenght_rbn': lenght_rbn,
                 'default_x_width_rbn': width_rbn,
                 'default_x_shelflife_rbn': shelflife_rbn,
+                'default_x_gramature_shrink': gramature_shrink,
+                'default_x_thickness_shrink': thickness_shrink,
+                'default_x_width_shrink': width_shrink,
+                'default_x_lenght_shrink': lenght_shrink,
             },
             'type': 'ir.actions.act_window',
             'view_mode': 'form'
@@ -183,6 +192,20 @@ class coa(models.Model):
     x_shelflife_rbn = fields.Char(string="Shelf Life (months)")
     x_apperance_rbn = fields.Selection([('good', 'Good'), ('average', 'Average'), ('bad', 'Bad')],
                                    string="Apperance", default='good', store=True)
+
+    # Notes fields shrink
+    x_seaming_shrink = fields.Selection([('good', 'Good'), ('average', 'Average'), ('bad', 'Bad')],
+                                   string="Seaming", default='good', store=True)
+    x_cutting_shrink = fields.Selection([('good', 'Good'), ('average', 'Average'), ('bad', 'Bad')],
+                                   string="Cutting", default='good', store=True)
+    x_gramature_shrink = fields.Float(string="Gramature (gsm)")
+    x_thickness_shrink = fields.Float(string="Thickness (mikron)")
+    x_apperance_shrink = fields.Selection([('good', 'Good'), ('average', 'Average'), ('bad', 'Bad')],
+                                   string="Apperance", default='good', store=True)
+    x_colour_shrink = fields.Selection([('good', 'Good'), ('average', 'Average'), ('bad', 'Bad')],
+                                string="Colour", default='good', store=True)
+    x_lenght_shrink = fields.Float(string="Lenght (+/-1 mm)")
+    x_width_shrink = fields.Float(string="Width (+/-1 mm)")
 
     # Get lot
     @api.model

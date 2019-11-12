@@ -45,6 +45,18 @@
                         <button name="confirm_move_raw" type="object" string="Confirm Waste" class="oe_highlight oe_inline"/>
                     </group>
                 </field>
+
+                <!-- Menambahakan button Estimated Time di Manufacturing Order -->
+                <field name="date_planned_finished" position="after">
+                <field name="x_duration" invisible="1"></field>
+                <field name="x_duration_view_custom"></field>
+                    <br/>
+                    <button name="btn_cal_duration"
+                            type="object"
+                            string="Estimated Time"
+                            class="oe_highlight oe_inline"
+                            attrs="{'invisible':[('state', '!=', 'planned')]}"/> <br/><br/>
+                </field>
             </field>
         </record>
 

@@ -1,0 +1,54 @@
+<odoo>
+    <data>
+       <record id="mt_course_name" model="mail.message.subtype">
+            <field name="name">Course</field>
+            <field name="res_model">training.training</field>
+            <field name="default" eval="True"/>
+            <field name="description">Course Is</field>
+        </record>
+        <record id="mt_price_id" model="mail.message.subtype">
+            <field name="name">Price</field>
+            <field name="res_model">training.training</field>
+            <field name="default" eval="True"/>
+            <field name="description">Price This Course</field>
+        </record>
+
+
+          <record id="mt_course_id" model="mail.message.subtype">
+            <field name="name">Course  Name</field>
+            <field name="res_model">course.schedule</field>
+            <field name="default" eval="True"/>
+            <field name="description">Course Name</field>
+        </record>
+        <record id="mt_trainer" model="mail.message.subtype">
+            <field name="name">Trainer</field>
+            <field name="res_model">course.schedule</field>
+            <field name="default" eval="True"/>
+            <field name="description">Trainer Name</field>
+        </record>
+
+
+
+          <record id="mt_partner_name" model="mail.message.subtype">
+            <field name="name">Trainer</field>
+            <field name="res_model">partner.trainer</field>
+            <field name="default" eval="True"/>
+            <field name="description">Trainer Is</field>
+        </record>
+        <record id="mt_course" model="mail.message.subtype">
+            <field name="name">Course Name</field>
+            <field name="res_model">course.training</field>
+            <field name="default" eval="True"/>
+            <field name="description">Course Name</field>
+        </record>
+
+
+
+          <record id="mt_bio" model="mail.message.subtype">
+            <field name="name">Note</field>
+            <field name="res_model">course.training</field>
+            <field name="default" eval="True"/>
+            <field name="description">Content</field>
+        </record>
+    </data>
+</odoo>

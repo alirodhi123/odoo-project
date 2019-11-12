@@ -37,6 +37,12 @@
               sequence="115"
               action="purchase.purchase_form_action"></menuitem>
 
+    <!-- Menu Serah Terima SJK -->
+    <menuitem name="Serah Terima SJK" id="menu_serah_terima_sjk"
+              parent="account.menu_finance"
+              sequence="16"
+              action="serah_terima_sjk_accounting"></menuitem>
+
     <!-- Sub menu down payment -->
     <!--<menuitem name="Down Payment" id="sub_menu_dp"-->
               <!--parent="account.menu_finance_receivables"-->

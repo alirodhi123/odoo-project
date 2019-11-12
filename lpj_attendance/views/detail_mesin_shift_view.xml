@@ -1,0 +1,43 @@
+<odoo>
+    <data>
+        <record id="view_shift_mesin" model="ir.ui.view">
+            <field name="name">x.shift.mesin.tree</field>
+            <field name="model">x.shift.mesin</field>
+            <field name="arch" type="xml">
+                <tree string="Detail Mesin">
+                    <field name="name"></field>
+                    <field name="x_tipe_mesin_shift"></field>
+                    <field name="x_tipe_proses_mesin_shift"></field>
+                </tree>
+            </field>
+        </record>
+
+        <record id="shift_mesin_form" model="ir.ui.view">
+            <field name="name">x.shift.mesin.form</field>
+            <field name="model">x.shift.mesin</field>
+            <field name="arch" type="xml">
+                <form string="Detail Mesin">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"></field>
+                                <field name="x_tipe_mesin_shift"></field>
+                                <field name="x_tipe_proses_mesin_shift"></field>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="shift_detail_mesin_action">
+          <field name="name">Detail Mesin</field>
+          <field name="res_model">x.shift.mesin</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Detail Mesin</p>
+          </field>
+        </record>
+    </data>
+</odoo>

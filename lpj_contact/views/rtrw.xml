@@ -1,3 +1,4 @@
+
 <odoo>
     <data>
         <record model="ir.ui.view" id="rtrw_partner_view">
@@ -5,7 +6,6 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-
                 <field name='fax' position="after">
                     <field name="x_npwp" placeholder="Nomor NPWP"/>
                     <field name="x_pkp"/>
@@ -13,15 +13,72 @@
 
                 <field name='parent_id' position="after">
                     <field name="x_kode_customer" placeholder="Kode Customer"/>
+                    <field name="x_pipeline_customer" placeholder="x_pipeline"/>
                 </field>
 
-                <field name='category_id' position="after">
+                <!--<xpath expr="/form/sheet/notebook/page/field[@name='sales_purchases']/tree/field[@name='user_id']" position="before">-->
+                    <!--<field name="x_customer_service"/>-->
+                <!--</xpath>-->
+                <!--<xpath expr="//field[@name='sales_purchases']/form//notebook" position="inside">-->
+                <field name = 'user_id' position = 'after'>
                     <field name="x_customer_service"/>
                 </field>
+                <!--</xpath>-->
+
+                <!--<field name='category_id' position="after">-->
+                    <!--<field name="x_customer_service"/>-->
+                    <!--&lt;!&ndash;<field name="x_tamp_pipeline"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<field name="x_customer_stage" placeholder="State Customer"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<field name="x_next_activity_id" string = "Next Activity"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<div class="form-group">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<field name="x_date_action"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<div class="form-group">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<field name="x_propose" placeholder="e.g. Discuss proposal"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                <!--</field>-->
+
 
             </field>
         </record>
+
+
+        <record id="view_partner_tree" model="ir.ui.view">
+            <field name="name">res.partner.tree</field>
+            <field name="model">res.partner</field>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Contacts">
+                    <field name="display_name" string="Name"/>
+                    <field name="function" invisible="1"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="is_company" invisible="1"/>
+                    <field name="country_id" invisible="1"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="active" invisible="1"/>
+                    <field name="x_pipeline_customer"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--<record model="ir.ui.view" id="loging_activity_view">-->
+            <!--<field name="name">log.activity.form</field>-->
+            <!--<field name="model">x.log.activity</field>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<form string="Log Activity Form">-->
+                    <!--<group>-->
+                        <!--&lt;!&ndash;<field name="name" string = "Activity"/>&ndash;&gt;-->
+                        <!--<field name="x_summary"/>-->
+                        <!--<field name="x_expected_revenue"/>-->
+                        <!--<field name="x_expected_closing"/>-->
+                        <!--<field name="x_description"/>-->
+                    <!--</group>-->
+                <!--</form>-->
+            <!--</field>-->
+        <!--</record>-->
+
     </data>
 </odoo>
-
 

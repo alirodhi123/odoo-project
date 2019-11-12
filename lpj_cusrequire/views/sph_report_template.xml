@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_sph_document">
+     <t t-foreach="docs" t-as="o">
+            <t t-call="report.external_layout">
+                    <div class="page">
+                        <div class="col-xs-6">
+                            <h1>TES</h1>
+                        </div>
+
+                        <!-- Row judul quotation  -->
+                        <div class="row">
+                            <div class="col-xs-12" style="margin-top: 200px">
+                                <h2>
+                                    <span>Quotation # </span>
+                                    <span t-field="o.name"/>
+                                </h2>
+                            </div>
+                        </div>
+
+                        <!-- Row deskripsi field parent -->
+                        <div class="row mt32 mb32" id="informations">
+                            <div t-if="o.x_cust" class="col-xs-3">
+                                <strong>Customer:</strong>
+                                <p t-field="o.x_cust"/>
+                            </div>
+                        </div>
+
+                        <!-- Row table -->
+                        <div class="row" style="margin-top:30px;">
+                            <div class="col-xs-12">
+                                <h4>Quotation Line</h4>
+                                <table class="table table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>Quotation</th>
+                                            <th>Item</th>
+                                            <th>Product</th>
+                                            <th class="text-right">Qty</th>
+                                            <th class="text-right">Harga Pcs</th>
+                                            <th class="text-right">Total Harga</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="o.x_quo_line" t-as="row">
+                                            <td><span t-field="row.x_sq"></span></td>
+                                            <td><span t-field="row.x_item_desc"></span></td>
+                                            <td><span t-field="row.x_prod"></span></td>
+                                            <td class="text-right"><span t-field="row.x_qty"></span></td>
+                                            <td class="text-right"><span t-field="row.x_price_pcs"></span></td>
+                                            <td class="text-right"><span t-field="row.x_total_price"></span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Row deskripsi total -->
+                        <div class="row">
+                            <div class="col-xs-4 pull-right">
+                                <table class="table table-condensed">
+                                    <tr class="border-black">
+                                        <td><strong>Total</strong></td>
+                                        <td class="text-right">
+                                            <span t-field="o.x_untaxed_amount"/>
+                                            <!--<span t-field="doc.x_untaxed_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>-->
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <!--keterangan pada SPH-->
+                        <div class="row">
+                            <div class="pull-left">
+                                <td class="text-left">
+                                    <strong>Keterangan:</strong>
+                                    <br></br>
+                                    1. Harga belum termasuk PPN.
+                                    <br></br>
+                                    2. Penawaran harga berlaku 30 hari sejak tanggal SPH dikirimkan.
+                                    <br></br>
+                                    3. Komplain maksimal 3 bulan setelah tanggal pengiriman, apabila lebih dari itu maka diluar tanggungjawab PT. Laprint Jaya.
+                                    <br></br>
+                                </td>
+                            </div>
+                        </div>
+
+                        <div class="oe_structure"/>
+                    </div> <!-- Tutup page -->
+                </t>
+            </t>
+</template>
+
+
+<template id="report_sph_template">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="doc">
+            <t t-call="lpj_cusrequire.report_sph_document" t-lang="doc.x_cust.lang"/>
+        </t>
+    </t>
+</template>
+
+</odoo>

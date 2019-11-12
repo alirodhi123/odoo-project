@@ -3,12 +3,23 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0).
 
 from odoo import _, api, exceptions, fields, models
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import odoo.addons.decimal_precision as dp
 
 
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
+    state = fields.Selection([
+        ('draft', 'RFQ'),
+        ('sent', 'RFQ Sent'),
+        ('to approve', 'To Approve'),
+        ('purchase', 'Purchase Order'),
+        ('done', 'Locked'),
+        ('pending', 'Pending'),
+        ('cancel', 'Cancelled')
+    ], string='Status', readonly=True, index=True, copy=False, default='draft', track_visibility='onchange')
 
     @api.multi
     def _purchase_request_confirm_message_content(self, request,
@@ -86,6 +97,16 @@ class PurchaseOrder(models.Model):
     def print_purchase_order(self):
         return self.env['report'].get_action(self, 'purchase_request_to_rfq.report_document_po')
 
+    # Action button pending PO / RFQ
+    @api.multi
+    def action_pending(self):
+        self.state = 'pending'
+
+    # Action button continue order PO / RFQ
+    @api.multi
+    def action_back_to_rfq(self):
+        self.state = 'draft'
+
 
 class PurchaseOrderLine(models.Model):
     _inherit = "purchase.order.line"
@@ -96,6 +117,7 @@ class PurchaseOrderLine(models.Model):
     x_qty_meterpersegi_po = fields.Float(string = 'Quantity (m2)', compute = '_meter_persegi', stored = True)
     x_harga_meterpersegi = fields.Float(string = 'Harga (m2)')
     price_unit = fields.Float(string='Unit Price', required=True, digits=dp.get_precision('Product Price'), stored = True)
+    x_last_price = fields.Float(string="Last Price", readonly=True)
 
 
     @api.one
@@ -148,3 +170,4 @@ class PurchaseOrderLine(models.Model):
                 'view_type': 'form',
                 'view_mode': 'tree,form',
                 'domain': domain}
+

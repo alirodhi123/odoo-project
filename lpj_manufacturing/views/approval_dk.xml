@@ -1,0 +1,68 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="x_sq_tree_view">
+            <field name="name">x.sq.tree</field>
+            <field name="model">x.approval.dk</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" string = "Code"/>
+                    <field name="x_sales" string = "Sales"/>
+                    <field name="x_customer" string = "Customer"/>
+                    <field name="x_item" string = "Item"/>
+                    <field name="x_qty" string = "Quantity"/>
+                    <field name="x_mesin"/>
+                    <field name="x_material_type_id"/>
+<!--                    <field name="x_acc_cust"/>-->
+                    <field name="x_flag_appdk" invisible = "1"/>
+                    <field name="x_flag_reqdk" invisible = "1"/>
+                    <field name="x_tgl_kirim" string = "Request Tanggal Kirim"/>
+                    <button name="act_approve_dk" type="object" string="Approve" class="oe_highlight" attrs="{'invisible':['|',('x_flag_appdk','=',True),('x_flag_reqdk','=',False)]}"/>
+                    <button name="act_reject_dk" type="object" string="Reject" class="oe_highlight" attrs="{'invisible':['|',('x_flag_appdk','=',True),('x_flag_reqdk','=',False)]}"/>
+                </tree>
+            </field>
+        </record>
+
+         <record model="ir.ui.view" id="app_duedate_view">
+            <field name="name">x.app.dk.form</field>
+            <field name="model">x.approval.dk</field>
+            <!--<field name="inherit_id" ref="crm.crm_stage_form"/>-->
+            <field name="arch" type="xml">
+                <form string="Approval Duedate Kirim SQ">
+                    <header>
+                    </header>
+                    <group>
+                        <group>
+                            <field name="name" string = "Kode SQ"/>
+                            <field name="x_sales" string = "Sales Person"/>
+                            <field name="x_customer" string = "Customer"/>
+                            <field name="x_item" string = "Barang"/>
+                            <field name="x_qty" string = "Quantity"/>
+                            <field name="x_mesin" string = "Mesin"/>
+                            <field name="x_material_type_id"/>
+<!--                            <field name="x_acc_cust"/>-->
+                        </group>
+                        <group>
+                            <field name="x_flag_appdk" invisible = "1"/>
+                            <field name="x_flag_reqdk" invisible = "1"/>
+                            <field name="x_tgl_kirim" string = "Permintaan Tanggal Kirim"/>
+                            <button name="act_approve_dk" type="object" string="Approve" class="oe_highlight" attrs="{'invisible':['|',('x_flag_appdk','=',True),('x_flag_reqdk','=',False)]}"/>
+                            <!--<button name="act_reject_dk" type="object" string="Reject" class="oe_highlight" attrs="{'invisible':['|',('x_flag_appdk','=',True),('x_flag_reqdk','=',False)]}"/>-->
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+
+
+        <record id="x_app_dk" model="ir.actions.act_window">
+            <field name="name">Approval Duedate Kirim</field>
+            <field name="res_model">x.approval.dk</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('x_flag_reqdk', '=', True),('x_flag_appdk', '=', False)]</field>
+        </record>
+
+
+    </data>
+</odoo>

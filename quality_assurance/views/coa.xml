@@ -47,7 +47,8 @@
 
                         <!-- Notes -->
                         <notebook>
-                            <page string="Notes" attrs="{'invisible':[('x_category_produk', '=', 'RBN')]}">
+                            <page string="Notes" attrs="{'invisible':['|', ('x_category_produk', '=', 'RBN'),
+                                                                           ('x_category_produk', '=', 'Shrink')]}">
                                 <group>
                                     <group>
                                         <field name="x_gramature"></field>
@@ -75,6 +76,21 @@
                                        <field name="x_lenght_rbn"></field>
                                        <field name="x_width_rbn"></field>
                                        <field name="x_shelflife_rbn"></field>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Notes Shrink" attrs="{'invisible':[('x_category_produk', '!=', 'Shrink')]}">
+                                <group>
+                                    <group>
+                                       <field name="x_gramature_shrink"></field>
+                                       <field name="x_thickness_shrink"></field>
+                                       <field name="x_apperance_shrink"></field>
+                                       <field name="x_colour_shrink"></field>
+                                       <field name="x_seaming_shrink"></field>
+                                       <field name="x_cutting_shrink"></field>
+                                       <field name="x_lenght_shrink"></field>
+                                       <field name="x_width_shrink"></field>
                                     </group>
                                 </group>
                             </page>

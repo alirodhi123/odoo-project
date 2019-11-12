@@ -208,6 +208,25 @@ class PurchaseRequestLineMakePurchaseOrder(models.TransientModel):
 
         for item in self.item_ids:
             line = item.line_id
+
+            # CUSTOM CODE
+            # Custom code mencari harga terakhir dari PO
+            product = item.product_id
+            if product:
+                self.env.cr.execute("SELECT pol.x_harga_meterpersegi "
+                                    "FROM purchase_order po "
+                                    "LEFT JOIN purchase_order_line pol on po.id = pol.order_id "
+                                    "WHERE pol.product_id = '" + str(product.id) + "' and po.date_order = ("
+                                           "SELECT MAX(date_order) FROM purchase_order po "
+                                           "LEFT JOIN purchase_order_line pol on po.id = pol.order_id "
+                                           "WHERE pol.product_id = '" + str(product.id) + "' and pol.x_harga_meterpersegi is not null)")
+
+                last_price = self.env.cr.fetchone()
+                if last_price:
+                    var = last_price[0]
+                else:
+                    var = 0.0
+
             if item.product_qty <= 0.0:
                 raise exceptions.Warning(
                     _('Enter a positive quantity.'))
@@ -232,10 +251,12 @@ class PurchaseRequestLineMakePurchaseOrder(models.TransientModel):
                 po_line = available_po_lines[0]
                 po_line.purchase_request_lines = [(4, line.id)]
             else:
-                po_line_data = self._prepare_purchase_order_line(purchase,
-                                                                 item)
+                po_line_data = self._prepare_purchase_order_line(purchase,item)
                 if item.keep_description:
                     po_line_data['name'] = item.name
+
+                # Lemparkan value harga terakhir PO
+                po_line_data['x_last_price'] = var
                 po_line = po_line_obj.create(po_line_data)
             new_qty = pr_line_obj._calc_new_qty(
                 line, po_line=po_line,

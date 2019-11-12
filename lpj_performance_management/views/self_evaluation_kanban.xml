@@ -1,0 +1,89 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="self_eval_tree_view_kanban">
+              <field name="name">Self Evaluation List</field>
+              <field name="model">x.self.evaluation.kanban</field>
+              <field name="arch" type="xml">
+                 <tree>
+                      <field name="name"/>
+                 </tree>
+              </field>
+        </record>
+
+        <record model="ir.ui.view" id="self_eval_kanban_form_view">
+              <field name="name">Self Evaluation Form</field>
+              <field name="model">x.self.evaluation.kanban</field>
+              <field name="arch" type="xml">
+                 <form>
+                     <sheet>
+                         <group>
+                             <group>
+                                 <field name="name"></field>
+                             </group>
+                         </group>
+                     </sheet>
+                 </form>
+              </field>
+        </record>
+
+        <record id="view_se_kanban" model="ir.ui.view">
+            <field name="name">self.evaluation.kanban</field>
+            <field name="model">x.self.evaluation.kanban</field>
+            <field name="arch" type="xml">
+                <kanban class="oe_background_grey o_kanban_dashboard o_hr_recruitment_kanban">
+
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <div class="o_kanban_card_header">
+                                    <div class="o_kanban_manage_button_section">
+                                        <field name="name"></field>
+                                    </div>
+                                </div>
+                                <div class="container o_kanban_card_content o_visible">
+                                    <t>
+                                        <div class="row">
+                                            <div class="col-xs-6 o_kanban_primary_left">
+                                                <button class="btn btn-primary" name="%(self_evaluation_action_window_new_new)d" type="action">Self Evaluation</button>
+                                            </div>
+                                            <div class="col-xs-6 o_kanban_primary_right">
+                                                <div class="row">
+                                                    <div class="col-xs-9">
+                                                        <field name="se_count"></field>
+                                                        Document(s)
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </t>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- hr related job position menu action -->
+         <record model="ir.actions.act_window" id="action_self_eval_kanban_custom">
+            <field name="name">Self Evaluation</field>
+            <field name="res_model">x.self.evaluation.kanban</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="self_evaluation_periode_action_window">
+          <field name="name">Self Evaluation Periode</field>
+          <field name="res_model">x.self.evaluation.kanban</field>
+          <field name="view_mode">tree</field>
+          <field name="view_id" ref="self_eval_tree_view_kanban"/>
+          <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Buatlah kursus pertamamu ...</p>
+          </field>
+        </record>
+
+    </data>
+</odoo>

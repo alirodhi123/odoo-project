@@ -24,11 +24,6 @@
                     <field name="x_no_ok"></field>
 
                 </field>
-
-                <!--<xpath expr='//field[@name="line_ids"]/tree/field[@name="product_id"]' position="replace">-->
-                    <!--&lt;!&ndash;<field name="bom_line_ids" domain="[('bom_id', '=', parent.x_bom)]"/>&ndash;&gt;-->
-                    <!--<field name="bom_line_ids"/>-->
-                <!--</xpath>-->
             </field>
         </record>
 
@@ -44,6 +39,39 @@
                 <xpath expr='//field[@name="line_ids"]/tree/field[@name="name"]' position="after">
                     <field name="catatan_barang"/>
                 </xpath>
+
+                <!--
+                    MENAMBAHKAN ATTRIBUTE READONLY
+                    PADA FIELD PURCHASE ORDER LINE
+                -->
+                <xpath expr='//field[@name="line_ids"]/tree/field[@name="product_id"]' position="attributes">
+                    <attribute name="attrs">{'readonly':[('purchase_state', 'in', ['cancel', 'done'])]} </attribute>
+                </xpath>
+
+                <xpath expr='//tree/field[@name="name"]' position="attributes">
+                    <attribute name="attrs">{'readonly':[('purchase_state', 'in', ['cancel', 'done'])]} </attribute>
+                </xpath>
+
+                <xpath expr='//field[@name="line_ids"]/tree/field[@name="catatan_barang"]' position="attributes">
+                     <attribute name="attrs">{'readonly':[('purchase_state', 'in', ['cancel', 'done'])]} </attribute>
+                </xpath>
+
+                <xpath expr='//field[@name="line_ids"]/tree/field[@name="product_uom_id"]' position="attributes">
+                     <attribute name="attrs">{'readonly':[('purchase_state', 'in', ['cancel', 'done'])]} </attribute>
+                </xpath>
+
+                <xpath expr='//field[@name="line_ids"]/tree/field[@name="product_qty"]' position="attributes">
+                     <attribute name="attrs">{'readonly':[('purchase_state', 'in', ['cancel', 'done'])]} </attribute>
+                </xpath>
+
+                <xpath expr='//field[@name="line_ids"]/tree/field[@name="analytic_account_id"]' position="attributes">
+                     <attribute name="attrs">{'readonly':[('purchase_state', 'in', ['cancel', 'done'])]} </attribute>
+                </xpath>
+
+                <xpath expr='//field[@name="line_ids"]/tree/field[@name="date_required"]' position="attributes">
+                     <attribute name="attrs">{'readonly':[('purchase_state', 'in', ['cancel', 'done'])]} </attribute>
+                </xpath>
+
             </field>
         </record>
 

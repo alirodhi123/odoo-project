@@ -1,38 +1,54 @@
 # -*- coding: utf-8 -*-
 import subprocess
 
-from odoo import models, fields, api
+from odoo import models, fields, api, exceptions
 import odoo.addons.decimal_precision as dp
 
 class sale_order_line(models.Model):
      _inherit = 'sale.order.line'
 
+     x_qty_produced_ok = fields.Float(string="Produced", readonly=True)
+     x_locked_product_so = fields.Boolean(string="Locked Product", default=True, readonly=True)
+     x_status_product = fields.Selection([('false', 'Open'), ('true', 'Locked')], default='true', string="Status Product")
 
-     # Fungsi parsing data to other view
+
+     # Funsgi tampilkan pop up pesan
      @api.multi
-     def open_ok_form(self):
-          ac = self.env['ir.model.data'].xmlid_to_res_id('mrp.mrp_production_form_view', raise_if_not_found=True)
+     def pop_message_ok(self):
+          product_ok = self.product_id.x_locked_ok
 
-          for o in self:
-               order_id = o.order_id.id
-               order_name = o.order_id.name
+          # Jika prodcut tidak dicentang (Unlock)
+          # Jalankan function create OK
+          if  product_ok == False:
+               for o in self:
+                    order_name = o.order_id.id
+                    order_name_char = o.order_id.name
 
-          result = {
-               'name': '2nd class',
-               'view_type': 'form',
-               'res_model': 'mrp.production',
-               'view_id': ac,
-               'context': {
-                    'default_order': order_id,
-                    'default_origin': order_name,
-               },
-               'type': 'ir.actions.act_window',
-               'view_mode': 'form'
-          }
-          return result
+               return {
+                    'name': 'Create Manufacturing Order',
+                    'type': 'ir.actions.act_window',
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'res_model': 'pop.message.ok',
+                    'target': 'new',
+                    'context': {
+                         'default_x_sale_order': order_name,
+                         'default_x_sale_order_char': order_name_char,
+                         'default_name': "Are you sure want to create Manufacturing Order ?"
+                    }
+               }
 
-
-
-
-
-
+          # Jika product di lock, jalankan function pop up message
+          else:
+               return {
+                    'name': 'Warning',
+                    'type': 'ir.actions.act_window',
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'res_model': 'pop.message.lock.ok',
+                    'target': 'new',
+                    'context': {
+                         'default_name': "Sorry, Product is Still Locked !",
+                         'default_name_second': "Please Request to PDE for Open this Product"
+                    }
+               }

@@ -1,0 +1,266 @@
+<odoo>
+    <data>
+
+        <record id="training_schedule_tree_view" model="ir.ui.view">
+            <field name="name">Course Schedule Tree View</field>
+            <field name="model">x.training.schedule</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"></field>
+                    <field name="x_employee_id"></field>
+                    <field name="create_date"></field>
+                    <field name="x_category_training_schedule"></field>
+                    <field name="f_date"/>
+                    <field name="to_date"/>
+                    <field name="state"></field>
+                </tree>
+            </field>
+        </record>
+
+        <record id="training_schedule_form_view" model="ir.ui.view">
+            <field name="name">Course Schedule Form View</field>
+            <field name="model">x.training.schedule</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_in_progress"
+                                states="hrd"
+                                groups="lpj_training.group_training_officer"
+                                string="Start Training"
+                                class="btn-primary"
+                                type="object"/>
+
+                        <button name="action_top_management"
+                                states="direktur"
+                                groups="lpj_training.group_training_manager"
+                                string="Top Management Approve"
+                                class="btn-primary"
+                                type="object"/>
+
+                        <button name="action_data_verification"
+                                states="in_progress"
+                                groups="lpj_training.group_training_officer"
+                                string="Data Verification"
+                                class="btn-primary"
+                                type="object"/>
+
+                         <button name="done"
+                                states="data_verification"
+                                groups="lpj_training.group_training_officer"
+                                string="Done"
+                                class="btn-primary"
+                                type="object"/>
+
+                        <button name="action_cancel"
+                                states="in_progress,data_verification,direktur,done"
+                                string="Cancel"
+                                groups="lpj_training.group_training_officer"
+                                type="object"/>
+
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="hrd,in_progress,data_verification,done"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h2><field name="name" placeholder="Name" readonly="1"/></h2>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="training_id"></field>
+                                <field name="x_employee_id"></field>
+                                <field name="f_date"/>
+                                <field name="to_date"/>
+                                <label for="Duration" string="Duration"/>
+                                <div>
+                                    <field name="duration"
+                                           class="oe_inline"/>
+                                    days
+                                </div>
+                                <label for="capacity" string="Training Participants"/>
+                                <div>
+                                    <field name="capacity"
+                                           class="oe_inline"/>
+                                    Person
+                                </div>
+
+                            </group>
+                            <group>
+                                <field name="x_category_training_schedule"></field>
+                                <field name="trainer_id"></field>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="employee_details_schedule" string="Detail Participants">
+                                <field name="training_schedule_ids">
+                                    <tree editable="bottom">
+                                        <field name="x_name_employee"></field>
+                                        <field name="x_work_email"></field>
+                                        <field name="x_department"></field>
+                                        <field name="x_job_tittle"></field>
+                                        <field name="x_manager"></field>
+                                        <field name="x_rating"
+                                               groups="lpj_training.group_training_officer"></field>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_trainers_filter" model="ir.ui.view">
+            <field name="name">training.schedule.select.trainers</field>
+            <field name="model">x.training.schedule</field>
+            <field name="arch" type="xml">
+                <search string="Trainers">
+                    <field name="name"></field>
+                    <separator/>
+                    <field name="x_employee_id"></field>
+                    <group expand="0" string="Group By">
+                        <filter string="Request By" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'x_employee_id'}"/>
+
+                        <filter string="States" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'state'}"/>
+
+                    </group>
+                </search>
+            </field>
+         </record>
+
+         <record id="training_sechdule_action" model="ir.actions.act_window">
+            <field name="name">Training Sechdule</field>
+            <field name="res_model">x.training.schedule</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!--
+            ACTION
+            TOP MANAGEMENT APPROVE
+         -->
+        <record id="training_sechdule_top_management_action" model="ir.actions.act_window">
+            <field name="name">Training Schedule to Approve</field>
+            <field name="res_model">x.training.schedule</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state', 'in', ['direktur'])]</field>
+        </record>
+
+        <!--
+            ACTION
+            ENTRY DATA VERIFICATION
+         -->
+        <record id="training_sechdule_data_verification_action" model="ir.actions.act_window">
+            <field name="name">Training Schedule to Verification Data</field>
+            <field name="res_model">x.training.schedule</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state', 'in', ['data_verification'])]</field>
+        </record>
+
+
+        <!--
+            TRAINING SCHEDULE LINE
+        -->
+
+        <record id="view_training_line_tree" model="ir.ui.view">
+            <field name="name">x.training.schedule.line.tree</field>
+            <field name="model">x.training.schedule.line</field>
+            <field name="arch" type="xml">
+                <tree string="Training Employee Lines" create="false">
+                    <field name="training_schedule_id"></field>
+                    <field name="x_name_employee"></field>
+                    <field name="name"></field>
+                    <field name="related_category_training"></field>
+                    <field name="related_date_from"></field>
+                    <field name="related_date_to"></field>
+                    <field name="related_duration"></field>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_training_schedule_line_form" model="ir.ui.view">
+            <field name="name">Training Form</field>
+            <field name="model">x.training.schedule.line</field>
+            <field name="arch" type="xml">
+                <form string="Training Employee" create="false" edit="false">
+                    <sheet>
+                        <group string="Employee Information">
+                            <group>
+                                <field name="training_schedule_id"></field>
+                                <field name="x_name_employee"></field>
+                                <field name="x_work_email"></field>
+                            </group>
+                            <group>
+                                <field name="x_department"></field>
+                                <field name="x_job_tittle"></field>
+                                <field name="x_manager"></field>
+                            </group>
+                        </group>
+
+                        <group String="Details Training">
+                            <group>
+                                <field name="related_training_id"></field>
+                                <field name="related_trainer"></field>
+                                <field name="name"></field>
+                                <field name="related_category_training"></field>
+                            </group>
+                            <group>
+                                <field name="related_date_from"></field>
+                                <field name="related_date_to"></field>
+                                <field name="related_duration"></field>
+                                <field name="x_rating" widget="priority" readonly="1"></field>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_training_schedule_line_filter" model="ir.ui.view">
+            <field name="name">training.schedule.line.select</field>
+            <field name="model">x.training.schedule.line</field>
+            <field name="arch" type="xml">
+                <search string="Training Employee">
+                    <separator/>
+                    <field name="training_schedule_id"/>
+                    <field name="x_name_employee"/>
+                    <field name="x_work_email"/>
+                    <field name="x_department"/>
+                    <field name="x_job_tittle"/>
+                    <field name="x_manager"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Employee" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'x_name_employee'}"/>
+                        <filter string="Department" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'x_department'}"/>
+
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_training_schedule_list" model="ir.actions.act_window">
+            <field name="name">Log Training Employee</field>
+            <field name="res_model">x.training.schedule.line</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[
+                ('x_name_employee', '=', active_id),
+                ('training_schedule_id.state', '=', 'done')]
+            </field>
+            <field name="context">{'search_default_x_name_employee': [active_id], 'default_x_name_employee': active_id}</field>
+        </record>
+
+    </data>
+</odoo>

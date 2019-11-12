@@ -1,0 +1,21 @@
+<openerp>
+    <data noupdate="1">
+
+        <!-- Sequence Training -->
+        <record id="seq_training_new" model="ir.sequence">
+              <field name="name">Sequence for new Training</field>
+              <field name="code">sequence.x.training</field>
+              <field name="prefix">TR-%(y)s%(month)s%(day)s-</field>
+              <field name="padding">5</field>
+        </record>
+
+        <!-- Sequence Schedule -->
+        <record id="seq_schedule_new" model="ir.sequence">
+              <field name="name">Sequence for new Schedule</field>
+              <field name="code">sequence.x.schedule</field>
+              <field name="prefix">SCH-%(y)s%(month)s%(day)s-</field>
+              <field name="padding">5</field>
+        </record>
+
+    </data>
+</openerp>

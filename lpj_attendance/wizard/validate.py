@@ -22,6 +22,7 @@ class ValidateAbsen(models.Model):
 
         for row in attendance:
             values = {}
+            id = row.id
             employee = row.x_employee_attend
             department = row.x_department_attend
             contract = row.x_contract_type_attend
@@ -36,10 +37,10 @@ class ValidateAbsen(models.Model):
             selisih_pulang = row.x_selisih_pulang_attend
             state = row.state_attend
 
-
+            values['x_attendance_attendance_id'] = id
             values['x_employee_validate'] = employee.id
-            values['x_dept_validate'] = department
-            values['x_contract_type_validate'] = contract
+            values['x_dept_validate'] = department.id
+            values['x_contract_type_validate'] = contract.id
             values['x_format_tanggal_validate'] = format_tanggal
             values['x_checkin_validate_view'] = check_in_view
             values['x_checkout_validate_view'] = check_out_view
@@ -84,11 +85,6 @@ class ValidateAbsen(models.Model):
                 selisih_pulang = row.x_selisih_pulang_validate
                 state = row.x_state_validate
 
-                coba = attendance_attendance_obj.search([('x_employee_attend', '=', employee.id)])
-                if coba:
-                    attendance_attendance_obj.update({'state_attend': 'validate'})
-                    pass
-
                 if checkin and checkout:
                     hr_attendance_obj.create({
                         'employee_id': employee.id,
@@ -96,15 +92,18 @@ class ValidateAbsen(models.Model):
                         'x_checkout_view_hr': checkout_view,
                         'check_in': checkin,
                         'check_out': checkout,
-                        'x_department_hr': department,
-                        'x_contract_type_hr': contract,
+                        'x_department_hr': department.id,
+                        'x_contract_type_hr': contract.id,
                         'x_format_tanggal_hr': format_tgl,
                         'x_categ_in_hr': categ_in,
                         'x_categ_out_hr': categ_out,
                         'x_selisih_masuk_hr': selisih_masuk,
-                        'x_selisih_pulang_hr': selisih_pulang
+                        'x_selisih_pulang_hr': selisih_pulang,
+                        'x_state_hr': 'validate'
                     })
                     pass
+
+            attendance.update_state()
 
             # Menampilkan message
             result = {
@@ -120,14 +119,29 @@ class ValidateAbsen(models.Model):
             }
             return result
 
+    @api.multi
+    def update_state(self):
+        attendance_line = self.x_popup_validate_ids
+        attendance_obj = self.env['x.attendance.attendance']
+
+        for row in attendance_line:
+            id = row.x_attendance_attendance_id.id
+
+            validate = attendance_obj.search([('id', '=', id)])
+            if validate:
+                validate.write({'state_attend': 'validate'})
+
+        return validate
+
 
 class ValidateAbsenLine(models.Model):
     _name = 'x.popup.validate.line'
 
+    x_attendance_attendance_id = fields.Many2one('x.attendance.attendance')
     x_popup_validate_id = fields.Many2one('x.popup.validate')
     x_employee_validate = fields.Many2one('hr.employee', string="Employee")
-    x_dept_validate = fields.Char(string="Department")
-    x_contract_type_validate = fields.Char(string="Contract Type")
+    x_dept_validate = fields.Many2one('hr.department', string="Department")
+    x_contract_type_validate = fields.Many2one('hr.contract.type', string="Contract Type")
     x_format_tanggal_validate = fields.Char(string="Format Tanggal")
     x_format_tanggal = fields.Char(string="Format Tanggal")
     x_checkin_validate_view = fields.Datetime(string="Check In View")

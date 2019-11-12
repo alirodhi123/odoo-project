@@ -20,7 +20,7 @@
                                         <field name="x_qa_jembret"/>
                                         <field name="x_qa_inspection"/>
                                         <field name="create_uid"/>
-                                        <field name="write_date"/>
+                                        <field name="write_date" invisible="1"/>
                                     </tree>
                                 </field>
                             </page>
@@ -33,7 +33,7 @@
                                         <field name="x_qa_tidakmenembusrelease"/>
                                         <field name="x_qa_tidakrontok"/>
                                         <field name="create_uid"/>
-                                        <field name="write_date"/>
+                                        <field name="write_date" invisible="1"/>
                                     </tree>
                                 </field>
                             </page>
@@ -44,7 +44,7 @@
                                         <field name="x_qa_tidakbergelembung"/>
                                         <field name="x_qa_tidakkotor"/>
                                         <field name="create_uid"/>
-                                        <field name="write_date"/>
+                                        <field name="write_date" invisible="1"/>
                                     </tree>
                                 </field>
                             </page>
@@ -54,7 +54,7 @@
                                         <field name="x_qa_kerataanpermukaanvarnish"/>
                                         <field name="x_qa_efekvarnish"/>
                                         <field name="create_uid"/>
-                                        <field name="write_date"/>
+                                        <field name="write_date" invisible="1"/>
                                     </tree>
                                 </field>
                             </page>
@@ -67,7 +67,7 @@
                                         <field name="x_qa_stickertembus"/>
                                         <field name="x_qa_releasetidakmenembus"/>
                                         <field name="create_uid"/>
-                                        <field name="write_date"/>
+                                        <field name="write_date" invisible="1"/>
                                     </tree>
                                 </field>
                             </page>
@@ -81,7 +81,7 @@
                                         <field name="x_qa_ketepatanposisi"/>
                                         <field name="x_qa_finalcheck"/>
                                         <field name="create_uid"/>
-                                        <field name="write_date"/>
+                                        <field name="write_date" invisible="1"/>
                                     </tree>
                                 </field>
                             </page>
@@ -91,7 +91,7 @@
                                         <field name="x_qa_jumlahperpack"/>
                                         <field name="x_qa_identitaspacking"/>
                                         <field name="create_uid"/>
-                                        <field name="write_date"/>
+                                        <field name="write_date" invisible="1"/>
                                     </tree>
                                 </field>
                             </page>

@@ -1,0 +1,33 @@
+<odoo>
+    <data>
+
+        <!---<Menuitem>-->
+        <menuitem name="Training" id="training_man_menu" web_icon="Training,static/description/icon-web.png"/>
+        <menuitem name="Training" id="training_training_menu" parent="training_man_menu"/>
+
+        <menuitem name="Training Request" id="training_training" parent="training_training_menu"
+                  action="training_training_action"/>
+
+        <menuitem name="Configuration" id="configuration_manu" parent="training_man_menu" groups="training_officer"/>
+        <menuitem name="Training Schedule" id="course_sechdule_configuration" parent="configuration_manu"
+                  action="course_sechdule_action"/>
+
+        <menuitem name="Trainers" id="partner_trainer_configuration"
+                  parent="configuration_manu" action="partner_trainer_action"/>
+
+        <menuitem name="Training Data" id="course_training_configuration" parent="configuration_manu"
+                  action="course_training_action"/>
+
+        <menuitem name="Training Tags" id="training_tags_configuration" parent="configuration_manu"
+                  action="training_tags_action"/>
+
+        <!-- Menu Training to Approve untuk HRD -->
+        <menuitem name="Training to Approve" id="training_to_approve" parent="training_training_menu"
+                  action="training_to_approve_action" groups="Employee_Training.training_officer"/>
+
+        <!-- Menu Top Management Approve untuk Direktur -->
+        <menuitem name="Top Management Approve" id="training_top_management_approve" parent="training_training_menu"
+                  action="training_top_management_approve_action" groups="Employee_Training.training_manager"/>
+
+    </data>
+</odoo>

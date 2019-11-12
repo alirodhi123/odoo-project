@@ -13,7 +13,7 @@
                         name="compare_bom"
                         type="object"
                         help="calls python function"
-                        attrs="{'invisible': ['|', ('state', '!=', 'confirmed'),('availability', '=', 'none')]}"
+                        attrs="{'invisible': ['|', ('state', 'not in', ['confirmed']),('availability', '=', 'none')]}"
                         options="{'reload_on_button': true}">
                     </button>
                 </xpath>

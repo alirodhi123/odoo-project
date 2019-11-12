@@ -1,0 +1,43 @@
+<odoo>
+    <data>
+
+         <record id="training_sechdule_action_trainers" model="ir.actions.act_window">
+            <field name="name">Log Trainers</field>
+            <field name="res_model">x.training.schedule</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[
+                    ('trainer_id', '=', active_id),
+                    ('state', '=', 'done')]
+            </field>
+            <field name="context">{
+                    'search_default_trainer_id': [active_id],
+                    'default_trainer_id': active_id
+                }
+            </field>
+        </record>
+
+
+        <!--
+            INHERITE RES.PARTNER
+            BUTTON
+        -->
+        <record id="view_hr_employee_form_inherited_trainer" model="ir.ui.view">
+            <field name="name">Inherited Form View For training</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='toggle_active']" position="after">
+                    <button
+                        name="%(lpj_training.training_sechdule_action_trainers)d"
+                        type="action"
+                        class="oe_stat_button"
+                        icon="fa-user">
+                     <field string="Trainer" name="trainer_count" widget="statinfo"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

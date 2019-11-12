@@ -20,7 +20,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','project'],
+    'depends': ['base','project','project_issue'],
 
     # always loaded
     'data': [
@@ -28,6 +28,7 @@
         'views/views.xml',
         'views/report_cca.xml',
         'views/sequence.xml',
+        'views/issue_project.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

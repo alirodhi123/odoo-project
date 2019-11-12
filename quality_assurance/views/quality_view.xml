@@ -296,4 +296,6 @@
     </record>
 
     <menuitem id="menu_quality_test" name="Quality Tests" parent="menu_quality_assurance" action="quality_test_action"/>
+
+
 </odoo>

@@ -58,6 +58,7 @@ class WizardAbsensi(models.Model):
                             if contract:
                                 for line in contract:
                                     contract_type = line.type_id.name
+                                    contract_type_id = line.type_id.id
                                     pass
                             else:
                                 contract_type = "Null"
@@ -66,6 +67,7 @@ class WizardAbsensi(models.Model):
                             if department:
                                 for line_dept in department:
                                     department_name = line_dept.name
+                                    department_id = line_dept.id
                                     pass
                             else:
                                 department_name = "Null"
@@ -78,7 +80,7 @@ class WizardAbsensi(models.Model):
                             attendance_obj.create({
                                 'x_id_attend': id,
                                 'x_employee_attend': employee_id,
-                                'x_contract_type_attend': contract_type,
+                                'x_contract_type_attend': contract_type_id,
                                 'x_check_in_attend': checkin_checkin,
                                 'x_check_out_attend': checkout_checkout,
                                 'x_check_in_view_attend': format_date_in_view,
@@ -88,18 +90,86 @@ class WizardAbsensi(models.Model):
                                 'x_to_varchar_attend': to_varchar,
                                 'x_selisih_masuk_attend': selisih_masuk,
                                 'x_selisih_pulang_attend': selisih_pulang,
-                                'x_department_attend': department_name
+                                'x_department_attend': department_id
                             })
                         else:
                             attendance_obj.create({
                                 'x_id_attend': id,
                                 'x_employee_attend': employee_id,
-                                'x_contract_type_attend': contract_type,
+                                'x_contract_type_attend': contract_type_id,
                                 'x_categ_in_attend': categ_in,
                                 'x_categ_out_attend': categ_out,
                                 'x_to_varchar_attend': to_varchar,
-                                'x_department_attend': department_name
+                                'x_department_attend': department_id
                             })
                             pass
 
+    @api.multi
+    def sinkron(self):
+        for attendance in self:
+            # checkin = attendance.x_checkin
+            date_format = "%Y-%m-%d"
+            date_start = attendance.x_date_start
+            date_end = attendance.x_date_end
+            attendance_attendance_obj = attendance.env['x.attendance.attendance']
+
+            self.env.cr.execute("SELECT x_employee, x_checkin, x_checkout "
+                                "FROM x_attendance "
+                                "WHERE to_char(x_checkin, 'YYYY-MM-DD') = to_char('"+ str(date_start) +"'::DATE, 'YYYY-MM-DD')")
+            query = self.env.cr.fetchall()
+            if query:
+                for row in query:
+                    employee_id = row[0]
+                    checkin = row[1]
+                    checkout = row[2]
+
+                    if employee_id:
+                        self.env.cr.execute("SELECT attend.x_employee, attend.x_checkin, attend.x_checkout "
+                                            "FROM x_attendance attend "
+                                            "LEFT JOIN x_attendance_attendance xaa on attend.x_checkin = xaa.x_check_in_attend "
+                                            "WHERE xaa.x_employee_attend = '"+ str(employee_id) +"' "
+                                            "AND to_char(xaa.x_check_in_attend, 'YYYY-MM-DD') = to_char('"+ str(checkin) +"'::DATE, '"+ 'YYYY-MM-DD' +"') "
+                                            "AND attend.x_checkin BETWEEN '"+ str(date_start) +"' AND date '"+ str(date_end) +"' + time '"+ '23:59' +"'")
+
+                        data = self.env.cr.fetchone()
+
+                        # Update record existing
+                        if data:
+                            var_employee_id = data[0]
+                            var_checkin = data[1]
+                            var_checkout = data[2]
+
+                            attendance_attendance_obj.update({
+                                # 'x_id_attend': id,
+                                'x_employee_attend': var_employee_id,
+                                # 'x_contract_type_attend': contract_type,
+                                'x_check_in_attend': var_checkin,
+                                'x_check_out_attend': var_checkout,
+                                # 'x_check_in_view_attend': format_date_in_view,
+                                # 'x_check_out_view_attend': format_date_out_view,
+                                # 'x_categ_in_attend': categ_in,
+                                # 'x_categ_out_attend': categ_out,
+                                # 'x_to_varchar_attend': to_varchar,
+                                # 'x_selisih_masuk_attend': selisih_masuk,
+                                # 'x_selisih_pulang_attend': selisih_pulang,
+                                # 'x_department_attend': department_name
+                            })
+
+                        # Membuat record baru
+                        else:
+                            attendance_attendance_obj.create({
+                                # 'x_id_attend': id,
+                                'x_employee_attend': employee_id,
+                                # 'x_contract_type_attend': contract_type,
+                                'x_check_in_attend': checkin,
+                                'x_check_out_attend': checkout,
+                                'x_check_in_view_attend': checkin,
+                                'x_check_out_view_attend': checkout,
+                                # 'x_categ_in_attend': categ_in,
+                                # 'x_categ_out_attend': categ_out,
+                                # 'x_to_varchar_attend': to_varchar,
+                                # 'x_selisih_masuk_attend': selisih_masuk,
+                                # 'x_selisih_pulang_attend': selisih_pulang,
+                                # 'x_department_attend': department_name
+                            })
 

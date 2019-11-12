@@ -16,6 +16,7 @@
                     </group>
                     <footer>
                        <button class="oe_highlight" string="Get Data" name="get_employee_not_here" type="object" />
+<!--                       <button class="oe_highlight" string="Sinkron" name="sinkron" type="object" />-->
                        <button string="Discard" special="cancel"/>
                     </footer>
                </form>

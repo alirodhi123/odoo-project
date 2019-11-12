@@ -164,11 +164,7 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <h5><b>Bahan Utama</b></h5>
-                                <span t-if="o.panjang_bahan_bu_tinta" style="font-size: 15.5px;" t-field="o.panjang_bahan_bu_tinta"></span>
-                                <span t-if="o.panjang_bahan_label_tinta" style="font-size: 15.5px;" t-field="o.panjang_bahan_label_tinta"></span>
-                                <span t-if="o.panjang_bahan_laminating_tinta" style="font-size: 15.5px;" t-field="o.panjang_bahan_laminating_tinta"></span>
-                                <span t-if="o.panjang_bahan_pita_tinta" style="font-size: 15.5px;" t-field="o.panjang_bahan_pita_tinta"></span>
-                                <span t-if="o.panjang_bahan_hot_foil_tinta" style="font-size: 15.5px;" t-field="o.panjang_bahan_hot_foil_tinta"></span>
+                                <span t-if="o.panjang_bahan_bu" style="font-size: 15.5px;" t-field="o.panjang_bahan_bu"></span>
                             </div>
                         </div>
                     </div> <!-- Tutup page -->

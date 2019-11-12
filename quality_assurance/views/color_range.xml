@@ -1,0 +1,138 @@
+<odoo>
+    <data>
+         <!-- ################# Color Range ################# -->
+<!--        <record model="ir.ui.view" id="color_range_list_tree">-->
+<!--            <field name="name">x.color.range.tree</field>-->
+<!--            <field name="model">x.color.range</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <tree string="Color Range">-->
+<!--                    <field name="x_customer"/>-->
+<!--                    <field name="x_material"/>-->
+<!--                    <field name="x_color"/>-->
+<!--                </tree>-->
+<!--            </field>-->
+<!--        </record>-->
+
+<!--        <record model="ir.ui.view" id="color_range_list_from">-->
+<!--            <field name="name">x.color.range.form</field>-->
+<!--            <field name="model">x.color.range</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <form string="Color Range">-->
+<!--                    <sheet>-->
+<!--                        <group>-->
+<!--                            <field name="x_customer"/>-->
+<!--                            <field name="x_material"/>-->
+<!--                            <field name="x_color"/>-->
+<!--                        </group>-->
+<!--                    </sheet>-->
+<!--                </form>-->
+<!--            </field>-->
+<!--        </record>-->
+
+
+
+
+
+        <record model="ir.ui.view" id="list_color_range_tree">
+            <field name="name">Color Range Tree</field>
+            <field name="model">x.color.range</field>
+            <field name="arch" type="xml">
+                <tree string="Color Range" create = "false">
+                    <field name="no_OK"/>
+                    <field name="name"></field>
+                    <field name="x_customer"/>
+                    <field name="x_state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Category Masalah -->
+        <record model="ir.ui.view" id="list_x_color_range_from">
+            <field name="name">x.color.range.form</field>
+            <field name="model">x.color.range</field>
+            <field name="arch" type="xml">
+                <form string="Color Range" create = "false">
+<!--                <form string="Color Range">-->
+                    <header>
+<!--                        <button name="create_color_range" type="object" string="Register Payment" class="oe_highlight"/>-->
+                        <button name="action_cr" type="object" string="Confirm" class="btn-primary" attrs="{'invisible':[('x_state','=','done')]}"/>
+                        <button name="action_kembali" type="object" string="Reset to Previous" attrs="{'invisible':[('x_state','=','qa')]}"/>
+                        <button name="action_cancel" type="object" string="Cancel"/>
+<!--                        <button name="action_cancel" type="object" string="Cancel" states="open"/>-->
+<!--                        <button name="action_close" type="object" string="Close" states="open" class="btn-primary"/>-->
+
+                        <field name="x_state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="name" placeholder="Name" readonly="1"/></h1>
+                        </div>
+
+                        <group col="2" >
+                            <group string="Product">
+                                <field name="x_production_id"/>
+                                <field name="x_article"/>
+                                <field name="x_design_ref"/>
+                                <field name="x_customer"/>
+                                <field name="x_sales"/>
+                            </group>
+                            <group string="Finishing">
+                                <div>
+                                    <div>
+                                        <field name="x_full_varnish"/>
+                                        <label for="x_full_varnish"/>
+                                    </div>
+                                    <div>
+                                        <field name="x_dripp_off"/>
+                                        <label for="x_dripp_off"/>
+                                    </div>
+                                    <div>
+                                        <field name="x_hotprint"/>
+                                        <label for="x_hotprint"/>
+                                    </div>
+                                    <div>
+                                        <field name="x_spot_varnish"/>
+                                        <label for="x_spot_varnish"/>
+                                    </div>
+                                    <div>
+                                        <field name="x_laminating"/>
+                                        <label for="x_laminating"/>
+                                    </div>
+                                </div>
+                            </group>
+                        </group>
+
+                        <group col="2" string="Paper Description">
+                            <group >
+                                <field name="x_color"/>
+                                <field name="x_id_core"/>
+                                <field name="x_material_cr"/>
+                            </group>
+                            <group>
+                                <field name="x_arah_roll"/>
+                                <field name="x_arah_roll_image" widget="image" readonly="True"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="color_range_action" model="ir.actions.act_window">
+            <field name="name">Color Range</field>
+            <field name="res_model">x.color.range</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Create a New Color Range ...
+              </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -47,22 +47,32 @@ class StockPicking(models.Model):
         '''
         This function generates quality alerts for the products mentioned in move_lines of given picking and also have quality measures configured.
         '''
+        id = self.id
         quality_alert = self.env['quality.alert']
         quality_measure = self.env['quality.measure']
+
         for move in self.move_lines:
-            # Cek apakah product sudah ada di quality measure
-            measures = quality_measure.search([('product_id', '=', move.product_id.id), ('trigger_time', 'in', self.picking_type_id.id)])
-            alert = quality_alert.search([('product_id', '=', move.product_id.id)])
-            if measures:
-                quality_alert.create({
-                    'name': self.env['ir.sequence'].next_by_code('quality.alert') or _('New'),
-                    'product_id': move.product_id.id,
-                    'picking_id': self.id,
-                    'origin': self.name,
-                    'company_id': self.company_id.id,
-                })
-            # else:
-            #     self.generate_quality_measure()
+            type_product = move.product_id.categ_id.sts_bhn_utama.name
+            if type_product == "Bahan Utama" or type_product == "Tinta" \
+                    or type_product == "Barang Jadi" or type_product == "PL&DC":
+
+                # Cek apakah product sudah ada di quality measure
+                measures = quality_measure.search([('product_id', '=', move.product_id.id), ('trigger_time', 'in', self.picking_type_id.id)])
+                alert = quality_alert.search([('product_id', '=', move.product_id.id), ('picking_id', '=', id)])
+                if measures:
+                    if not alert:
+                        quality_alert.create({
+                            'name': self.env['ir.sequence'].next_by_code('quality.alert') or _('New'),
+                            'product_id': move.product_id.id,
+                            'picking_id': self.id,
+                            'origin': self.name,
+                            'company_id': self.company_id.id,
+                        })
+                        pass
+                else:
+                    self.generate_quality_measure()
+                    pass
+
 
     #Fungsi dijalankan ketika master quality measure tidak ada
     @api.multi
@@ -92,16 +102,15 @@ class StockPicking(models.Model):
     # Button Mark As Todo di stock picking
     @api.multi
     def action_confirm(self):
-        # Jika quality alert = 0 dan picking type = Receipt
-        # if self.alert_count == 0 and self.picking_type_id.id == 1:
-        if self.alert_count == 0:
+        if self.alert_count == 0 and self.picking_type_id.id == 1:
             self.generate_quality_alert()
+
         res = super(StockPicking, self).action_confirm()
         return res
 
     @api.multi
     def force_assign(self):
-        if self.alert_count == 0:
+        if self.alert_count == 0 and self.picking_type_id.id == 1:
             self.generate_quality_alert()
         res = super(StockPicking, self).force_assign()
         return res

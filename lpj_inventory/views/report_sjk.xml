@@ -87,6 +87,13 @@
                                         <td style="padding-right: 10px">:</td>
                                         <td><p t-if="o.x_po_cus"><span t-field="o.x_po_cus"></span></p></td>
                                     </tr>
+                                    <t t-if="o.x_tkr_guling == 'exchange' or o.x_tkr_guling == 'partial'">
+                                        <tr>
+                                            <td style="padding-right: 35px; padding-bottom:8px;"><b>Delivery Type</b></td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td><p><span t-field="o.x_tkr_guling"></span></p></td>
+                                        </tr>
+                                    </t>
                                 </table>
                             </div>
                             <div class="col-xs-6" name="customer_address">
@@ -162,20 +169,26 @@
                         <div class="row">
                             <table>
                                 <div style="margin-top: -23px">
-                                    <div style="float: left; margin-left: 15px;">
+                                    <div style="float: left; margin-left: 40px;">
                                         <h5 class="text-center"><b>Penerima</b></h5>
                                         <br></br>
                                         <br></br>
                                         <p class="text-center">........................</p>
                                     </div>
-                                    <div style="float: left; margin-left: 35%;">
+                                    <div style="float: left; margin-left: 151px;">
+                                        <h5 class="text-center"><b>Pengirim</b></h5>
+                                        <br></br>
+                                        <br></br>
+                                        <p class="text-center">........................</p>
+                                    </div>
+                                    <div style="float: left; margin-left: 208px;">
                                         <h5 class="text-center"><b>Driver</b></h5>
                                         <br></br>
                                         <br></br>
                                         <p class="text-center">........................</p>
                                     </div>
-                                    <div style="float: Right; margin-right: 15px;">
-                                        <h5 class="text-center"><b>Pengirim</b></h5>
+                                    <div style="float: Right; margin-right: 40px;">
+                                        <h5 class="text-center"><b>Satpam</b></h5>
                                         <br></br>
                                         <br></br>
                                         <p class="text-center">........................</p>

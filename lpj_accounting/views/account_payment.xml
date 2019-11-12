@@ -11,6 +11,7 @@
                     <field name="amount_to_text" invisible="1"></field>
                     <field name="x_amount_total" invisible="1"></field>
                     <field name="kode" invisible="1"></field>
+                    <field name="x_perkiraan_journal" invisible="1"></field>
                 </field>
             </field>
         </record>

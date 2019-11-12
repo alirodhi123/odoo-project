@@ -12,31 +12,14 @@ class sq(models.Model):
 class minmax_mo(models.Model):
      _inherit = 'mrp.production'
 
+     # Untuk mengambil product order line berdasarkan trigger dari button open SO
+     def _default_id(self):
+         return self.env['sale.order.line'].browse(self._context.get('active_id'))
+
      x_type_mo = fields.Selection([('stc', 'Sticker'), ('ink', 'Tinta Campuran'), ('plate', 'Plate'),('diecut', 'Diecut')], string='Type MO', required=True)
-     order = fields.Many2one('sale.order', string = 'Kode SO')
-     orderline = fields.Many2one('sale.order.line', string = 'Barang SO')
-     x_flag = fields.Boolean(related = 'orderline.x_flag_mo')
-     x_due_kirim = fields.Datetime(related = 'orderline.x_duedate_kirim', readonly=True)
-
-     # x_sale_order = fields.Many2one('sale.order', string="Sale Order", help="Select Sale Order")
-     # x_order_id = fields.Char(related = 'x_sale_order.order_id')
-     # x_sale_order_line = fields.Many2one('sale.order.line')
-     x_kode_product = fields.Many2one('product.product',related='orderline.product_id')
-     # product_id = fields.Many2one('product.product', readonly = True, store=True, string="Order Reference Product", help="Select product", related='orderline.product_id')
-     # x_product_temp = fields.Many2one('product.product', readonly=True, store=True, string="Product Related",
-     #                                   help="Select product", related='x_sale_order_line.product_id')
-     # x_product_temp = fields.Many2one('product.product', readonly=True, store=True, string="Product Related",
-     #                                  help="Select product", related='cusrequire.x_product')
-     customer = fields.Many2one('res.partner', string='Customer', related = 'order.partner_id')
-     customer_code = fields.Char(related = 'customer.x_kode_customer')
+     # customer = fields.Many2one('res.partner', string='Customer', related = 'order.partner_id')
+     customer_code = fields.Char(string="Kode Customer", compute='get_kode_customer')
      categ_id = fields.Many2one(readonly = True, related = 'product_id.product_tmpl_id.categ_id')
-
-
-     # order_line = fields.One2many('sale.order.line', 'x_sol', string='Order Lines', related = 'cusrequire.x_so_line')
-     # x_toleransi_pengiriman = fields.Integer(related = 'order_line.x_toleransi', readonly = True, string = 'Toleransi')
-
-     x_toleransi = fields.Float(string = 'Toleransi SO', related ='orderline.x_toleransi')
-
      jml_lot = fields.Char(string='Jumlah Lot')
      x_kode_awal = fields.Char(string='Kode Awal')
      x_kode_akhir = fields.Char(string='Kode Akhir')
@@ -45,6 +28,15 @@ class minmax_mo(models.Model):
      x_keterangan = fields.Text(string="Keterangan")
      x_width = fields.Float(string="Width", compute='get_value')
      quantity_so = fields.Float(string="Quantity SO", compute='get_value_qty_so')
+
+     # Untuk OK otomatis parsing value dari open SO (SQ)
+     # POP MESSAGE OK
+     order = fields.Many2one('sale.order', string='Kode SO')
+     # x_duedate_so = fields.Datetime(string = 'Duedate kirim SO', compute = 'duedate_kirim')
+     x_product_order_line = fields.Many2one('sale.order.line', default=_default_id)
+     x_flag = fields.Boolean()
+     x_due_kirim = fields.Datetime(string="Due Date Kirim", readonly=True)
+     x_toleransi = fields.Float(string='Toleransi SO')
 
      # Pcs to meter khusus untuk roll
      x_pcs_units = fields.Float(string="Roll/sheet/fold", compute='get_value')
@@ -63,26 +55,70 @@ class minmax_mo(models.Model):
      jumlah_druk_max = fields.Float(compute='calculate_jumlah_druk')
 
 
+     # MANUFACTURING ORDER
+     # Update x_flag MO ketika klik button save
      @api.model
      def create(self, vals):
-          vals['x_flag'] = True
+          sale_order_line_id = vals['x_product_order_line']  # ambil sale order line id
+          sale_order_id = vals['order']  # ambil sale order id
+          product_ok = vals['product_id']  # ambil product id yang ada di OK
+
+          if sale_order_line_id:
+               # Cek apakah no SO yang ada di OK sama dengan no SO yang ada di sale order
+               sale_order = self.env['sale.order'].search([('id', '=', sale_order_id)])
+               for row in sale_order.order_line:
+                    sale_order_line = self.env['sale.order.line'].search([('id', '=', sale_order_line_id)])
+                    if sale_order_line:
+                         prodcut_so = row.product_id.id
+                         if product_ok == prodcut_so:
+                              sale_order_line.write({'x_flag_mo': True})
+
           result = super(minmax_mo, self).create(vals)
           return result
 
+     # ORDER KERJA
+     # Ubah product sesuai dengan product yang ada di order line (Berdasarkan Open SO yang di klik
      # Onchange product
      @api.onchange('x_type_mo')
      def set_value(self):
-          if self.x_type_mo == 'stc':
-               # Jika orderline kosong
-               if self.orderline.id == False:
+          product_order_line = self.x_product_order_line
+          type_mo = self.x_type_mo
+
+          if type_mo == 'stc':
+               # Jika product yang ada di order line (SQ) kosong
+               if product_order_line.id == False:
                     self.product_id = self.product_id
                else:
-                    self.product_id = self.x_kode_product
+                    product = product_order_line.product_id
+                    self.product_id = product
 
-     # @api.multi
-     # def write(self, vals):
-     #      vals['x_flag'] = True
-     #      return super(minmax_mo, self).write(vals)
+     # ORDER KERJA
+     # Ambil qty yg ada di SO dan letakkan di product_qty (Quantity to produce)
+     # Get Product qty dari SO
+     @api.onchange('x_type_mo')
+     def get_qty_so(self):
+          for manufacturing in self:
+               if manufacturing.x_type_mo == 'stc':
+                    product_order_line = manufacturing.x_product_order_line.id
+                    if product_order_line != False:
+                         id = manufacturing.x_product_order_line.id
+
+                         sale_order_line = manufacturing.env['sale.order.line'].search([('id', '=', id)])
+                         if sale_order_line:
+                              for row in sale_order_line:
+                                   qty_ordered = row.product_uom_qty
+                                   qty_produced = row.x_qty_produced_ok
+
+                                   if qty_produced == 0.0:
+                                        # Get qty SO REAL
+                                        qty = qty_ordered
+                                        manufacturing.product_qty = qty
+                                   else:
+                                        # Jika qty produced != 0, maka yang diambil adalah qty terakhir dari qty produced
+                                        # Mencari sisa qty yang harus di produksi
+                                        selisih = qty_ordered - qty_produced
+                                        manufacturing.product_qty = selisih
+
 
      @api.multi
      def action_next(self):
@@ -98,7 +134,6 @@ class minmax_mo(models.Model):
      # Get one2many x_layout_product_ids (REPORT)
      @api.one
      def get_value(self):
-
           id = self.product_id.id
           accros = self.env['product.product'].search([('id', '=', id)])
           type_packing = accros.x_type_packing
@@ -124,7 +159,6 @@ class minmax_mo(models.Model):
      # Get one2many order_line qty SO (REPORT)
      @api.depends('product_id', 'x_toleransi')
      def get_value_qty_so(self):
-
           toleransi_so = self.x_toleransi
           id = self.order.id
           qty_so = self.env['sale.order'].search([('id', '=', id)])
@@ -167,17 +201,18 @@ class minmax_mo(models.Model):
      # REPORT
      @api.depends('quantity_so', 'x_toleransi', 'product_qty', 'x_product_uom_qty', 'x_isi_druk', 'x_jarak_druk_product')
      def compute_max_qty(self):
-          qty_so = self.quantity_so
-          toleransi_so = self.x_toleransi
-          qty_to_produce = self.product_qty
-          isi_druk = self.x_isi_druk
-          jarak_druk = self.x_jarak_druk_product / 10 #konversi mm ke cm
-          panjang_bahan_max = self.x_product_uom_qty
+          for manufacturing in self:
+               qty_so = manufacturing.quantity_so
+               toleransi_so = manufacturing.x_toleransi
+               qty_to_produce = manufacturing.product_qty
+               isi_druk = manufacturing.x_isi_druk
+               jarak_druk = manufacturing.x_jarak_druk_product / 10 #konversi mm ke cm
+               panjang_bahan_max = manufacturing.x_product_uom_qty
 
-          if jarak_druk != 0:
-               qty_max_temp = (panjang_bahan_max * isi_druk) / jarak_druk
-               qty_max = qty_max_temp * 100
-               self.x_quantity_max = qty_max
+               if jarak_druk != 0:
+                    qty_max_temp = (panjang_bahan_max * isi_druk) / jarak_druk
+                    qty_max = qty_max_temp * 100
+                    manufacturing.x_quantity_max = qty_max
 
 
      # REPORT JUMLAH DRUK
@@ -185,6 +220,7 @@ class minmax_mo(models.Model):
      # Model Product.product
      @api.one
      def get_jumlah_druk(self):
+          self.ensure_one()
           id = self.product_id.id
           product_product = self.env['product.product'].search([('id', '=', id)])
           if product_product:
@@ -201,6 +237,7 @@ class minmax_mo(models.Model):
      # Ambil dari fungsi get_jumlah_druk
      @api.depends('product_qty', 'x_quantity_max', 'x_across_number', 'x_arround_number')
      def calculate_jumlah_druk(self):
+          self.ensure_one()
           qty_to_produce = self.product_qty
           qty_max = self.x_quantity_max
           var_across_number = self.x_across_number
@@ -211,6 +248,22 @@ class minmax_mo(models.Model):
                druk_max = qty_max / (var_across_number * var_arround_number)
                self.jumlah_druk_min = druk_min
                self.jumlah_druk_max = druk_max
+
+     # Get kode customer SO
+     # Untuk PRINT NO LOT
+     @api.one
+     def get_kode_customer(self):
+          sale_order = self.order
+
+          if sale_order:
+               for row in sale_order:
+                    customer = row.partner_id
+                    if customer:
+                         for o in customer:
+                              kode_customer = o.x_kode_customer
+                              if kode_customer:
+                                   self.customer_code = kode_customer
+                              pass
 
 
 class lot_barang(models.Model):

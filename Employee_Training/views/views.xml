@@ -1,0 +1,415 @@
+<odoo>
+    <data>
+
+        <!-- Model Training training -->
+        <record id="training_training_form_view" model="ir.ui.view">
+            <field name="name">Training Form View</field>
+            <field name="model">training.training</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_hod"
+                                string="Request Training"
+                                type="object"
+                                states="new"
+                                class="btn-primary"/>
+                        <button name="action_hrman"
+                                string="HR Aprrove"
+                                type="object"
+                                groups="Employee_Training.training_officer"
+                                states="hod"
+                                class="btn-primary"/>
+                        <button name="action_approve"
+                                states="hrman"
+                                string="Approved"
+                                groups="Employee_Training.training_officer"
+                                class="btn-primary"
+                                type="object"/>
+                        <button name="action_in_progress"
+                                states="approve"
+                                groups="Employee_Training.training_officer"
+                                string="Start Training"
+                                class="btn-primary"
+                                type="object"/>
+                        <button name="action_reject"
+                                states="hrman,hod"
+                                string="Reject"
+                                groups="Employee_Training.training_officer,Employee_Training.training_manager"
+                                type="object"/>
+                        <button name="action_cancel"
+                                states="hod"
+                                string="Cancel"
+                                groups="Employee_Training.training_employee"
+                                type="object"/>
+                        <button name="create_training"
+                                states="hod"
+                                groups="Employee_Training.training_officer"
+                                string="Create Training"
+                                class="btn-primary"
+                                type="object"
+                                attrs="{'invisible': [('line_count', '=', 0)]}"/>
+                        <button name="done"
+                                states="in progress"
+                                groups="Employee_Training.training_officer"
+                                string="Done"
+                                class="btn-primary"
+                                type="object"/>
+
+<!--                        <field name="state" widget="statusbar"-->
+<!--                               statusbar_visible="new,hod,approve,in progress,done"/>-->
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="new,hod"/>
+
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button type="object"
+                                name="action_view_purchase_request_line"
+                                class="oe_stat_button"
+                                attrs="{'invisible':[('line_count', '=', 0)]}"
+                                icon="fa-list">
+                                <field name="line_count" widget="statinfo"
+                                       string="Lines"/>
+                            </button>
+                        </div>
+
+                        <div class="oe_title">
+                            <h2><field name="name" placeholder="Name" readonly="1"/></h2>
+                         </div>
+                        <group>
+                            <group>
+                                <field name="employee_id"/>
+                                <!-- <field name="course_name"/> -->
+                                <!--<field name="course_name" attrs="{'invisible': [('state', '=', 'new')]}"/> -->
+                            </group>
+                            <group>
+                                <field name="price_id" invisible="1"></field>
+                                <field name="user_id" invisible="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="content" string="Content" invisible="1">
+                                <field name="bio_content"/>
+                            </page>
+                            <page name="agreement" string="Agreement" invisible="1">
+                                <field name="bio_agrement"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="training_tree_view" model="ir.ui.view">
+            <field name="name">Training Tree View</field>
+            <field name="model">training.training</field>
+            <field name="arch" type="xml">
+                <tree string="Training"
+                      decoration-info="state in ('hod')"
+                      decoration-muted="state in ('reject')"
+                      default_order='create_date desc'>
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="x_department"/>
+                    <field name="create_date"/>
+                    <field name="x_category_training"/>
+                    <field name="course_name"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_training_training_search" model="ir.ui.view">
+            <field name="name">training.training.list.select</field>
+            <field name="model">training.training</field>
+            <field name="arch" type="xml">
+                <search string="Search Training">
+                    <separator/>
+                    <field name="state"/>
+
+                    <filter domain="[('user_id','=', uid)]"
+                            help="My requests"/>
+                    <filter name="today" string="Today"
+                            domain="[('create_date', '&gt;=', datetime.datetime.now().replace(hour=0, minute=0, second=0)),
+                                     ('create_date', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
+
+                     <field name="user_id" />
+                    <group expand="0" string="Group By...">
+                        <filter string="Requested by" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'employee_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="training_training_action" model="ir.actions.act_window">
+            <field name="name">Training</field>
+            <field name="res_model">training.training</field>
+            <field name="view_type">form</field>
+            <field name="context">{"search_default_user_id":uid}</field>
+            <field name="view_mode">tree,form,pivot</field>
+        </record>
+
+
+        <!-- Model Course Schedule -->
+        <record id="course_schedule_form_view" model="ir.ui.view">
+            <field name="name">Course Schedule Form View</field>
+            <field name="model">course.schedule</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_active"
+                                string="Active"
+                                type="object"
+                                groups="Employee_Training.training_officer"
+                                states="new,close"
+                                class="btn-primary"/>
+                        <button name="action_close"
+                                string="Closed"
+                                type="object"
+                                groups="Employee_Training.training_officer"
+                                states="active"
+                                class="btn-primary"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="new,active"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h2><field name="name" placeholder="Name" readonly="1"/></h2>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="course_id"/>
+                                <field name="f_date"/>
+                                <field name="to_date"/>
+                                <label for="Duration" string="Duration"/>
+                                <div>
+                                    <field name="duration"
+                                           class="oe_inline"/>
+                                    days
+                                </div>
+                                <!-- <field name="tags" widget="many2many_tags" placeholder="e.g. Part Time" /> -->
+                                <label for="Capacity" string="Capacity"/>
+                                <div>
+                                    <field name="capacity"
+                                           class="oe_inline"/>
+                                    Person
+                                </div>
+
+                            </group>
+                            <group>
+                                <field name="trainer_id"/>
+                                <field name="price"/>
+                                <field name="reserv"/>
+                                <field name="remain"/>
+                                <field name="text" invisible="True"/>
+                            </group>
+                        </group>
+<!--                        <notebook>-->
+<!--                            <page string="Agreement">-->
+<!--                                <field name="bio"/>-->
+<!--                            </page>-->
+<!--                        </notebook>-->
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="course_sechdule_kanban_view" model="ir.ui.view">
+            <field name="name">Course Sechdule View Kanban</field>
+            <field name="model">course.schedule</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="course_id" class="o_kanban_small_column o_opportunity_kanban"
+                        on_create="training.create_course_scedule">
+                    <field name="course_id"/>
+                    <field name="reserv"/>
+                    <field name="remain"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.id.raw_value)}  oe_kanban_global_click">
+                                <a type="open">
+
+                                </a>
+                                <div class="oe_kanban_details">
+                                    <div>
+                                        <b>
+                                            <div>Course:
+                                                <field name="course_id"/>
+                                            </div>
+                                            <div>
+                                                <field name="state"/>
+                                            </div>
+                                            <div>Reservation
+                                                <field name="reserv"/>
+                                            </div>
+                                            <div>Remaining
+                                                <field name="remain"/>
+                                            </div>
+                                            <div>Trainer :
+                                                <field name="trainer_id"/>
+                                            </div>
+                                        </b>
+                                    </div>
+                                    <br/>
+                                    <div>
+                                        <b>
+                                            <div>
+                                                <field name="capacity"/>
+                                                person
+                                            </div>
+                                        </b>
+                                        <div>Price
+                                            <field name="price"/>
+                                        </div>
+                                        <img t-att-src="kanban_image('partner.trainer', 'image_small', record.trainer_id.raw_value)"
+                                             t-att-title="record.trainer_id.value" width="24" height="24"
+                                             class="oe_kanban_avatar pull-right"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="course_schedule_tree_view" model="ir.ui.view">
+            <field name="name">Course Schedule Tree View</field>
+            <field name="model">course.schedule</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="course_id"/>
+                    <field name="trainer_id"/>
+                    <field name="f_date"/>
+                    <field name="to_date"/>
+                    <field name="price"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="course_schedule_search_view" model="ir.ui.view">
+            <field name="name">Course Schedule Search View</field>
+            <field name="model">course.schedule</field>
+            <field name="arch" type="xml">
+                <search string="Course">
+                    <field name="course_id"/>
+                    <field name="trainer_id"/>
+                    <field name="price"/>
+                    <group expand="0" string="Group By" domain="[('employee_id.user_id', '=', uid)]">
+                        <filter name="groupby_course_id" context="{'group_by':'course_id'}" string="Course"/>
+                        <filter name="trainer_id" context="{'group_by': 'trainer_id'}" string="Trainer"/>
+                        <filter name="price" context="{'group_by': 'price'}" string="Price"/>
+                        <filter name="groupby_month" context="{'group_by': 'date:month'}" string="Month"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+         <record id="course_sechdule_action" model="ir.actions.act_window">
+            <field name="name">Course Sechdule</field>
+            <field name="res_model">course.schedule</field>
+            <field name="view_type">form</field>
+            <!-- <field name="view_mode">kanban,tree,form</field> -->
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <!-- Model Trainer -->
+        <record id="partner_trainer_form_view" model="ir.ui.view">
+            <field name="name">Trainer Form View</field>
+            <field name="model">partner.trainer</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="partner_name"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="partner_trainer_tree_view" model="ir.ui.view">
+            <field name="name">Trainer Tree View</field>
+            <field name="model">partner.trainer</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="partner_name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="partner_trainer_action" model="ir.actions.act_window">
+            <field name="name">Trainer</field>
+            <field name="res_model">partner.trainer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+         <!--Model Course.Training-->
+        <record id="course_trainind_form_view" model="ir.ui.view">
+            <field name="name">Course</field>
+            <field name="model">course.training</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="course"/>
+                                <field name="price_ids"/>
+                            </group>
+                            <group>
+                                <field name="code"/>
+                            </group>
+                        </group>
+<!--                        <notebook>-->
+<!--                            <page string="Content">-->
+<!--                                <field name="bio_course"/>-->
+<!--                            </page>-->
+<!--                        </notebook>-->
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="course_training_tree_view" model="ir.ui.view">
+            <field name="name">Course</field>
+            <field name="model">course.training</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="course"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="course_training_action" model="ir.actions.act_window">
+            <field name="name">Course Training</field>
+            <field name="res_model">course.training</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

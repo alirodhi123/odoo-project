@@ -76,7 +76,7 @@
                                     </thead>
                                     <tbody>
                                         <tr t-foreach="o.x_quo_line" t-as="row">
-                                            <td><span t-field="row.x_cusreq"></span></td>
+                                            <td><span t-field="row.x_sq"></span></td>
                                             <td><span t-field="row.x_item_desc"></span></td>
                                             <td><span t-field="row.x_prod"></span></td>
                                             <td class="text-right"><span t-field="row.x_qty"></span></td>
@@ -100,6 +100,22 @@
                                         </td>
                                     </tr>
                                 </table>
+                            </div>
+                        </div>
+                        <!--keterangan pada SPH-->
+                        <div class="row">
+                            <div class="pull-left">
+                                <td class="text-left">
+                                    <strong>Keterangan:</strong>
+                                    <br></br>
+                                    1. Harga belum termasuk PPN.
+                                    <br></br>
+                                    2. Penawaran harga berlaku 30 hari sejak tanggal SPH dikirimkan.
+                                    <br></br>
+                                    3. Komplain maksimal 3 bulan setelah tanggal pengiriman, apabila lebih dari itu maka diluar tanggungjawab PT. Laprint Jaya.
+                                    <br></br>
+                                    4. Tambahkan juga kolom untuk ukuran dan jenis bahan.
+                                </td>
                             </div>
                         </div>
 

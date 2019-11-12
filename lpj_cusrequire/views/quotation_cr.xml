@@ -50,8 +50,11 @@
                     <field name="x_harga_material"
                            attrs="{'invisible': [('x_pecah_harga', '!=', 'yes')]}"
                            groups="sales_team.group_sale_manager,sales_team.group_sale_salesman"/>
+
                 </xpath>
+
             </field>
         </record>
+
     </data>
 </odoo>

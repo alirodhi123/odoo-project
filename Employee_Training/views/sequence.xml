@@ -1,0 +1,30 @@
+<openerp>
+    <data noupdate="1">
+
+        <!-- Sequences for Contract Order -->
+<!--        <record id="seq_engagement_info_order" model="ir.sequence">-->
+<!--            <field name="name">engagement info Order</field>-->
+<!--            <field name="code">course.schedule</field>-->
+<!--            <field name="prefix"></field>-->
+<!--            <field eval="1" name="number_next"/>-->
+<!--            <field name="padding">6</field>-->
+<!--            <field name="reserv" eval="False"/>-->
+<!--        </record>-->
+
+        <record id="seq_course_schedule" model="ir.sequence">
+              <field name="name">Sequence for new Schedule</field>
+              <field name="code">sequence.schedule</field>
+              <field name="prefix">SCH-%(y)s%(month)s%(day)s-</field>
+              <field name="padding">5</field>
+        </record>
+
+        <record id="seq_training_training_new" model="ir.sequence">
+              <field name="name">Sequence for new Training</field>
+              <field name="code">sequence.training.new</field>
+              <field name="prefix">TR-%(y)s%(month)s%(day)s-</field>
+              <field name="padding">5</field>
+        </record>
+
+
+    </data>
+</openerp>

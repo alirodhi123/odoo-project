@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <data>
+        <report
+            id="report_color_range"
+            model="x.color.range"
+            string="Print CR"
+            report_type="qweb-pdf"
+            name="quality_assurance.report_document_color_range"
+            file="quality_assurance.report_document_color_range"
+            menu="True"
+        />
+
+        <record id="paperformat_color_range" model="report.paperformat">
+            <field name="name">European A4 low margin</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">6</field>
+            <field name="margin_bottom">2</field>
+            <field name="margin_left">8</field>
+            <field name="margin_right">8</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field> <!-- Jika ingin header muncul ubah nilai - 0 -->
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="quality_assurance.report_color_range" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="quality_assurance.paperformat_color_range" />
+        </record>
+
+
+        <template id="report_document_color_range">
+            <t t-name="quality_assurance.report_document_color_range">
+                <t t-call="report.html_container">
+                    <t t-foreach="docs" t-as="o">
+                        <div class="page">
+
+                            <!-- Logo Laprint -->
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <img t-if="res_company.logo" t-att-src="'data:image/png;base64,%s' %res_company.logo" style="width: 190%"/>
+                                </div>
+                            </div>
+                            <br></br>
+
+                            <!-- Untuk garis horizontal-->
+                            <div class="row zero_min_height">
+                                <div class="col-xs-12">
+                                    <div style="border-bottom: 1px solid black;"/>
+                                </div>
+                            </div>
+                            <br/>
+
+                            <!-- Company information -->
+                             <div class="row">
+                                <div class="col-xs-6" name="company_address">
+                                    <t t-set="res_company" t-value="res_company.sudo()"/>
+                                    <span t-field="res_company.partner_id" t-field-options="{
+                                            &quot;widget&quot;: &quot;contact&quot;,
+                                            &quot;fields&quot;: [
+                                                &quot;address&quot;,
+                                                &quot;name&quot;,
+                                                &quot;vat&quot;
+                                            ], &quot;no_marker&quot;: true}"></span>
+                                        <p t-if="res_company.partner_id.vat"><span style="border-bottom: 1px solid black; display:inline-block; width:87%;" t-field="res_company.partner_id.vat"/></p>
+                                </div>
+                            </div>
+
+                            <!-- Footer -->
+                            <div class="row">
+                                <div class="col-xs-12" style="position: fixed; width: 100%; bottom: -1375px;">
+                                    <div class="text-center" style="border-top: 1px solid black;">
+                                        <ul t-if="not res_company.custom_footer" style="list-style: none;">
+                                            <t t-set="res_company" t-value="res_company.sudo()"/>
+                                            <li t-if="res_company.street">Office: <span t-field="res_company.street"/></li>
+                                            <li t-if="res_company.phone">Phone: <span t-field="res_company.phone"/><span>, 99038051, 99038051, 99038064</span> </li>
+                                            <li t-if="res_company.fax">Fax: <span t-field="res_company.fax"/></li>
+                                            <li t-if="res_company.email">Email: <span t-field="res_company.email"/></li>
+                                            <li t-if="res_company.website">Website: <span t-field="res_company.website"></span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Tutup Footer -->
+
+
+                        </div> <!-- Tutup page -->
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

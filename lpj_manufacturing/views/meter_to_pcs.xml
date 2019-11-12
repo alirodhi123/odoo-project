@@ -34,7 +34,6 @@
                      <field name = "x_ids_duration" widget="float_time" invisible = "1"/>
                  </field>
 
-
                 <field name="time_ids" position = "replace">
                     <field name="time_ids" nolabel="1">
                         <tree editable="bottom">

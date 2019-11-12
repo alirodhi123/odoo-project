@@ -1,0 +1,125 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="x_sq_tree_view">
+            <field name="name">x.sq.tree</field>
+            <field name="model">x.sales.quotation</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" string = "Code"/>
+                    <field name="x_sales_id" string = "Sales"/>
+                    <field name="x_customer_id" string = "Customer"/>
+                    <field name="item_description" string = "Item Name"/>
+                    <field name="x_repeat_order" string = "Repeat Order"/>
+                    <!--<field name="x_desc_sq" string = "Description"/>-->
+                    <field name="x_status_cr" string = "Status SQ"/>
+                    <field name="x_req_dk"/>
+                    <field name="x_status_dk"/>
+                    <field name="x_flag_reqdk" invisible="1"/>
+                    <field name="x_flag_appdk" invisible="1"/>
+                    <field name="x_is_salemanager" invisible="1"/>
+                    <!--<button name="act_req_dk" type="object" string="Request" class="oe_highlight" attrs="{'invisible':['|','|',('x_status_cr','=','reject'),('x_flag_reqdk','=',True),('x_flag_appdk','=',True)]}"/>-->
+                    <!--<button name="act_approve" type="object" string="Approve" class="oe_highlight" attrs="{'invisible':['|', '|','|',('x_status_cr','=','approve'), ('x_status_cr','=','reject'),('x_status_cr','=','done'),('x_is_salemanager', '=', False)]}"/>-->
+                    <button name="act_reject" type="object" string="Reject" class="oe_highlight" attrs="{'invisible':[('x_status_cr','=','reject')]}"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="x_sq_view">
+            <field name="name">x.sales.quotation.form</field>
+            <field name="model">x.sales.quotation</field>
+            <!--<field name="inherit_id" ref="crm.crm_stage_form"/>-->
+            <field name="arch" type="xml">
+                <form string="Sales Quotation Form">
+                    <header>
+                    </header>
+                    <group>
+                        <group>
+                            <field name="item_description" string = "Item Name"/>
+                            <field name="x_repeat_order" string = "Repeat Order"/>
+                            <field name="description" string = "Description"/>
+                            <field name="compute_field" invisible="1"/>
+                            <field name="x_status_cr" string = "Status SQ" attrs="{'readonly': [('compute_field', '=', False)]}"/>
+                            <field name="x_sales_id" string = "Sales"/>
+                            <field name="x_customer_id" string = "Customer"/>
+                            <field name="x_request_date" string = "Request Date" invisible="1"/>
+                            <field name="x_duedate_drawing" string = "Duedate Drawing"/>
+                        </group>
+                        <group>
+                            <field name="x_product"/>
+                            <field name="x_status_dk"/>
+                            <field name="x_req_dk" string = "Request Duedate Kirim"/>
+                            <field name="x_flag_reqdk" invisible="1"/>
+                            <field name="x_flag_appdk" invisible="1"/>
+                            <button name="act_req_dk" type="object" string="Request" class="oe_highlight" attrs="{'invisible':['|',('x_status_cr','=','reject'),('x_status_dk','=','requested')]}"/>
+                        </group>
+                    </group>
+                     <notebook>
+                            <page string="PreCosting" id="page_precosting_sq">
+                                <group>
+                                    <group string="Dimension">
+                                        <field name="x_qty" string = "Quantity (pcs)"/>
+                                        <field name="x_length"/>
+                                        <field name="x_length_m" invisible = "1"/>
+                                        <field name="x_width"/>
+                                        <field name="x_width_m" invisible="1"/>
+                                        <field name="x_packing_category_id"/>
+                                        <field name="x_satuan"/>
+                                    </group>
+                                    <group string="Estimated BOM">
+                                        <field name="x_supplier_id" string = "Supplier"/>
+                                        <field name="x_material_type_id"/>
+                                        <field name="x_numbers_of_colors"/>
+                                        <field name="x_varnish"/>
+                                        <field name="x_special_color"/>
+                                        <field name="x_ink_coverage"/>
+                                        <field name="x_reg_cr_mkt"/>
+                                        <field name = "x_jumlah_cr_mkt" attrs="{'invisible':[('x_reg_cr_mkt','!=',True)]}"/>
+                                    </group>
+                                    <group string="Estimated Process">
+                                        <field name="x_mrpwordkcenter_id" string = "Prime Machine"/>
+                                        <field name="x_lamination"/>
+                                        <field name="x_category_foil"/>
+
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Price" id="page_price" groups="sales_team.group_sale_manager,sales_team.group_sale_salesman">
+                                <group>
+                                    <group string="Porpose">
+                                        <!--<field name="x_propose_price_low" attrs="{'readonly': [('compute_field', '=', False)]}"/>-->
+                                        <!--<field name="x_propose_price_high" attrs="{'readonly': [('compute_field', '=', False)]}"/>-->
+                                        <field name="start_of_date"></field>
+                                        <field name="end_of_date"></field>
+                                    </group>
+                                    <group string="Price">
+                                        <field name="compute_field" invisible="1"/>
+                                        <field name="x_price_low" />
+                                        <field name="x_price_high" />
+                                        <field name="x_price_fix" />
+                                        <field name="x_harga_repeat" domain="[('order_id','=', x_order)]" attrs="{'invisible':[('x_repeat_order','!=',True)]}"/>
+                                        <!--<field name="x_hpp"/>-->
+                                    </group>
+                                </group>
+                            </page>
+                     </notebook>
+                </form>
+            </field>
+        </record>
+
+          <record model="ir.actions.act_window" id="x_sq">
+            <field name="name">Sales Quotation</field>
+            <field name="res_model">x.sales.quotation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="x_sales_quotation" name="Customer Requirement"
+                  parent="sales_team.menu_sales" sequence="9"
+                  action="x_sq"/>
+
+
+    </data>
+</odoo>
+
+

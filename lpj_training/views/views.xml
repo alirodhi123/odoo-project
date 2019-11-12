@@ -1,0 +1,170 @@
+<odoo>
+  <data>
+
+    <record id="x_training_training_form_view" model="ir.ui.view">
+            <field name="name">Training Form View</field>
+            <field name="model">x.training.training</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_hrd"
+                                string="Request Training"
+                                type="object"
+                                states="new"
+                                class="btn-primary"/>
+
+                        <button name="action_reject"
+                                states="hrd,in_progress,data_verification,direktur,done"
+                                string="Reject"
+                                groups="lpj_training.group_training_user"
+                                type="object"/>
+
+                        <button name="create_training"
+                                states="hrd"
+                                groups="lpj_training.group_training_officer"
+                                string="Create Training"
+                                class="btn-primary"
+                                type="object"/>
+
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="new,hrd"/>
+
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button
+                                name="%(x_training_training_action)d"
+                                type="action"
+                                class="oe_stat_button"
+                                attrs="{'invisible':[('line_count', '=', 0)]}"
+                                icon="fa-list">
+                                <field name="line_count" widget="statinfo"
+                                       string="Lines"/>
+                            </button>
+                        </div>
+
+                        <div class="oe_title">
+                            <h2><field name="name" placeholder="Name" readonly="1"/></h2>
+                         </div>
+                        <group>
+                            <group>
+                                <field name="x_training_name" placeholder="Ex: Training Odoo"></field>
+                                <field name="employee_id"/>
+                                <label for="x_department"></label>
+                                <div class="o_row">
+                                    <field name="x_department"></field>
+                                    <button name="function_details_employee"
+                                            type="object"
+                                            class="oe_stat_button"
+                                            string="Insert Employee"
+                                            states="new"/>
+                                </div>
+
+                            </group>
+                            <group>
+                                <field name="x_category_training"></field>
+                                <field name="x_origin"></field>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="employee_details" string="Employee Details">
+                                <field name="x_employee_training_ids">
+                                    <tree editable="bottom">
+                                        <field name="x_name_employee"></field>
+                                        <field name="x_work_email"></field>
+                                        <field name="x_department"></field>
+                                        <field name="x_job_tittle"></field>
+                                        <field name="x_manager"></field>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="x_training_tree_view" model="ir.ui.view">
+            <field name="name">Training Tree View</field>
+            <field name="model">x.training.training</field>
+            <field name="arch" type="xml">
+                <tree string="Training"
+                      decoration-info="state in ('hrd')"
+                      decoration-muted="state in ('reject')"
+                      default_order='create_date desc'>
+                    <field name="name"/>
+                    <field name="create_date"></field>
+                    <field name="employee_id"/>
+                    <field name="x_department"/>
+                    <field name="x_training_name"/>
+                    <field name="x_category_training"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="x_view_training_training_search" model="ir.ui.view">
+            <field name="name">training.training.list.select</field>
+            <field name="model">x.training.training</field>
+            <field name="arch" type="xml">
+                <search string="Search Training">
+                    <separator/>
+                    <field name="state"/>
+                    <filter domain="[('user_id','=', uid)]"
+                            help="My requests"/>
+                    <filter name="today" string="Today"
+                            domain="[('create_date', '&gt;=', datetime.datetime.now().replace(hour=0, minute=0, second=0)),
+                                     ('create_date', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]"/>
+
+                     <field name="user_id" />
+                    <group expand="0" string="Group By...">
+                        <filter string="Requested by" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'employee_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="x_training_training_action" model="ir.actions.act_window">
+            <field name="name">Training</field>
+            <field name="res_model">x.training.training</field>
+            <field name="view_type">form</field>
+            <field name="context">{"search_default_user_id":uid}</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+      <!--
+            CUSTOM VIEW
+            TRAINING TO APPROVE
+        -->
+        <record id="training_to_approve_action" model="ir.actions.act_window">
+            <field name="name">Training to Approve</field>
+            <field name="res_model">x.training.training</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state', 'in', ['hrd'])]</field>
+            <!-- <field name="context">{"search_default_today":1}</field> -->
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <!--
+            CUSTOM VIEW
+            TOP MANAGEMENT APPROVE
+        -->
+        <record id="training_top_management_approve_action" model="ir.actions.act_window">
+            <field name="name">Top Management to Approve</field>
+            <field name="res_model">x.training.training</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state', 'in', ['hrman'])]</field>
+            <!-- <field name="context">{"search_default_today":1}</field> -->
+            <field name="view_mode">tree,form,pivot</field>
+        </record>
+
+  </data>
+</odoo>

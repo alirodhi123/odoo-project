@@ -1,0 +1,21 @@
+<openerp>
+    <data noupdate="1">
+
+        <!-- Sequence Self Evaluation -->
+        <record id="seq_self_eval_new" model="ir.sequence">
+              <field name="name">Sequence for new SE</field>
+              <field name="code">sequence.x.self.evaluation</field>
+              <field name="prefix">SE-%(y)s%(month)s%(day)s-</field>
+              <field name="padding">5</field>
+        </record>
+
+        <!-- Sequence Goal Setting -->
+        <record id="seq_goal_setting_new" model="ir.sequence">
+              <field name="name">Sequence for new Goal Setting</field>
+              <field name="code">sequence.x.goal.setting</field>
+              <field name="prefix">GS-%(y)s%(month)s%(day)s-</field>
+              <field name="padding">5</field>
+        </record>
+
+    </data>
+</openerp>

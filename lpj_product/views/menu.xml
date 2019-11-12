@@ -9,7 +9,6 @@
 		  parent="lpj_cusrequire.main_approval_odoo_menu"
                   name="Configuration" sequence="7"/>
 
-
         <record model="ir.actions.act_window" id="products">
             <field name="name">Product</field>
             <field name="res_model">product.template</field>
@@ -18,19 +17,19 @@
         </record>
 
         <menuitem id="product_menu"
-                  action="products" parent="master_pde_menu" name="Product" />
+                  action="products" parent="master_pde_menu" name="Product" sequence="1"/>
 
         <menuitem id="bom_menu"
-                  action="mrp.mrp_bom_form_action" parent="master_pde_menu" name="Bill of Materials"/>
+                  action="mrp.mrp_bom_form_action" parent="master_pde_menu" name="Bill of Materials" sequence="10"/>
 
         <menuitem id="routing_menu"
-                  action="mrp.mrp_routing_action" parent="master_pde_menu" name="Routings" />
+                  action="mrp.mrp_routing_action" parent="master_pde_menu" name="Routings" sequence="20"/>
 
         <menuitem id="workcenter_menu"
-                  action="mrp.mrp_workcenter_action" parent="master_pde_menu" name="Work Centers"/>
+                  action="mrp.mrp_workcenter_action" parent="master_pde_menu" name="Work Centers" sequence="30"/>
 
-
-
+        <menuitem id="color_range_menu_pde"
+                  action="lpj_product.action_color_range_pde" parent="master_pde_menu" name="Color Range" sequence="40"/>
 
         <menuitem id="dataform_menu"
                   parent="configuration_pde_menu" name="Property" sequence="7"/>
@@ -64,6 +63,8 @@
 
         <menuitem id="varnish_menu" parent="dataform_menu" name="Varnish List"
                   action="varnish_list_action"/>
+
+
 
     </data>
 </odoo>

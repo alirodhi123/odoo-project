@@ -1,0 +1,45 @@
+<odoo>
+    <data>
+
+        <record id="view_shift_master_employee" model="ir.ui.view">
+            <field name="name">x.master.shift.tree</field>
+            <field name="model">x.master.shift</field>
+            <field name="arch" type="xml">
+                <tree string="Employee attendances">
+                    <field name="x_name"></field>
+                    <field name="x_jam_masuk"></field>
+                    <field name="x_jam_pulang"></field>
+                </tree>
+            </field>
+        </record>
+
+        <record id="shift_master_employee_view_form" model="ir.ui.view">
+            <field name="name">x.master.shift.form</field>
+            <field name="model">x.master.shift</field>
+            <field name="arch" type="xml">
+                <form string="Employee attendances">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="x_name"></field>
+                                <field name="x_jam_masuk" widget="float_time"></field>
+                                <field name="x_jam_pulang" widget="float_time"></field>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="master_shift_employee_action">
+          <field name="name">Master Shift Employee</field>
+          <field name="res_model">x.master.shift</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Shift Employee</p>
+          </field>
+        </record>
+
+    </data>
+</odoo>

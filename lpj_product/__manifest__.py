@@ -20,12 +20,13 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['product', 'sale', 'mrp', 'quality_assurance', 'purchase', 'base'],
+    'depends': ['product', 'sale', 'mrp',
+                'quality_assurance', 'purchase', 'base'],
 
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
-        # 'security/security.xml',
+        'security/security.xml',
         'views/diecut_shape.xml',
         'views/category_finishing_product.xml',
         'views/category_finishing_process.xml',
@@ -40,10 +41,13 @@
         'views/precosting_manufac.xml',
         'views/drawing.xml',
         'views/tds.xml',
+        'views/color_range.xml',
         'views/menu.xml',
         'views/sequences.xml',
         'views/product_view_standard_price.xml',
+        'views/product_category.xml',
         # 'views/report_label_plate.xml',
+
     ],
     # only loaded in demonstration mode
     'demo': [

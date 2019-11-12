@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+    <data noupdate="1">
+
+        <!-- Daily Attendance Information-->
+
+        <record id="demo_daily_attendance_1" model="daily.attendance">
+            <field name="date" eval="(DateTime.today())"/>
+            <field name="standard_id" ref="school.demo_school_standard_1"/>
+            <field name="user_id" ref="school.demo_school_teacher_1"/>
+            <field name="state">draft</field>
+        </record>
+
+        <!-- Daily Attendance Line Information-->
+
+        <record id="demo_daily_attendance_line_1" model="daily.attendance.line">
+            <field name="roll_no">3</field>
+            <field name="is_present" eval="True"/>
+            <field name="standard_id" ref="school_attendance.demo_daily_attendance_1"/>
+            <field name="stud_id" ref="school.demo_student_student_7"/>
+        </record>
+
+    </data>
+</odoo>

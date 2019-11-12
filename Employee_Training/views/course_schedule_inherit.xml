@@ -1,0 +1,16 @@
+<odoo>
+    <data>
+
+        <record id="course_schedule_view_inherit" model="ir.ui.view">
+            <field name="name">Course Schedule View</field>
+            <field name="model">course.schedule</field>
+            <field name="inherit_id" ref="Employee_Training.course_schedule_form_view"/>
+            <field name="arch" type="xml">
+                <field name="remain" position="after">
+                    <field name="x_training_id"></field>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,33 @@
+<odoo>
+    <data>
+
+        <!-- Inherit Product Category menambahkan grup keterangan bahan -->
+        <record model="ir.ui.view" id="product.category_msr">
+            <field name="name">product.category.form</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='type']" position="before">
+                    <field name = "sts_bhn_utama"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="mrp_tipe_bahan_form">
+            <field name="name">x.tipe.bahan.form</field>
+            <field name="model">x.tipe.bahan</field>
+            <field name="arch" type="xml">
+                <form string="Nama Tipe Bahan">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>
+

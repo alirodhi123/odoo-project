@@ -31,21 +31,40 @@
                             attrs="{'invisible':[('state','in',['draft','sent','to approve'])]}"/>
                 </xpath>
 
+                <!-- Add Button Pending -->
+                <xpath expr="//button[@name='button_cancel']" position="before">
+                    <button name="action_pending"
+                            string="Pending Order"
+                            type="object"
+                            groups="purchase.group_purchase_manager"
+                            attrs="{'invisible':[('state','in',['done','pending','cancel'])]}"/>
+
+                    <button name="action_back_to_rfq"
+                            string="Continue Order"
+                            type="object"
+                            groups="purchase.group_purchase_manager"
+                            states="pending"/>
+                </xpath>
+
+                <!-- Add field di purchase order line -->
                 <xpath expr="//field[@name='order_line']/tree"
                        position="inside">
 
                     <field name="x_harga_meterpersegi"/>
                     <field name="x_qty_meterpersegi_po"/>
+                    <field name="x_last_price"/>
                     <field name="purchase_request_lines" invisible="1"/>
                     <field name="x_category" invisible="1"/>
                     <field name="x_internal_ref" invisible="1"/>
                     <field name="x_variant_po" invisible="1"/>
+
                     <button string="Purchase Request lines"
                         attrs="{'invisible': [('purchase_request_lines', '=', [])]}"
                         name="action_openRequestLineTreeView"
                         type="object"
                         icon="fa-folder-open-o"/>
                 </xpath>
+
             </field>
         </record>
 
@@ -76,5 +95,18 @@
                 </xpath>
             </field>
         </record>
+
+        <!-- Add Custom field Keterangan -->
+        <record id="purchase_order_tree_inherit" model="ir.ui.view">
+            <field name="name">purchase.order</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                   <field name="notes"></field>
+                </field>
+            </field>
+        </record>
+
     </data>
 </odoo>

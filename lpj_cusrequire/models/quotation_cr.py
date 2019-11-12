@@ -156,6 +156,8 @@ class sales_order(models.Model):
     x_is_pkp = fields.Boolean(related='partner_id.x_pkp', readonly = True)
     x_sales_external = fields.Many2one(related = 'partner_id.user_id')
     is_block = fields.Selection([('no', 'Block'), ('yes', 'Open')], string="Customer Status", readonly=True)
+    x_order_line = fields.One2many ('sale.order.line', 'order_id')
+    x_duedatekirim_sol = fields.Datetime(related = 'x_order_line.x_duedate_kirim', readonly = True)
 
     # Button Insert SQ
     # Auti filled in order line
@@ -169,15 +171,23 @@ class sales_order(models.Model):
             for row in print_quo.x_quo_line:
                 values = {}
                 product = row.x_prod
-                # Jika product yang ada di sph kosong
+                # Jika product yang ada di sph tidak kosong
                 if product.active != False:
-                    values['x_customer_requirement'] = row.x_cusreq.name
+                    values['x_customer_requirement'] = row.x_sq.name
                     values['product_id'] = row.x_prod
                     values['product_uom_qty'] = row.x_qty
                     values['price_unit'] = row.x_price_pcs
+                    if row.x_sq.x_status_dk == 'approve':
+                        values['x_duedate_kirim'] = row.x_sq.x_req_dk
                     terms.append((0, 0, values))
 
             return self.update({'order_line': terms})
+
+    # Button Unlock untuk SO yang sudah locked
+    @api.multi
+    def unlock_so(self):
+        return self.write({'state': 'sale'})
+
 
 
 class Quotation_cr_line(models.Model):
@@ -200,7 +210,7 @@ class Quotation_cr_line(models.Model):
     x_trial = fields.Boolean(string='is trial')
     x_st_cr = fields.Selection([('draft', 'Draft'), ('SPV', 'Need Approval SPV'), ('approve', 'Approve'), ('done', 'Done'),
                              ('reject', 'Reject')], default='draft', string='Status SQ', compute='update_status_cr')
-    x_duedate_kirim = fields.Datetime(string='Duedate kirim', required=True)
+    x_duedate_kirim = fields.Datetime(string='Duedate kirim', readonly = True)
 
     @api.model
     def create(self, vals):
@@ -278,3 +288,4 @@ class Quotation_cr_line(models.Model):
         harga_jasa = self.x_harga_jasa
 
         self.x_harga_material = price_unit - harga_jasa
+

@@ -51,6 +51,7 @@
         'views/menu.xml',
         'views/report_coa.xml',
         'views/report_coa_ribbon.xml',
+        'views/report_coa_shrink.xml',
     ],
     'demo': [],
     'images': ['static/description/banner.jpg'],

@@ -45,8 +45,8 @@
 
                 <field name="amount_total" position="after">
                     <field name="x_amount_total" invisible="1"></field>
-                    <field name="x_total_jasa"></field>
-                    <field name="x_total_material"></field>
+                    <field name="x_total_jasa" invisible="1"></field>
+                    <field name="x_total_material" invisible="1"></field>
                 </field>
             </field>
         </record>
@@ -63,6 +63,11 @@
                         <field name="x_no_sjk"></field>
                     </field>
 
+                    <!-- Menambahkan date tanda terima -->
+                    <field name="user_id" position="after">
+                        <field name="x_tanda_terima"></field>
+                    </field>
+
                     <!-- Replace due date -->
                     <field name="date_due" position="replace">
                         <field name="x_due_date_pembayaran"></field>
@@ -77,11 +82,11 @@
                 <field name="inherit_id" ref="account.invoice_form"></field>
                 <field name="arch" type="xml">
                     <field name="price_unit" position="after">
-                        <field name="x_harga_jasa"></field>
-                        <field name="x_harga_material"></field>
-                        <field name="x_qty_done_sjk"></field>
-                        <field name="x_value_jasa"></field>
-                        <field name="x_value_material"></field>
+                        <field name="x_harga_jasa" invisible="1"></field>
+                        <field name="x_harga_material" invisible="1"></field>
+                        <field name="x_qty_done_sjk" invisible="1"></field>
+                        <field name="x_value_jasa" invisible="1"></field>
+                        <field name="x_value_material" invisible="1"></field>
                         <field name="x_price_subtotal" invisible="1"></field>
                         <field name="x_price_unit_include" invisible="1"></field>
                     </field>

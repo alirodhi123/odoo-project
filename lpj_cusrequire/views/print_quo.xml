@@ -21,6 +21,9 @@
             <field name="arch" type="xml">
                 <form string="Printing Sales Quotation">
                     <group>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="x_send_quotation" string="Send Quotation" type="object" class="oe_stat_button" icon="fa-paper-plane"/>
+                        </div>
                         <group>
                             <field name = "name"/>
                             <field name = "x_cust"/>
@@ -36,11 +39,14 @@
                                 <field name="x_quo_line">
                                     <tree editable="bottom">
                                         <field name = 'x_flag' invisible = '1'/>
-                                        <field name = 'x_cusreq' domain="[('x_customer_id','=', parent.x_cust),('x_flag_quo', '=', False),
+                                        <field name = 'x_sq' domain="[('x_customer_id','=', parent.x_cust),('x_flag_quo', '=', False),
                                                                           ('x_status_cr', '=', 'approve'),
                                                                           ('end_of_date', '&gt;=', current_date)]"/>
                                         <field name = 'x_item_desc'/>
                                         <field name = 'x_prod'/>
+                                        <field name = 'x_width'/>
+                                        <field name = 'x_length'/>
+                                        <field name = 'x_material_type_id'/>
                                         <field name = 'x_qty'/>
                                         <field name = 'x_price_pcs'/>
                                         <field name = 'x_total_price'/>
@@ -60,6 +66,20 @@
                 </form>
             </field>
         </record>
+        <!--<record id="send_quotation" model="ir.ui.view">-->
+            <!--<field name="name">send.quotation.form</field>-->
+            <!--<field name="model">x.print.quo</field>-->
+            <!--<field name="inherit_id" ref="lpj_cusrequire.quotation_x_cusrequirement_form"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--&lt;!&ndash;<xpath expr="//button[@name='action_view_invoice']" position="before">&ndash;&gt;-->
+                <!--<sheet>-->
+                    <!--<div class="oe_button_box" name="button_box">-->
+                        <!--<button name="x_send_quotation" string="Send Quotation" type="object" class="oe_stat_button" icon="fa-paper-plane"/>-->
+                    <!--</div>-->
+                <!--</sheet>-->
+                <!--&lt;!&ndash;</xpath>&ndash;&gt;-->
+            <!--</field>-->
+        <!--</record>-->
 
         <!-- Inherit search view invoice -->
         <record id="inherit_x_print_quo_search" model="ir.ui.view">
@@ -81,8 +101,8 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="print_quotation_cusreq" name="Print SQ"
-                  parent="sales_team.menu_sales" sequence="100"
+        <menuitem id="print_quotation_cusreq" name="SPH"
+                  parent="sales_team.menu_sales" sequence="10"
                   action="quotation_cusrequirement"/>
 
 

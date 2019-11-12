@@ -18,6 +18,7 @@
                     <group>
                         <field name="x_popup_validate_ids" nolabel="1" colspan="2">
                             <tree create="false" editable="bottom">
+                                <field name="x_attendance_attendance_id" invisible="1"></field>
                                 <field name="x_employee_validate"></field>
                                 <field name="x_dept_validate"></field>
                                 <field name="x_contract_type_validate"></field>

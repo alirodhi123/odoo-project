@@ -1,0 +1,38 @@
+<odoo>
+    <data>
+
+        <!---<Judul Menu>-->
+        <menuitem name="Training" id="training_main_menu_new" sequence="100" web_icon="lpj_training,static/icon.png"/>
+        <menuitem name="Training" id="training_training_sub_menu" sequence="101" parent="training_main_menu_new"/>
+        <menuitem name="Training Schedule" id="training_training_sub_menu_schedule" sequence="102" parent="training_main_menu_new"/>
+
+        <!-- ================================ -->
+        <!-- TRAINING MENU -->
+        <menuitem name="Training Request" id="training_training_request" parent="training_training_sub_menu"
+                  action="x_training_training_action"/>
+
+        <!-- Menu Training to Approve untuk HRD -->
+        <menuitem name="Training to Approve" id="training_to_approve" parent="training_training_sub_menu"
+                  action="training_to_approve_action" groups="lpj_training.group_training_officer"/>
+
+        <!-- ================================ -->
+        <!-- MENU SCHEDULE -->
+        <menuitem name="Training Schedule List" id="training_schedule_sub_menu" sequence="103" parent="training_training_sub_menu_schedule"
+                  action="training_sechdule_action"/>
+
+        <!-- Menu Top Management Approve untuk Direktur -->
+        <menuitem name="Top Management Approve" id="training_schedule_top_management_approve" parent="training_training_sub_menu_schedule"
+                  action="training_sechdule_top_management_action" groups="lpj_training.group_training_manager" sequence="105"/>
+
+        <!-- Menu Entry Data Verification -->
+        <menuitem name="Entry Data Verification" id="training_schedule_data_verification" parent="training_training_sub_menu_schedule"
+                  action="training_sechdule_data_verification_action" groups="lpj_training.group_training_officer" sequence="104"/>
+
+
+        <!-- MENU TRAINING PARTNER -->
+        <menuitem name="Trainers" id="training_partner_sub_menu" sequence="104" parent="training_main_menu_new"
+                  action="contacts.action_contacts"/>
+
+
+    </data>
+</odoo>

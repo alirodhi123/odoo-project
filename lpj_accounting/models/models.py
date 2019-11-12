@@ -219,5 +219,13 @@ class stock_picking(models.Model):
     _inherit = 'stock.picking'
 
     is_responsible = fields.Boolean(string="SJK Status", default=False)
+    x_confirmation_sjk = fields.Selection([('yes', 'Yes'), ('no', 'No')],
+                                          default='no', readonly=True, string="Confirmation SJK")
+
+
+    @api.multi
+    def sjk_confirmatipn(self):
+        for picking in self:
+            return picking.update({'x_confirmation_sjk': 'yes'})
 
 

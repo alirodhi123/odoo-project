@@ -3,10 +3,15 @@
 from odoo import models, fields, api
 import odoo.addons.decimal_precision as dp
 
+class x_sales_quo(models.Model):
+    _name = 'x.sales.quotation'
+    _inherit = 'mail.thread'
+
+    name = fields.Char(string='Code SQ')
+
 
 class data_form(models.Model):
     _inherit = 'product.template'
-    _name = 'product.template'
 
     x_pp_template = fields.One2many('product.product','product_tmpl_id',string='roduct_product')
     x_is_trial = fields.Boolean(string = 'is trial', default=True)
@@ -48,6 +53,7 @@ class data_form(models.Model):
     x_thickness_product = fields.Float(string="Thickness (mikron)", track_visibility='onchange')
     x_keterangan_lem = fields.Text(string="Keterangan Lem", track_visibility='onchange')
     x_material_type_quality = fields.Char(string="Material Type COA")
+    x_material_type_coa = fields.Char(string="Material Type COA")
     x_length = fields.Float('Length (mm)')
     x_width_variant = fields.Char(string = 'Variant', readonly = True, compute = '_get_variant')
     x_width = fields.Float('Width (mm)', track_visibility='onchange')
@@ -94,10 +100,22 @@ class data_form(models.Model):
     x_notch = fields.Boolean('With Notch')
     x_roll_perbox_ribbon = fields.Integer('Roll Perbox')
     x_material_core = fields.Selection([('paper', 'Paper'), ('plastic', 'Plastic')], string='Material Core')
+    # x_tamp_barcode = fields.Float('Tampungan barcode', related = 'x_qty_mpersegi')
     x_colour = fields.Char(string="Colour")
     x_ink_melting = fields.Char(string="Ink Melting")
     # Code
     x_code = fields.Char("My Code")
+    # Locked product
+    x_locked_ok = fields.Boolean(string="Lock Manufacturing Order", default=True, track_visibility='onchange')
+
+    # Color Range
+    x_product_cr = fields.One2many('x.color.range.pde','x_product_id',string = 'Color Range', copy=False, readonly = True)
+
+    x_reg_cr_mkt_m = fields.Boolean('Request Color Range')
+    x_jumlah_cr_mkt_m = fields.Integer('Request Color Range Count')
+
+    x_reg_cr_pde_m = fields.Boolean('Request Color Range')
+    x_jumlah_cr_pde_m = fields.Integer('Request Color Range Count')
 
 
     @api.depends("x_length", "x_width", "x_jarak_druk", "x_lebar_bahan", "categ_id", "x_id_core", "x_od_core")
@@ -126,6 +144,37 @@ class data_form(models.Model):
                             "left join product_template pt on pp.product_tmpl_id = pt.id "
                             "where pa.name = 'Lebaran' and pp.barcode = '" + str(self.barcode) + "'")
         # self.x_width_variant = self.env.cr.fetchone()[0]
+
+    # OPEN SO
+    # Function untuk update field di sale order line
+    @api.multi
+    def write(self, vals):
+        res = super(data_form, self).write(vals)
+        id = self.id
+        locked = self.x_locked_ok
+
+        if id:
+            product_obj = self.env['product.product'].search([('product_tmpl_id', '=', id)])
+            if product_obj:
+                for row in product_obj:
+                    product_id = row.id
+                    pass
+
+                    sale_order_line = self.env['sale.order.line'].search([('product_id', '=', product_id),
+                                                                          ('x_flag_mo', '=', False)])
+                    if sale_order_line:
+                        if locked == False:
+                            sale_order_line.update({
+                                'x_locked_product_so': False,
+                                'x_status_product': 'false'
+                            })
+                        else:
+                            sale_order_line.update({
+                                'x_locked_product_so': True,
+                                'x_status_product': 'true'
+                            })
+
+        return res
 
 
 class hasil_bungkus(models.Model):
@@ -162,6 +211,31 @@ class pp_variant(models.Model):
     def _perkalian(self):
         self.x_qty_mpersegi = int(self.qty_available) * float(self.x_variant_value)
 
+    # OPEN SO
+    # Function untuk update field di sale order line
+    @api.multi
+    def write(self, vals):
+        res = super(pp_variant, self).write(vals)
+        id = self.id
+        locked = self.x_locked_ok
+
+        # Update field x_locked_product_so yang ada di OPEN SO
+        if id:
+            sale_order_line = self.env['sale.order.line'].search([('product_id', '=', id),
+                                                                  ('x_flag_mo', '=', False)])
+            if sale_order_line:
+                if locked == False:
+                    sale_order_line.update({
+                        'x_locked_product_so': False,
+                        'x_status_product': 'false'
+                    })
+                else:
+                    sale_order_line.update({
+                        'x_locked_product_so': True,
+                        'x_status_product': 'true'
+                    })
+
+        return res
 
 
 class diecut_shape(models.Model):
@@ -240,6 +314,7 @@ class material_type(models.Model):
     x_is_main = fields.Boolean('Is Main')
     description = fields.Text(string='Description')
     x_product_id = fields.Many2one('product.template', string='Product Id')
+    # x_cr_id = fields.Many2one('x.color.range', string='CR Id')
 
 
 class packing_category(models.Model):
@@ -360,8 +435,4 @@ class ribbon_type(models.Model):
 
     name = fields.Char(required=True)
     description = fields.Text(string='Plate Type')
-
-
-
-
 
