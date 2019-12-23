@@ -22,7 +22,9 @@
 <!--                    <field name="x_company_size"></field>-->
                     <field name="x_avg_kebutuhan"></field>
                     <field name="x_priority" widget="priority"></field>
+                    <field name="x_status"></field>
                 </field>
+                
 
 
             </field>

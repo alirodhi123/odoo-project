@@ -12,6 +12,9 @@
             <field name="inherit_id" ref="sale.view_order_line_tree"/>
             <field name="arch" type="xml">
                  <xpath expr="/tree/field[@name='price_subtotal']" position="after">
+                     <field name="x_m_qty"></field>
+                     <field name="x_confirmation_date_so"></field>
+                     <field name="x_note_so_tree"></field>
                      <field name="x_status_product"></field>
 
                      <button name="pop_message_ok"

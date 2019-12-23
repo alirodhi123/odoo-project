@@ -20,6 +20,7 @@ class PurchaseOrder(models.Model):
         ('pending', 'Pending'),
         ('cancel', 'Cancelled')
     ], string='Status', readonly=True, index=True, copy=False, default='draft', track_visibility='onchange')
+    x_user_approve = fields.Char(string="User Approve", compute='_get_user_approve')
 
     @api.multi
     def _purchase_request_confirm_message_content(self, request,
@@ -107,6 +108,24 @@ class PurchaseOrder(models.Model):
     def action_back_to_rfq(self):
         self.state = 'draft'
 
+    # Get user approve dari mail message
+    @api.one
+    def _get_user_approve(self):
+
+        self.env.cr.execute("select rp.name as users, mtv.field as field, mtv.field_desc, mtv.new_value_char "
+                            "from mail_message mm "
+                            "left join mail_tracking_value mtv on mm.id = mtv.mail_message_id "
+                            "left join res_users ru on mm.write_uid = ru.id "
+                            "left join res_partner rp on ru.partner_id = rp.id "
+                            "where mm.model = 'purchase.order' and mm.record_name like '%" + self.name + "%'" 
+                            "and mtv.new_value_char = 'Locked'")
+        row = self.env.cr.fetchone()
+        if row:
+            user = row[0]
+            self.x_user_approve = user
+            return self.x_user_approve
+        else:
+            self.x_user_approve = "Novrinda Ayu"
 
 class PurchaseOrderLine(models.Model):
     _inherit = "purchase.order.line"

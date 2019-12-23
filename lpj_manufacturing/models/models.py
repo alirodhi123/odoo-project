@@ -26,6 +26,8 @@ class mrp_production(models.Model):
      date_planned_finished = fields.Datetime('Deadline End', copy=False, index=True, states={'confirmed': [('readonly', False)]},
                                              compute='onchange_date_planned_finished')
      x_is_administrator = fields.Boolean(string="Is Administrator", default=False, compute='get_user_admin')
+     x_tgl_produksi = fields.Date(string="Tanggal Turun Produksi")
+     x_flag_produksi = fields.Boolean(default=False)
 
      # WORKORDER
      # Fungsi ambil field finish date yang paling lama
@@ -96,6 +98,16 @@ class mrp_production(models.Model):
                  # Jika login tidak sebagai administrator
                  manufacturing.update({'x_is_administrator': True})
                  pass
+
+     @api.multi
+     def production(self):
+         for production in self:
+            default = datetime.now().strftime('%Y-%m-%d')
+            production.update({
+                'x_tgl_produksi': default,
+                'x_flag_produksi': True
+            })
+
 
 
 

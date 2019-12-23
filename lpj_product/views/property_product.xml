@@ -42,6 +42,7 @@
             <field name="arch" type="xml">
                 <field name="barcode" position="after">
                     <field name="x_qty_mpersegi"/>
+                    <field name="x_locked_ok"/>
                 </field>
             </field>
         </record>
@@ -241,6 +242,10 @@
                 <field name="name" position="after">
                     <field name="x_length"></field>
                     <field name="x_width"></field>
+                </field>
+
+                <field name="uom_id" position="after">
+                    <field name="x_locked_ok"></field>
                 </field>
             </field>
         </record>

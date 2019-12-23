@@ -24,6 +24,7 @@ class PopMessageManufacturing(models.Model):
               product = o.x_sale_order_line.id
               toleransi = o.x_sale_order_line.x_toleransi
               due_date_kirim = o.x_sale_order_line.x_duedate_kirim
+              notes = o.x_sale_order.note
 
          result = {
               'name': '2nd class',
@@ -35,7 +36,8 @@ class PopMessageManufacturing(models.Model):
                    'default_origin': order_name,
                    'default_x_product_order_line': product,
                    'default_x_toleransi': toleransi,
-                   'default_x_due_kirim': due_date_kirim
+                   'default_x_due_kirim': due_date_kirim,
+                   'default_x_note_so': notes,
               },
               'type': 'ir.actions.act_window',
               'view_mode': 'form'

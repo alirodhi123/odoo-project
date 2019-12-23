@@ -8,6 +8,7 @@
             <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>
             <field name="arch" type="xml">
                 <field name="name" position="after">
+                    <field name="x_customer_so"></field>
                     <field name="create_date" ></field>
                 </field>
 
@@ -15,6 +16,26 @@
                 <field name="product_id" position="after">
                     <field name="x_due_kirim"></field>
                 </field>
+
+                <field name="origin" position="after">
+                    <field name="x_tgl_produksi"></field>
+                </field>
+
+                <!-- Menambahkan button OK turun -->
+                <button name="popup_message_pr" position="after">
+                    <button class="oe_highlight"
+                            name="production"
+                            string="Production"
+                            type="object"
+                            help="calls python function"
+                            groups="mrp.group_mrp_user"
+                            attrs="{'invisible': ['|', '|', ('state', 'in', ('done', 'cancel', 'progress')),
+                                                        ('x_flag_produksi', '=', True),
+                                                        ('x_type_mo', '!=', 'stc')]}">
+                    </button>
+                    <field name="x_flag_produksi" invisible="1"></field>
+                    <field name="x_type_mo" invisible="1"></field>
+                </button>
             </field>
         </record>
 

@@ -7,10 +7,14 @@ import odoo.addons.decimal_precision as dp
 class sale_order_line(models.Model):
      _inherit = 'sale.order.line'
 
+     order_id = fields.Many2one('sale.order', string='Order Reference', required=True, ondelete='cascade', index=True,
+                                copy=False)
+     x_note_so_tree = fields.Text(related='order_id.note', string="Note SO")
+     x_confirmation_date_so = fields.Datetime(related='order_id.confirmation_date', string="Confirmation Date SO")
      x_qty_produced_ok = fields.Float(string="Produced", readonly=True)
      x_locked_product_so = fields.Boolean(string="Locked Product", default=True, readonly=True)
      x_status_product = fields.Selection([('false', 'Open'), ('true', 'Locked')], default='true', string="Status Product")
-
+     x_m_qty = fields.Float(string="Quantity (m2)")
 
      # Funsgi tampilkan pop up pesan
      @api.multi

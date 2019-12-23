@@ -208,7 +208,7 @@
                                         <br></br>
                                         <br></br>
                                         <br/>
-                                        <b><span t-field="o.write_uid"></span></b> <br/>
+                                        <b><span t-field="o.x_user_approve"></span></b> <br/>
                                     </div>
                                     <div style="float: Right; text-align: center;">
                                         Diterima Oleh,

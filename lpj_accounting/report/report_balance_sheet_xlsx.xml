@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+
+        <report
+            id="balance_sheet_xlsx"
+            model="accounting.report"
+            string="Report Balance Sheet"
+            report_type="xlsx"
+            name="lpj_accounting.balance_sheet_report.xlsx"
+            file="lpj_accounting.balance_sheet_report.xlsx"
+            attachment_use="False"
+        />
+    </data>
+</odoo>

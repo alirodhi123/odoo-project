@@ -11,7 +11,7 @@ class purchase_request_inherit(models.Model):
     def _default_mrp_production(self):
         return self.env['mrp.production'].browse(self._context.get('active_id'))
 
-    x_no_ok = fields.Many2one('mrp.production', string="Order Kerja", default=_default_mrp_production)
+    x_no_ok = fields.Many2one('mrp.production', string="Order Kerja")
     x_bom = fields.Many2one('mrp.production')
     x_product = fields.Char(string="Product")
 
@@ -30,14 +30,15 @@ class purchase_request_inherit(models.Model):
         terms_obj = self.env['mrp.production']
         terms = []
         termsids = terms_obj.search([('id', '=', order_kerja)])
-        for rec in termsids.move_raw_ids:
-            values = {}
-            values['product_id'] = rec.product_id
-            values['name'] = rec.product_id.name
-            values['product_uom_id'] = rec.product_uom
-            terms.append((0, 0, values))
+        if termsids:
+            for rec in termsids.move_raw_ids:
+                values = {}
+                values['product_id'] = rec.product_id
+                values['name'] = rec.product_id.name
+                values['product_uom_id'] = rec.product_uom
+                terms.append((0, 0, values))
 
-        res.update({'line_ids': terms})
+            res.update({'line_ids': terms})
 
         return res
 

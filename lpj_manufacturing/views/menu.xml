@@ -3,7 +3,7 @@
 
         <!-- Sub menu sales order line -->
         <menuitem name="Open SO" id="sub_menu_sales_order_line_mrp"
-                  parent="mrp.menu_mrp_root"
+                  parent="mrp.menu_mrp_manufacturing"
                   sequence="112"
                   action="action_product_sale_list"></menuitem>
 
@@ -15,7 +15,7 @@
 
         <!-- Sub menu Approval Duedate Kirim -->
         <menuitem id="sub_menu_appdk_mrp" name="Approval Duedate Kirim"
-                  parent="mrp.menu_mrp_root" sequence="113"
+                  parent="mrp.menu_mrp_manufacturing" sequence="113"
                   action="x_app_dk"/>
 
     </data>

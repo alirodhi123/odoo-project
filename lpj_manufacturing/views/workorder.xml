@@ -22,7 +22,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="work_order_lines">
+        <record model="ir.ui.view" id="work_order_lines_new">
             <field name="name">mrp.workorder.lines</field>
             <field name="model">mrp.workorder</field>
             <field name="inherit_id" ref="mrp.mrp_production_workcenter_form_view_inherit"/>
@@ -44,7 +44,7 @@
 
                 <!-- Menambahkan domain pada lot yang ada di workorder -->
                 <field name="lot_id" position="attributes">
-                    <attribute name="domain">['|', '|', ('quant_ids.location_id', '=', 22),
+                     <attribute name="domain">['|',('quant_ids.location_id', '=', 22),
                         ('quant_ids.location_id', '=', 23),
                         ('product_id', '=', product_id)]
                     </attribute>

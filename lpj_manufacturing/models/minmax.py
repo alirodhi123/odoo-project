@@ -37,6 +37,8 @@ class minmax_mo(models.Model):
      x_flag = fields.Boolean()
      x_due_kirim = fields.Datetime(string="Due Date Kirim", readonly=True)
      x_toleransi = fields.Float(string='Toleransi SO')
+     x_note_so = fields.Text(string="Notes SO", readonly=True)
+     x_customer_so = fields.Many2one('res.partner', related='order.partner_id', string="Customer", readonly=True)
 
      # Pcs to meter khusus untuk roll
      x_pcs_units = fields.Float(string="Roll/sheet/fold", compute='get_value')

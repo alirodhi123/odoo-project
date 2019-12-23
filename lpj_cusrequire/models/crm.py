@@ -23,6 +23,8 @@ class x_crm(models.Model):
     x_status_job = fields.Selection([('repeat', 'Repeat'), ('new', 'New')], string='Status Job')
     x_cs_lead = fields.Many2one('res.users',string = 'Customer Services')
     x_partner = fields.Many2one('res.partner', related = 'partner_id')
+    x_status_lead = fields.Many2one('x.lead.status', string='Lead Status', required=True)
+    x_source_lead = fields.Many2one('x.lead.source', string='Lead Source', required=True)
 
     # @api.onchange('stage_id')
     # def status_customer(self):
@@ -188,3 +190,14 @@ class crm_activities_inherit(models.Model):
 #     x_name = fields.Many2one('x.cusrequirement', string = 'SQ')
 #     x_state = fields.Many2one('crm.stage',string = 'Stage')
 
+
+class lead_status(models.Model):
+    _name = 'x.lead.status'
+
+    name = fields.Char(string = 'Nama')
+
+
+class lead_source(models.Model):
+    _name = 'x.lead.source'
+
+    name = fields.Char(string='Nama')

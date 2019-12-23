@@ -1,0 +1,15 @@
+<odoo>
+    <data>
+
+        <report
+            id="partner_xlsx"
+            model="account.report.general.ledger"
+            string="Print to xlsx"
+            report_type="xlsx"
+            name="lpj_accounting.general_ledger_report.xlsx"
+            file="lpj_accounting.general_ledger_report.xlsx"
+            attachment_use="False"
+        />
+
+    </data>
+</odoo>

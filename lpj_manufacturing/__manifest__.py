@@ -48,6 +48,7 @@
         'views/report_ok_non_sticker.xml',
         'views/buffer_tags.xml',
         'views/sequence.xml',
+        'wizard/pop_up_production_view.xml',
         'views/menu.xml',
 
     ],

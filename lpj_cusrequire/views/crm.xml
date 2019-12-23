@@ -43,6 +43,10 @@
                 <xpath expr="//field[@name='user_id']" position="after">
                     <field name="x_cs_lead"/>
                 </xpath>
+                <xpath expr="//field[@name='tag_ids']" position="after">
+                    <field name="x_status_lead"/>
+                    <field name="x_source_lead"/>
+                </xpath>
             </field>
         </record>
 
@@ -276,7 +280,7 @@
             <!--<field name="search_view_id" ref="nextactivity_treeview_custom"/>-->
         </record>
 
-       
+
         <!-- Menu history activity -->
          <record model="ir.ui.view" id="mail_message_tree_view_custom">
             <field name="name">History Activity</field>
@@ -352,9 +356,66 @@
                 ]]>
 			</field>
 		</record>
-       
+       <record model="ir.ui.view" id="x_statuslead_tree">
+            <field name="name">x.statuslead.tree</field>
+            <field name="model">x.lead.status</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                   </tree>
+            </field>
+        </record>
 
+        <record model="ir.ui.view" id="x_statuslead_form">
+            <field name="name">x.statuslead.form</field>
+            <field name="model">x.lead.status</field>
+            <field name="arch" type="xml">
+                <form string="Status Lead">
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
 
+ <record model="ir.actions.act_window" id="x_status_lead">
+            <field name="name">Status Lead</field>
+            <field name="res_model">x.lead.status</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+         <record model="ir.ui.view" id="x_sourcelead_tree">
+            <field name="name">x.sourcelead.tree</field>
+            <field name="model">x.lead.source</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                   </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="x_sourcelead_form">
+            <field name="name">x.sourcelead.form</field>
+            <field name="model">x.lead.source</field>
+            <field name="arch" type="xml">
+                <form string="Source Lead">
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+         <record model="ir.actions.act_window" id="x_source_lead">
+            <field name="name">Source Lead</field>
+            <field name="res_model">x.lead.source</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
     </data>
 </odoo>
 

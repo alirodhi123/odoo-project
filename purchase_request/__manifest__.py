@@ -29,6 +29,7 @@
         "views/manufacturing_order.xml",
         "views/purchase_request_report.xml",
         "views/partner.xml",
+        "views/pop_message_pr_view.xml",
 
     ],
     'demo': [

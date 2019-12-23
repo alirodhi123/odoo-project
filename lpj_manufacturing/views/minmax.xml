@@ -11,7 +11,7 @@
                         <field name="x_type_mo"/>
                         <field name="order" attrs="{'invisible': [('x_type_mo', '!=', 'stc')]}"
                                groups="sales_team.group_sale_salesman,account.group_account_user"/>
-                        <!--<field name="x_duedate_so"/>-->
+                        <field name="x_customer_so"/>
                         <field name="x_product_order_line" domain="[('order_id','=', order), ('x_flag_mo','=', False)]" attrs="{'invisible': [('x_type_mo', '!=', 'stc')]}" invisible="1"></field>
                     </xpath>
                     <xpath expr="//field[@name='bom_id'][not(ancestor::field)]" position="before">
@@ -19,6 +19,9 @@
                         <field name="x_quantity_max"/>
                         <field name="x_due_kirim"/>
                     </xpath>
+                    <field name="routing_id" position="after">
+                        <field name="x_note_so"></field>
+                    </field>
                     <xpath expr="//field[@name='origin'][not(ancestor::field)]" position="before">
                         <field name="x_keterangan"></field>
                         <field name="x_width" invisible="1"></field>
@@ -51,6 +54,7 @@
                             </group>
                         </group>
                     </page>
+
                 </notebook>
             </field>
         </record>

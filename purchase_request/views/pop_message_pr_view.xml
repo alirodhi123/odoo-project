@@ -1,0 +1,22 @@
+<odoo>
+    <data>
+        <record id="pop_message_pr_wizard_view_form" model="ir.ui.view">
+            <field name="name">custom.pop.message.form</field>
+            <field name="model">x.pop.message.pr</field>
+            <field name="arch" type="xml">
+                <form string="Custom POP Message">
+                    <field name="name"></field>
+                    <group>
+                        <field name="x_no_ok"></field>
+                        <field name="x_product_ok"></field>
+                    </group>
+                    <footer>
+                       <button name="create_pr" string="Create PR" class="oe_highlight" type="object"></button>
+                       <button name="dont_need_pr" string="Don't Need PR" type="object"></button>
+                       <button string="Discard" special="cancel"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -168,12 +168,12 @@ class data_form(models.Model):
                                 'x_locked_product_so': False,
                                 'x_status_product': 'false'
                             })
+
                         else:
                             sale_order_line.update({
                                 'x_locked_product_so': True,
                                 'x_status_product': 'true'
                             })
-
         return res
 
 
@@ -229,12 +229,12 @@ class pp_variant(models.Model):
                         'x_locked_product_so': False,
                         'x_status_product': 'false'
                     })
+
                 else:
                     sale_order_line.update({
                         'x_locked_product_so': True,
                         'x_status_product': 'true'
                     })
-
         return res
 
 

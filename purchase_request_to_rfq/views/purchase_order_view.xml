@@ -65,6 +65,11 @@
                         icon="fa-folder-open-o"/>
                 </xpath>
 
+                <!-- Add field user approve -->
+                <field name="date_order" position="after">
+                    <field name="x_user_approve" invisible="1"></field>
+                </field>
+
             </field>
         </record>
 

@@ -11,7 +11,7 @@ class res_partner(models.Model):
     x_avg_kebutuhan = fields.Selection(
         [('s', 'Small (< Rp.100jt/th)'), ('m', 'Medium (Rp.100jt-Rp.500jt/th)'), ('l', 'Large (Rp.500jt-Rp.2M/th)')
             , ('xl', 'X-Large (>Rp.2M/th)')],
-        string='Avg Kebutuhan Label')
+        string='Avg Kebutuhan Label', required = True)
     x_priority = fields.Selection([
         ('0', 'Very Low'),
         ('1', 'Low'),
@@ -20,6 +20,10 @@ class res_partner(models.Model):
         ('4', 'Very High'),
         ('5', 'Superuser')],
         string='Priority')
+    x_status = fields.Selection([
+        ('New', 'New'),
+        ('Existing', 'Existing')],
+        string='Status Customer', default = 'New')
 
     # Cek apakah user login adalah marketing
     @api.one

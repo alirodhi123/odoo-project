@@ -1,0 +1,53 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="wizard_form_view_production_ok">
+            <field name="name">x.popup.production.form</field>
+            <field name="model">x.popup.production</field>
+            <field name="arch" type="xml">
+                <form string="Send to Production">
+                    <group>
+                        <label for="x_count_data"/>
+                        <div>
+                            <field name="x_count_data"
+                                   class="oe_inline"></field>
+                            Data
+                        </div>
+                    </group>
+                    <newline/>
+                    <group>
+                        <field name="x_popup_production_ids" nolabel="1" colspan="2">
+                            <tree create="false" editable="bottom">
+                                <field name="x_manufacturing_id"></field>
+                                <field name="x_product_production"></field>
+                                <field name="x_qty_production"></field>
+                                <field name="x_uom_production"></field>
+                                <field name="x_source_production"></field>
+                            </tree>
+                        </field>
+                    </group>
+
+                    <newline/>
+                    <footer>
+                        <button class="oe_highlight"
+                                 name="send_to_produksi"
+                                 string="Send to Production"
+                                 type="object"
+                                 help="calls python function"
+                                 target="new">
+                         </button>
+                        <button special="cancel" string="Discard"/>
+                    </footer>
+                </form>
+            </field>
+         </record>
+
+        <act_window id="launch_production_wizard"
+                name="Production"
+                src_model="mrp.production"
+                res_model="x.popup.production"
+                view_mode="form"
+                target="new"
+                key2="client_action_multi"/>
+    </data>
+</odoo>

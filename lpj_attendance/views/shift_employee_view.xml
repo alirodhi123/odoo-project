@@ -9,7 +9,7 @@
                     <field name="x_employee"></field>
                     <field name="x_start_date"></field>
                     <field name="x_end_date"></field>
-
+                    <field name="x_mesin_shift"></field>
                 </tree>
             </field>
         </record>
@@ -32,7 +32,11 @@
                                 <button name="insert_shift"
                                     type="object"
                                     string="Insert Shift"
-                                    class="oe_highlight"/>
+                                    class="oe_highlight"
+                                />
+                            </group>
+                            <group>
+                                <field name="x_mesin_shift"></field>
                             </group>
                         </group>
                         <notebook>

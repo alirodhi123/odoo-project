@@ -8,14 +8,17 @@
             <field name="arch" type="xml">
                 <tree>
                     <button class="oe_highlight"
-                            name="open_second_class"
+                            name="popup_message_pr"
                             string="Create PR"
                             type="object"
                             help="calls python function"
                             target="new"
-                            attrs="{'invisible': ['|', ('is_responsible', '=', True),('state', 'not in', ('confirmed', 'planned', 'progress'))]}">
+                            attrs="{'invisible': ['|', '|', ('is_responsible', '=', True),
+                                                        ('state', 'not in', ('confirmed', 'planned', 'progress')),
+                                                        ('x_type_mo', '!=', 'stc')]}">
                     </button>
                     <field name="is_responsible" invisible="1"></field>
+                    <field name="x_type_mo" invisible="1"></field>
                 </tree>
             </field>
         </record>

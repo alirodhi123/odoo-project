@@ -20,7 +20,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'account', 'sale', 'report', 'lpj_cusrequire', 'stock', 'purchase'],
+    'depends': ['base', 'account', 'sale', 'report', 'lpj_cusrequire', 'stock', 'purchase', 'report_xlsx'],
 
     # always loaded
     'data': [
@@ -41,8 +41,12 @@
         'views/stock_picking.xml',
         'views/due_date_pembayaran.xml',
         'views/account_payment.xml',
+        'views/general_ledger_inherit.xml',
+        'views/balance_sheet_inherit.xml',
         'demo/demo.xml',
         'views/menu.xml',
+        'report/report_general_ledger_xlsx.xml',
+        'report/report_balance_sheet_xlsx.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

@@ -32,7 +32,7 @@ class WizardAbsensi(models.Model):
             'res_model': 'ir.actions.act_url',
             'type': 'ir.actions.act_url',
             'view_mode': 'form',
-            'url': 'http://192.168.1.195:8038/',
+            'url': 'http://192.168.1.15:8038/',
         }
         return result
 

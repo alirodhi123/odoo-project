@@ -9,7 +9,7 @@ import subprocess
 class config_waste(models.Model):
      _inherit = 'mrp.production'
 
-     x_trial_produksi = fields.Selection([('trial', 'New Design'), ('not_trial', 'Repeat')],string='Status Produksi:')
+     x_trial_produksi = fields.Selection([('trial', 'New Design'), ('not_trial', 'Repeat'), ('barang_trial', 'Trial')],string='Status Produksi:')
      x_mesin = fields.Many2one('mrp.workcenter', string='Mesin: ')
      x_std_fixed = fields.Float(related = 'x_mesin.x_std_waste.x_fixed_m')
      x_std_var = fields.Float(related='x_mesin.x_std_waste.x_variable')

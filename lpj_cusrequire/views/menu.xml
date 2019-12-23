@@ -28,7 +28,13 @@
                   parent="lpj_cusrequire.x_crm_menu" sequence="109"
                   action="x_message_tree"/>
 
+     <menuitem id="x_lead_status" name="Lead Status"
+                  parent="sales_team.menu_sale_config" sequence="13"
+                  action="x_status_lead"/>
 
+          <menuitem id="x_lead_source" name="Lead Source"
+                  parent="sales_team.menu_sale_config" sequence="14"
+                  action="x_source_lead"/>
          <!--<menuitem id="customer_crm" name="Job Potential"-->
                  <!--parent="sales_team.menu_sales" sequence="100"-->
                 <!--action="job_potental_action"/>-->
