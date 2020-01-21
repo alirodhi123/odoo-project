@@ -133,6 +133,7 @@
                                 <field name="x_uom"/>
                                 <field name="x_desc"/>
                                 <field name="x_flag_harga" invisible = '1'/>
+                                <field name="x_sq"/>
                                 <button class="oe_highlight"
                                     string="Create SQ"
                                     name="crm_sq"

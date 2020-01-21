@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+
+        <record id="vendor_bill_inherit_form" model="ir.ui.view">
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="model">account.invoice</field>
+            <field name="arch" type="xml">
+                <field name="reference" position="after">
+                    <field name="x_no_receipt" domain="[('partner_id', '=', partner_id), ('origin', '=', origin),
+                                                        ('state', '=', 'done')]"></field>
+                </field>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -18,5 +18,10 @@
                   parent="mrp.menu_mrp_manufacturing" sequence="113"
                   action="x_app_dk"/>
 
+        <menuitem id="history_duedate_menu2" name="History Duedate"
+                  parent="mrp.menu_mrp_manufacturing" sequence="114"
+                  action="lpj_cusrequire.list_history_duedate"/>
+
+
     </data>
 </odoo>

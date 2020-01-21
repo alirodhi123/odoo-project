@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo>
+
+        <template id="assets_backend" name="account_dynamic_pl assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+
+                <link rel="stylesheet" href="/account_dynamic_pl/static/src/css/select2.min.css"/>
+                <link rel="stylesheet" href="/account_dynamic_pl/static/src/css/dynamic_pl_report.css"/>
+                <script type="text/javascript" src="/account_dynamic_pl/static/src/js/select2.full.min.js"/>
+                <script type="text/javascript" src="/account_dynamic_pl/static/src/js/dynamic_pl_report.js"/>
+
+            </xpath>
+        </template>
+
+</odoo>

@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <template id="assets_backend" name="dynamic_reports assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/account_dynamic_gl/static/src/css/select2.min.css"/>
+                <link rel="stylesheet" href="/account_dynamic_gl/static/src/css/dynamic_gl_report.css"/>
+                <script type="text/javascript" src="/account_dynamic_gl/static/src/js/select2.full.min.js"/>
+                <script type="text/javascript" src="/account_dynamic_gl/static/src/js/select2.min.js"/>
+                <script type="text/javascript" src="/account_dynamic_gl/static/src/js/dynamic_gl_report.js"/>
+            </xpath>
+        </template>
+
+        <template id="report_general_ledger" inherit_id="account.report_generalledger">
+            <xpath expr="//div[@class='page']/div[1]" position="after">
+                <div class="row mt32">
+                    <div class="col-xs-4" t-if="data['used_context'].get('acc_tags_name')">
+                        <strong>Account tags:</strong>
+                          <p t-esc="', '.join([ lt or '' for lt in data['used_context']['acc_tags_name'] ])"/>
+                    </div>
+                    <div class="col-xs-4" t-if="data['used_context'].get('analytic_acc_name')">
+                        <strong>Analytic accounts:</strong>
+                          <p t-esc="', '.join([ lt or '' for lt in data['used_context']['analytic_acc_name'] ])"/>
+                    </div>
+                    <div class="col-xs-4" t-if="data['used_context'].get('account_name')">
+                        <strong>Accounts:</strong>
+                          <p t-esc="', '.join([ lt or '' for lt in data['used_context']['account_name'] ])"/>
+                    </div>
+                    <div class="col-xs-4" t-if="data['used_context'].get('partner_name')">
+                        <strong>Partners:</strong>
+                          <p t-esc="', '.join([ lt or '' for lt in data['used_context']['partner_name'] ])"/>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+
+        <!-- ============= Launch menu GL============== -->
+
+        <record id="action_dynamic_gl_report_coba" model="ir.actions.client">
+            <field name="name">Dynamic GL Report</field>
+            <field name="tag">dynamic.gl.report</field>
+        </record>
+
+        <menuitem id="menu_dynamic_gl_report"
+                  name="Dynamic GL Report" parent="account.menu_finance_legal_statement" action="action_dynamic_gl_report_coba"/>
+
+        <report
+            id="general_ledger_xlsx"
+            model="account.report.general.ledger"
+            string="General Ledger"
+            report_type="xlsx"
+            name="account_dynamic_gl.general_ledger_xls.xlsx"
+            file="account_dynamic_gl.general_ledger_xls.xlsx"
+            attachment_use="False"
+        />
+
+    </data>
+</odoo>

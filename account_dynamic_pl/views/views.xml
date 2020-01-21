@@ -1,0 +1,28 @@
+<odoo>
+
+        <!-- ============= Launch menu GL============== -->
+
+        <record id="action_dynamic_pl_report" model="ir.actions.client">
+            <field name="name">Dynamic PL Report</field>
+            <field name="tag">dynamic_pl_report</field>
+        </record>
+
+        <menuitem
+            id="menu_dynamic_profit_and_loss"
+            name="Dynamic P and L Report"
+            parent="account.menu_finance_legal_statement"
+            action="action_dynamic_pl_report"
+            groups="account.group_account_user"
+           />
+
+        <report
+            id="profit_and_loss_xlsx"
+            model="accounting.report"
+            string="Profit and Loss"
+            report_type="xlsx"
+            name="account_dynamic_pl.profit_and_loss_xlsx"
+            file="account_dynamic_pl.profit_and_loss_xlsx"
+            attachment_use="False"
+        />
+
+</odoo>

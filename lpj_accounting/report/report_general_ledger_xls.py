@@ -22,7 +22,7 @@ class GeneralLedgerXls(ReportXlsx):
                 end_date = o.date_to
 
                 # Ubah selection targer moves ke dalam string
-                if target_move == "poster":
+                if target_move == "posted":
                     var_target_move = "All Posted Entries"
                 else:
                     var_target_move = "All Entries"

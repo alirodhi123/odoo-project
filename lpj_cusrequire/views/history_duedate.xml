@@ -1,0 +1,59 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="x_history_duedate">
+            <field name="name">x.history.duedate.tree</field>
+            <field name="model">x.history.duedate2</field>
+            <field name="arch" type="xml">
+                <tree create="false">
+                    <field name="x_kode_sq" string = "Nomor SQ"/>
+                    <field name="x_so" string = "Nomor SO"/>
+                    <field name="x_status_so" string = "Status SO"/>
+                    <!--<field name="x_requester" string = "Requester"/>-->
+                    <!--<field name="x_nama_requester" string = "nama Requester"/>-->
+                    <field name="x_admin_sq" string = "Admin SQ"/>
+                    <field name="x_tgl_request" string = "Tanggal Request"/>
+                    <field name="x_tgl_keputusan" string = "Tanggal Keputusan"/>
+                    <!--<field name="x_desc_sq" string = "Description"/>-->
+                    <field name="x_tgl_reset" string = "Tanggal Reset" invisible="1"/>
+                    <field name="x_req_tgl_kirim" string = "Tanggal Kirim"/>
+
+                    <!--<button name="act_req_dk" type="object" string="Request" class="oe_highlight" attrs="{'invisible':['|','|',('x_status_cr','=','reject'),('x_flag_reqdk','=',True),('x_flag_appdk','=',True)]}"/>-->
+                    <!--<button name="act_approve" type="object" string="Approve" class="oe_highlight" attrs="{'invisible':['|', '|','|',('x_status_cr','=','approve'), ('x_status_cr','=','reject'),('x_status_cr','=','done'),('x_is_salemanager', '=', False)]}"/>-->
+                </tree>
+            </field>
+        </record>
+
+         <record model="ir.ui.view" id="x_history_duedate_form">
+            <field name="name">x.history.duedate.form</field>
+            <field name="model">x.history.duedate2</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                    <field name="x_kode_sq" string = "SQ"/>
+                    <field name="x_so" string = "SO"/>
+                    <field name="x_status_so" string = "Status SO"/>
+                    <field name="x_requester" string = "Sales"/>
+                    <field name="x_admin_sq" string = "Admin"/>
+                    <field name="x_tgl_request" string = "Tanggal Request"/>
+                    <field name="x_tgl_keputusan" string = "Tanggal Keputusan"/>
+                    <!--<field name="x_desc_sq" string = "Description"/>-->
+                    <field name="x_tgl_reset" string = "Tanggal Reset" invisible="1"/>
+                    <field name="x_req_tgl_kirim" string = "Tanggal Kirim"/>
+                    </group>
+                    <!--<button name="act_req_dk" type="object" string="Request" class="oe_highlight" attrs="{'invisible':['|','|',('x_status_cr','=','reject'),('x_flag_reqdk','=',True),('x_flag_appdk','=',True)]}"/>-->
+                    <!--<button name="act_approve" type="object" string="Approve" class="oe_highlight" attrs="{'invisible':['|', '|','|',('x_status_cr','=','approve'), ('x_status_cr','=','reject'),('x_status_cr','=','done'),('x_is_salemanager', '=', False)]}"/>-->
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window"
+                id="list_history_duedate">
+            <field name="name">History Duedate</field>
+            <field name="res_model">x.history.duedate2</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree, form</field>
+        </record>
+
+    </data>
+</odoo>

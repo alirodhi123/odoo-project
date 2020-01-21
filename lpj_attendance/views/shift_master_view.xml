@@ -7,8 +7,8 @@
             <field name="arch" type="xml">
                 <tree string="Employee attendances">
                     <field name="x_name"></field>
-                    <field name="x_jam_masuk"></field>
-                    <field name="x_jam_pulang"></field>
+                    <field name="x_jam_masuk" widget="float_time"></field>
+                    <field name="x_jam_pulang" widget="float_time"></field>
                 </tree>
             </field>
         </record>

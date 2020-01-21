@@ -13,6 +13,16 @@
                   parent="sales_team.menu_sales" sequence="10"
                   action="requirement_list_action"/>
 
+        <menuitem id="history_duedate_menu" name="History Duedate"
+                  parent="sales_team.menu_sales" sequence="100"
+                  action="list_history_duedate"/>
+
+        <menuitem name="Open SO" id="sub_menu_sales_order_line_sales"
+                  parent="sales_team.menu_sales"
+                  sequence="112"
+                  action="lpj_manufacturing.action_product_sale_list"></menuitem>
+
+
 	 <menuitem id="x_crm_menu" name="CRM"
 		          parent="sales_team.menu_base_partner" sequence="2"/>
 

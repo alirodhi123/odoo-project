@@ -205,10 +205,10 @@
                         </div>
                     </div> <!-- Tutup footer harga -->
 
-                    <p t-if="o.comment">
-                        <strong>Comment:</strong>
-                        <span t-field="o.comment"/>
-                    </p>
+<!--                    <p t-if="o.comment">-->
+<!--                        <strong>Comment:</strong>-->
+<!--                        <span t-field="o.comment"/>-->
+<!--                    </p>-->
 
                     <div style="float: left; text-align: center;">
                         <span style="font-size: 16px">Hormat Kami,</span>

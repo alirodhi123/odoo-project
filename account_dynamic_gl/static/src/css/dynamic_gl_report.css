@@ -1,0 +1,76 @@
+.DynamicMain {
+    background-color: white;
+}
+
+.FiltersSection {
+    padding-left:7%;
+    padding-right:7%;
+    padding-top:1%;
+}
+
+.DataSection {
+    padding-bottom:5%;
+}
+
+.account_filter {
+    margin-left:50px;
+    margin-right:50px;
+    margin-top:25px;
+    margin-bottom:25px;
+    border:1px solid black;
+    border-radius:12px;
+
+}
+
+.report_header {
+    padding-bottom: 5%;
+}
+
+/* Account lines div */
+.account_lines {
+    padding-left:2%;
+    padding-right:2%;
+}
+
+/* tr of account move line */
+.move-line {
+    border-top-style: double;
+    border-bottom-style: double;
+    cursor:pointer;
+    background-color:#edeeef;
+}
+
+.move-line:hover{
+    background-color:#edeeef;
+}
+
+.move-sub-line:hover{
+    background-color:#eaeee1;
+}
+
+.move-sub-line > td {
+    padding:0 !important;
+}
+
+.move-line > td {
+    padding:0 !important;
+}
+
+.filter-row {
+    margin:10px;
+}
+
+.select2-container{
+    min-width:240px;
+}
+
+#from_date {
+    max-width:150px;
+}
+
+#to_date {
+    max-width:150px;
+}
+
+
+

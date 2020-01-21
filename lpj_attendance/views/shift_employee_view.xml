@@ -6,7 +6,7 @@
             <field name="model">x.shift.employee</field>
             <field name="arch" type="xml">
                 <tree string="Employee attendances">
-                    <field name="x_employee"></field>
+                    <field name="name"></field>
                     <field name="x_start_date"></field>
                     <field name="x_end_date"></field>
                     <field name="x_mesin_shift"></field>
@@ -22,7 +22,7 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="x_employee"></field>
+                                <field name="name"></field>
                                 <label for="x_start_date" string="Periode Date"/>
                                 <div class="o_row">
                                     from <field name="x_start_date"/>
@@ -62,7 +62,7 @@
             <field name="arch" type="xml">
                 <search string="Attendance">
                     <separator/>
-                    <field name="x_employee"></field>
+                    <field name="name"></field>
 
                     <group expand="0" string="Group By">
                         <filter string="Employee" icon="terp-personal"

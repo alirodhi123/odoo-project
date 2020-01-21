@@ -116,7 +116,6 @@ class account_payment(models.Model):
     _inherit = 'account.payment'
 
     x_amount_total = fields.Monetary(compute='_amount_in_word')
-    kode = fields.Char(compute='get_account')
     x_perkiraan_journal = fields.Char(compute='get_perkiraan_journal')
 
 
@@ -132,17 +131,11 @@ class account_payment(models.Model):
     amount_to_text = fields.Text(string="Terbilang", store=True, readonly=True,
                                  compute='_amount_in_word')
 
-    # Untuk mendapatkan kode pembayaran
-    @api.one
-    def get_account(self):
-        id = self.journal_id.id
-        if id == 6:
-            self.kode = "101501"
-        else:
-            self.kode = "101401"
 
     @api.one
     def get_perkiraan_journal(self):
+        code = ""
+        name = ""
         for o in self.move_line_ids:
             if o.full_reconcile_id:
                 account_id = o.account_id
@@ -151,7 +144,8 @@ class account_payment(models.Model):
                     code = row.code
                     name = row.name
 
-        self.x_perkiraan_journal = code + " " + name
+        if code and name:
+            self.x_perkiraan_journal = code + " " + name
 
 
 

@@ -5,7 +5,7 @@
             <field name="name">attendance.attendance.tree</field>
             <field name="model">x.attendance.attendance</field>
             <field name="arch" type="xml">
-                <tree string="Employee attendances" editable="bottom">
+                <tree string="Employee attendances" editable="bottom" default_order="x_employee_attend">
                     <field name="x_id_attend" invisible="1"/>
                     <field name="x_employee_attend"/>
                     <field name="x_department_attend"/>

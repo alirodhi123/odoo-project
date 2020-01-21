@@ -8,7 +8,7 @@ class ShiftEmployee(models.Model):
     _name = 'x.shift.employee'
 
     x_shift_employee_ids = fields.One2many('x.shift.employee.line', 'x_shift_employee_id', string="Shift Line")
-    x_employee = fields.Many2one('hr.employee', string="Employee Name")
+    name = fields.Many2one('hr.employee', string="Employee Name")
     x_start_date = fields.Date(string="Date Start")
     x_end_date = fields.Date(string="Date End")
     x_mesin_shift = fields.Many2one('x.shift.mesin', string="Mesin")

@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="DynamicMain">
+
+        <div class="DynamicMain">
+            <div class="FiltersSection">
+                <!--<t t-call="UserFilters"/>-->
+            </div>
+            <div class="ControlSection">
+                <!--<t t-call="ControlButtons"/>-->
+            </div>
+            <div class="HeaderSection">
+                <t t-call="HeaderSection"/>
+            </div>
+            <div class="DataSection">
+                <!--<t t-call="AccountContents"/>-->
+            </div>
+        </div>
+    </t>
+
+    <t t-name="HeaderSection">
+        <!-- Place here to display as header -->
+    </t>
+
+    <t t-name="AccountContents">
+        <div class="report_header">
+            <div class="col-xs-4" align="center">
+                <h3>General Ledger</h3>
+            </div>
+        </div>
+        <div class="account_lines">
+            <div class="row">
+
+                <!--
+                    Available options are,
+                        1. widget.result.doc_ids
+                        2. widget.result.time
+                        3. widget.result.Accounts
+                        4. widget.result.print_journal
+                 -->
+
+                <table class="table account-moves">
+                    <thead>
+                        <tr>
+                            <td></td>
+                            <td>Date</td>
+                            <td>JRNL</td>
+                            <td>Partner</td>
+                            <td>Ref</td>
+                            <td>Move</td>
+                            <td>Label</td>
+                            <td>Reco</td>
+                            <td align="right">Debit</td>
+                            <td align="right">Credit</td>
+                            <td align="right">Balance</td>
+                            <td align="right">Currency</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="widget.result.Accounts" t-as="line">
+                            <tr data-toggle="collapse" class="move-line" t-attf-data-target=".{{line.code}}">
+                                <td><span class="fa fa-caret-right"/></td>
+                                <td><b><t t-esc="line.code"/></b></td>
+                                <td colspan="3"><b><t t-esc="line.name"/></b></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td align="right"><b><t t-esc="widget.format_currency_no_symbol(line.debit,line.precision)"/></b></td>
+                                <td align="right"><b><t t-esc="widget.format_currency_no_symbol(line.credit,line.precision)"/></b></td>
+                                <td align="right"><b><t t-esc="widget.format_currency_no_symbol(line.balance,line.precision)"/></b></td>
+                                <td></td>
+                            </tr>
+                            <t t-foreach="line.move_lines" t-as="sub_line">
+                                <t t-if="!sub_line.lid">
+                                    <tr t-attf-class="collapse {{line.code}} move-sub-line">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><t t-esc="sub_line.lref"/></td>
+                                        <td><t t-esc="sub_line.move_name"/></td>
+                                        <td><t t-esc="sub_line.lname"/></td>
+                                        <td></td>
+                                        <td align="right"><t t-esc="widget.format_currency_with_symbol(sub_line.debit,line.precision,line.currency_symbol,line.currency_position)"/></td>
+                                        <td align="right"><t t-esc="widget.format_currency_with_symbol(sub_line.credit,line.precision,line.currency_symbol,line.currency_position)"/></td>
+                                        <td align="right"><t t-esc="widget.format_currency_with_symbol(sub_line.balance,line.precision,line.currency_symbol,line.currency_position)"/></td>
+                                        <td align="right"><t t-esc="sub_line.amount_currency"/><t t-esc="sub_line.currency_code"/></td>
+                                    </tr>
+                                </t>
+                                <t t-if="sub_line.lid">
+                                    <tr t-attf-class="collapse {{line.code}} move-sub-line">
+                                        <td></td>
+                                        <td >
+                                            <div class="dropdown">
+                                                <a data-toggle="dropdown" href="#">
+                                                    <span data-id="17">
+                                                        <t t-esc="sub_line.ldate"/>
+                                                    </span>
+                                                    <span class="caret"></span>
+                                                </a>
+                                                <span data-id="17"></span>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <t t-if="sub_line.move_id">
+                                                        <li role="presentation">
+                                                            <a role="menuitem" class="view-source" tabindex="-1"
+                                                               action="open_document" t-att-data-move-id="sub_line.move_id">
+                                                                View Source move
+                                                            </a>
+                                                        </li>
+                                                    </t>
+                                                    <t t-if="sub_line.lref">
+                                                        <li role="presentation">
+                                                            <a role="menuitem" class="view-invoice" tabindex="-1"
+                                                               action="open_document2" t-att-data-lref="sub_line.lref">
+                                                                View Invoice
+                                                            </a>
+                                                        </li>
+                                                    </t>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td><t t-esc="sub_line.lcode"/></td>
+                                        <td><t t-esc="sub_line.partner_name"/></td>
+                                        <td><t t-esc="sub_line.lref"/></td>
+                                        <td><t t-esc="sub_line.move_name"/></td>
+                                        <td><t t-esc="sub_line.lname"/></td>
+                                        <td align="center">
+                                            <t t-if="sub_line.reconciled">
+                                                <span>&#10004;</span>
+                                            </t>
+                                            <t t-if="!sub_line.reconciled">
+                                                <span>&#10008;</span>
+                                            </t>
+                                        </td>
+                                        <td align="right"><t t-esc="widget.format_currency_with_symbol(sub_line.debit,line.precision,line.currency_symbol,line.currency_position)"/></td>
+                                        <td align="right"><t t-esc="widget.format_currency_with_symbol(sub_line.credit,line.precision,line.currency_symbol,line.currency_position)"/></td>
+                                        <td align="right"><t t-esc="widget.format_currency_with_symbol(sub_line.balance,line.precision,line.currency_symbol,line.currency_position)"/></td>
+                                        <t t-if="sub_line.amount_currency">
+                                            <td align="right"><t t-esc="widget.format_currency_with_symbol(sub_line.amount_currency,sub_line.amount_currency_precision,sub_line.currency_code,sub_line.amount_currency_position)"/></td>
+                                        </t>
+                                        <t t-log="sub_line"/>
+                                    </tr>
+                                </t>
+
+
+                            </t>
+                        </t>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ControlButtons">
+        <div class="control_buttons">
+            <div class="row filter-row">
+                <div class="col-sm-4" align="left">
+                    <button id="pdf_button" type="button" class="btn btn-success"><span class="fa fa-download"/> PDF</button>
+                    <button id="xlsx_button" type="button" class="btn btn-success"><span class="fa fa-download"/> XLSX</button>
+                </div>
+                <div class="col-sm-4" align="center">
+                    <button id="filter_button" type="button" class="btn btn-success"><span class="fa fa-filter"/> Filter</button>
+                    <button id="apply_button" type="button" class="btn btn-success"><span class="fa fa-arrow-down"/> Apply</button>
+                </div>
+                <div class="col-sm-4" align="right">
+                    <button id="expand_all" type="button" class="btn btn-success"><span class="fa fa-expand"/> Expand all</button>
+                    <button id="merge_all" type="button" class="btn btn-success"><span class="fa fa-compress"/> Merge all</button>
+                </div>
+            </div>
+
+        </div>
+    </t>
+
+    <t t-name="UserFilters">
+        <div class="account_filter">
+        </div>
+    </t>
+
+    <t t-name="DateLine">
+        <div class="row filter-row">
+            <div class="col-sm-2">
+                <p><b>Start date</b></p>
+            </div>
+            <div class="col-sm-4">
+                <div class='input-group date' id='from_date'>
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <p><b>End date</b></p>
+            </div>
+            <div class="col-sm-4">
+                <div class='input-group date' id='to_date'>
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="CompanyDatefilterLine">
+        <div class="row filter-row">
+            <div class="col-sm-2">
+                <p><b>Date filters</b></p>
+            </div>
+            <div class="col-sm-4 date-filters">
+                <!--<select class="dynamic-ou-multiple" name="states[]" multiple="multiple">-->
+                    <!--<option value="AL">Alabama</option>-->
+                <!--</select>-->
+            </div>
+            <div class="col-sm-2">
+                <p><b>Companies</b></p>
+            </div>
+            <div class="col-sm-4 multi-companies">
+                <!--<select class="dynamic-company-multiple" name="states[]" multiple="multiple">-->
+                    <!--<option value="AL">Alabama</option>-->
+                <!--</select>-->
+            </div>
+        </div><!-- row -->
+    </t>
+
+    <t t-name="DatefilterSelectionLine">
+        <!-- Filters -->
+        <select class="dynamic-datefilter-multiple" name="states[]" multiple="multiple">
+            <option value="today">Today</option>
+            <option value="this_week">This week</option>
+            <option value="this_month">This month</option>
+            <option value="this_quarter">This quarter</option>
+            <option value="this_financial_year">This financial year</option>
+            <option value="yesterday">Yesterday</option>
+            <option value="last_week">Last week</option>
+            <option value="last_month">Last month</option>
+            <option value="last_quarter">Last quarter</option>
+            <option value="last_financial_year">Last financial year </option>
+        </select>
+    </t>
+
+    <t t-name="MultiCompanies">
+        <select class="dynamic-company-multiple" name="states[]" multiple="multiple">
+            <t t-foreach="companies" t-as="company">
+                <option t-attf-value="{{company.code}}"><t t-esc="company.name"/></option>
+                <!--<option value="AL">Sales journal</option>-->
+            </t>
+        </select>
+    </t>
+
+    <t t-name="TargetAccountsLine">
+        <div class="row filter-row">
+            <div class="col-sm-2">
+                <b>Target moves</b>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-check form-check-inline">
+                  <label class="form-check-label">
+                      <input class="form-check-input" type="radio" name="targetMoves" id="all_posted_entries" value="option1" checked="1">All posted entries</input>
+                      <input class="form-check-input" type="radio" name="targetMoves" id="all_entries" value="option2">All entries</input>
+                  </label>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <b>Display accounts</b>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-check form-check-inline">
+                  <label class="form-check-label">
+                      <input class="form-check-input" type="radio" name="displayAccounts" id="all_datas" value="option3"> All</input>
+                      <input class="form-check-input" type="radio" name="displayAccounts" id="all_movements" value="option4" checked="1"> All movements</input>
+                      <input class="form-check-input" type="radio" name="displayAccounts" id="all_balance_not_zero" value="option5"> With balance not equal to zero</input>
+                  </label>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="SortByInitialBalanceLine">
+        <div class="row filter-row">
+            <div class="col-sm-2">
+                <b>Sort by</b>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-check form-check-inline">
+                  <label class="form-check-label">
+                      <input class="form-check-input" type="radio" name="sortBy" id="by_date" value="option6" checked="1">Date</input>
+                      <input class="form-check-input" type="radio" name="sortBy" id="by_journal_and_partner" value="option7">Journal and Partner</input>
+                  </label>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <b>Include initial balance</b>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-check form-check-inline">
+                  <label class="form-check-label">
+                      <input class="form-check-input" type="radio" name="initialBalance" id="initial_balance_yes" value="option1">Yes</input>
+                      <input class="form-check-input" type="radio" name="initialBalance" id="initial_balance_no" checked="1" value="option2">No</input>
+                  </label>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="JournalsLine">
+        <!-- Journals -->
+        <div class="row filter-row">
+            <div class="col-sm-2">
+                <b>Journals</b>
+            </div>
+            <div class="col-sm-10">
+                <div class="form-check form-check-inline">
+                    <select class="dynamic-journal-multiple" name="states[]" multiple="multiple">
+                        <t t-foreach="journals" t-as="journal">
+                            <option t-attf-value="{{journal.code}}"><t t-esc="journal.name"/>-<t t-esc="journal.short_code"/></option>
+                            <!--<option value="AL">Sales journal</option>-->
+                        </t>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="PartnersLine">
+        <!-- Partners -->
+        <div class="row filter-row">
+            <div class="col-sm-2">
+                <b>Partners</b>
+            </div>
+            <div class="col-sm-10">
+                <div class="form-check form-check-inline">
+                    <select class="dynamic-partner-multiple" name="states[]" multiple="multiple">
+                        <t t-foreach="partners" t-as="partner">
+                            <option t-attf-value="{{partner.id}}"><t t-esc="partner.name"/></option>
+                            <!--<option value="AL">Sales journal</option>-->
+                        </t>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="AccountsLine">
+        <!-- Accounts -->
+        <div class="row filter-row">
+            <div class="col-sm-2">
+                <b>Accounts</b>
+            </div>
+            <div class="col-sm-10">
+                <div class="form-check form-check-inline">
+                    <select class="dynamic-account-multiple" name="states[]" multiple="multiple">
+                        <t t-foreach="accounts" t-as="account">
+                            <option t-attf-value="{{account.code}}"><t t-esc="account.short_code"/>-<t t-esc="account.name"/></option>
+                            <!--<option value="AL">Sales journal</option>-->
+                        </t>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="AccountTagsLine">
+        <!-- Account Tags -->
+        <div class="row filter-row">
+            <div class="col-sm-2">
+                <b>Account tags</b>
+            </div>
+            <div class="col-sm-10">
+                <div class="form-check form-check-inline">
+                    <select class="dynamic-acc-tags-multiple" name="states[]" multiple="multiple">
+                        <t t-foreach="acc_tags" t-as="acc_tag">
+                            <option t-attf-value="{{acc_tag.code}}"><t t-esc="acc_tag.name"/></option>
+                            <!--<option value="AL">Sales journal</option>-->
+                        </t>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="Analytic">
+        <!--<div class="row filter-row">-->
+            <!--<div class="analytic_acc col-sm-6"></div>-->
+            <!--<div class="analytic_acc_tags col-sm-6"></div>-->
+        <!--</div>-->
+        <div class="analytic_acc"></div>
+        <div class="analytic_acc_tags"></div>
+    </t>
+
+    <t t-name="Account">
+        <!--<div class="row filter-row">-->
+            <!--<div class="normal_acc col-sm-6"></div>-->
+            <!--<div class="normal_acc_tags col-sm-6"></div>-->
+        <!--</div>-->
+        <div class="normal_acc"></div>
+        <div class="normal_acc_tags"></div>
+    </t>
+
+    <t t-name="AnalyticAccountLine">
+        <!-- OUs -->
+        <div class="row filter-row">
+            <div class="col-sm-2">
+                <b>Analytic accounts</b>
+            </div>
+            <div class="col-sm-10">
+                <div class="form-check form-check-inline">
+                    <select class="dynamic-analytic-acc-multiple" name="states[]" multiple="multiple">
+                        <t t-foreach="analytic_accs" t-as="analytic_acc">
+                            <option t-attf-value="{{analytic_acc.code}}"><t t-esc="analytic_acc.name"/></option>
+                            <!--<option value="AL">Sales journal</option>-->
+                        </t>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

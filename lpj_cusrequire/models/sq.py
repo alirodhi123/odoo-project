@@ -69,6 +69,9 @@ class x_sq(models.Model):
     x_status_dk = fields.Selection(
         [('draft', 'Draft'),('requested', 'Requested'), ('reject', 'Reject'), ('approve', 'Approve')],
         default='draft', string='Status Request Duedate Kirim', readonly=True,track_visibility='always')
+    x_id_estimated_product = fields.Char(string="id estimated produk")
+    x_id_lead = fields.Many2one('crm.lead', string="CRM lead")
+    x_drawing_file_prd = fields.Binary(related="x_product.x_drawing_file", readonly = True)
 
 
 
@@ -193,12 +196,19 @@ class x_sq(models.Model):
 
     @api.model
     def create(self, vals):
+
         result = super(x_sq, self).create(vals)
 
         sequence = self.env['ir.sequence'].next_by_code('x.sales.quotation') or ('New')
         result.write({'name': sequence})
 
         result.write({'start_of_date': datetime.now()})
+
+        id_estimated = vals['x_id_estimated_product']
+        estimated_obj = self.env['x.estimated.product.crm'].search([('id', '=', id_estimated)])
+        if estimated_obj:
+            estimated_obj.write({'x_flag_harga': True})
+            estimated_obj.write({'x_sq': sequence})
 
         return result
 

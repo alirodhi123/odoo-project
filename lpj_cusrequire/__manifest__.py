@@ -32,6 +32,7 @@
         'views/report_sph.xml',
         'views/mail_template_sph.xml',
         'views/sph_report_template.xml',
+        'views/history_duedate.xml',
 
         # 'views/admin_input_product.xml',
         'views/sale_view.xml',

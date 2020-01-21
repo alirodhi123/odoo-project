@@ -130,6 +130,7 @@ class account_invoice(models.Model):
     x_no_po = fields.Char(string="No. PO", compute='get_po_cust')
     is_responsible = fields.Boolean(string="Kuitansi Status", default=False)
     x_tanggal_sjk = fields.Date(string="Tgl SJK", compute='get_tanggal_sjk')
+    x_no_receipt = fields.Many2one('stock.picking', string="Receipt No")
     # FOOTER
     x_discount_foot = fields.Monetary(string="Discount", compute='get_discount')
     x_bruto = fields.Monetary(string="Bruto", compute='get_discount')

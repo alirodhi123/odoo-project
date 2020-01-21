@@ -44,13 +44,22 @@
                             <field name="x_customer_id" string = "Customer"/>
                             <field name="x_request_date" string = "Request Date" invisible="1"/>
                             <field name="x_duedate_drawing" string = "Duedate Drawing"/>
+                            <field name="x_id_estimated_product" invisible="1"/>
+                            <field name="x_id_lead"/>
                         </group>
                         <group>
                             <field name="x_product"/>
+                            <field name="x_drawing_file_prd" widget="image"/>
                             <field name="x_status_dk"/>
                             <field name="x_req_dk" string = "Request Duedate Kirim"/>
                             <field name="x_flag_reqdk" invisible="1"/>
                             <field name="x_flag_appdk" invisible="1"/>
+
+                        </group>
+                        <group>
+                            <!--<button name="act_req_dk" type="object" string="Request" class="oe_highlight" attrs="{'invisible':['|',('x_status_cr','=','reject'),('x_status_dk','=','requested')]}"/>-->
+                        </group>
+                        <group>
                             <button name="act_req_dk" type="object" string="Request" class="oe_highlight" attrs="{'invisible':['|',('x_status_cr','=','reject'),('x_status_dk','=','requested')]}"/>
                         </group>
                     </group>

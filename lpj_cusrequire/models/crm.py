@@ -138,19 +138,41 @@ class estimated_product(models.Model):
     x_product_product_crm = fields.Many2one('x.product.product.crm', string='Estimated Product')
     x_desc = fields.Text (string = 'Description')
     x_flag_harga = fields.Boolean(string = 'flag sudah create SQ', default = False)
+    x_sq = fields.Text(string='SQ')
+
 
     @api.multi
     def crm_sq(self):
-        self.x_flag_harga = True
+        # self.x_flag_harga = True
         ac = self.env['ir.model.data'].xmlid_to_res_id('lpj_cusrequire.x_sq_view', raise_if_not_found=True)
-        # for o in self:
+        for o in self:
+            id_estimated_produk = o.id
+            id_product_product_crm = o.x_product_product_crm
+            id_lead = o.x_crm_lead
+            qty = o.x_qty
+
+            for row in id_product_product_crm:
+                name = row.x_name
+                lgth = row.x_length
+                wdth = row.x_width
+
+            for row2 in id_lead:
+                id_crm_lead = row2.id
+
+
+
         result = {
             'name': 'Sales Quotation',
             'view_type': 'form',
             'res_model': 'x.sales.quotation',
             'view_id': ac,
             'context': {
-                # 'default_name': sq
+                'default_x_id_estimated_product': id_estimated_produk,
+                'default_item_description': name,
+                'default_x_id_lead': id_crm_lead,
+                'default_x_qty': qty,
+                'default_x_length': lgth,
+                'default_x_width': wdth
             },
             'type': 'ir.actions.act_window',
             'view_mode': 'form',

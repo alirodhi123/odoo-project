@@ -3,7 +3,7 @@
 
         <report
             id="balance_sheet_xlsx"
-            model="accounting.report"
+            model="account.financial.report"
             string="Report Balance Sheet"
             report_type="xlsx"
             name="lpj_accounting.balance_sheet_report.xlsx"
