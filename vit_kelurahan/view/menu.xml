@@ -1,0 +1,24 @@
+<odoo>
+    <data>
+        <menuitem id="menu_regional"
+                  name="Regional"
+                  parent="contacts.menu_contacts"
+                  sequence="5"/>
+
+         <menuitem id="menu_kelurahan"
+                  parent="menu_regional"
+                  sequence="1"
+                  action="act_open_kelurahan_view"/>
+
+        <menuitem id="menu_kecamatan"
+                  parent="menu_regional"
+                  sequence="2"
+                  action="act_open_kecamatan_view"/>
+
+        <menuitem id="menu_kota"
+                  parent="menu_regional"
+                  sequence="3"
+                  action="act_open_kota_view"/>
+
+    </data>
+</odoo>

@@ -103,6 +103,7 @@ class data_form(models.Model):
     # x_tamp_barcode = fields.Float('Tampungan barcode', related = 'x_qty_mpersegi')
     x_colour = fields.Char(string="Colour")
     x_ink_melting = fields.Char(string="Ink Melting")
+
     # Code
     x_code = fields.Char("My Code")
     # Locked product
@@ -188,6 +189,7 @@ class pp_variant(models.Model):
 
     x_variant_value  = fields.Char(readonly=True, compute = '_pp_variant')
     x_qty_mpersegi = fields.Float(string = 'Quantity Meter Persegi', compute = '_perkalian')
+    x_gsm_bahan = fields.Float(string="Gsm")
 
 
     @api.one

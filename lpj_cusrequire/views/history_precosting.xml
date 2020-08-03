@@ -1,0 +1,64 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="history_precosting_tree">
+            <field name="name">x.history.precosting.tree</field>
+            <field name="model">x.history.precosting</field>
+            <field name="arch" type="xml">
+
+                <tree>
+                    <field name="name"/>
+                    <field name="x_id_sq"/>
+                    <field name="x_length"/>
+                    <field name="x_width"/>
+                    <field name="x_length_m"/>
+                    <field name="x_width_m"/>
+                    <field name="x_quantity"/>
+                    <field name="x_area_m2_pcs"/>
+                    <field name="x_area_m2_tot"/>
+                    <field name="x_waste_produksi"/>
+                    <field name="x_waste_config"/>
+                    <field name="x_total_waste_m2"/>
+                    <field name="x_category"/>
+                </tree>
+            </field>
+        </record>
+
+         <record model="ir.ui.view" id="history_precosting_form">
+            <field name="name">x.history.precosting.form</field>
+            <field name="model">x.history.precosting</field>
+            <field name="arch" type="xml">
+                <form>
+
+                        <group>
+                            <field name="name"/>
+                            <field name="x_id_sq"/>
+                            <field name="x_length"/>
+                            <field name="x_width"/>
+                            <field name="x_length_m"/>
+                            <field name="x_width_m"/>
+                            <field name="x_quantity"/>
+                            <field name="x_area_m2_pcs"/>
+                            <field name="x_area_m2_tot"/>
+                            <field name="x_waste_produksi"/>
+                            <field name="x_waste_config"/>
+                            <field name="x_total_waste_m2"/>
+                            <field name="x_category"/>
+                        </group>
+
+
+                    <!--<button name="act_req_dk" type="object" string="Request" class="oe_highlight" attrs="{'invisible':['|','|',('x_status_cr','=','reject'),('x_flag_reqdk','=',True),('x_flag_appdk','=',True)]}"/>-->
+                    <!--<button name="act_approve" type="object" string="Approve" class="oe_highlight" attrs="{'invisible':['|', '|','|',('x_status_cr','=','approve'), ('x_status_cr','=','reject'),('x_status_cr','=','done'),('x_is_salemanager', '=', False)]}"/>-->
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="list_history_precosting">
+            <field name="name">History Precosting</field>
+            <field name="res_model">x.history.precosting</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,18 @@
+<odoo>
+    <data>
+        <!-- Message block pengiriman -->
+         <record id="pop_message_block_pengiriman_form" model="ir.ui.view">
+            <field name="name">Message Block Pengiriman</field>
+            <field name="model">message.block.pengiriman</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="name" readonly="1"/> <br/>
+                    <field name="name_second" readonly="1"/>
+                    <footer>
+                       <button string="Oke" class="oe_highlight" special="cancel"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+    </data>
+</odoo>

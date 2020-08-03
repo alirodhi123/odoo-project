@@ -33,3 +33,6 @@ class HistoryDueDate(models.Model):
     #     sql = self.env.cr.fetchone()
     #     if sql:
     #         self.x_nama_requester = sql[0]
+
+
+

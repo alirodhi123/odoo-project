@@ -5,6 +5,7 @@ class res_partner(models.Model):
     _inherit = 'res.partner'
 
     x_block_customer = fields.Selection([('no', 'Block'), ('yes', 'Open')], default='no', string="Block Customer")
+    x_toleransi_pengiriman = fields.Float(string="Toleransi Pengiriman %")
     is_mkt = fields.Boolean(string="check mkt", compute="is_mkt_act")
     is_administrator = fields.Boolean(string="Check Admin", compute='is_admin_act')
     x_company_size = fields.Selection([('s', 'Small (0-50 person)'), ('m', 'Medium (50-250 person)'), ('l', 'Large (>250 person)')], string='Company Size')
@@ -24,6 +25,28 @@ class res_partner(models.Model):
         ('New', 'New'),
         ('Existing', 'Existing')],
         string='Status Customer', default = 'New')
+    x_industry = fields.Selection([
+        ('food', 'Food and Beverage'),
+        ('healthy', 'Farmasi and Healthcare'),
+        ('goverment', 'Goverment / Military / Education'),
+        ('pariwisata', 'Pariwisata'),
+        ('garment', 'Garment'),
+        ('huseware', 'Huseware'),
+        ('personalcare', 'Personal Care'),
+        ('tambang', 'Tambang / Chemical'),
+        ('manufacturing', 'Manufacturing / Export Import'),
+        ('technology', 'Technology'),
+        ('cargo', 'Cargo / Pengiriman')], default='food', string="Bidang Industri", required=True)
+    x_jumlah_karyawan = fields.Selection([
+        ('less', '< 100 Karyawan'),
+        ('small', '100 - 300 Karyawan'),
+        ('medium', '301 - 500 Karyawan'),
+        ('large', '501 - 1000 Karyawan'),
+        ('too_much', '> 1000 Karyawan')], default='less', string="Jumlah Karyawan")
+    jalan = fields.Char(string="Jalan")
+    x_block_pengiriman = fields.Selection([('block', 'Block'), ('open', 'Open')], default='open', string="Block Pengiriman")
+    x_kebutuhan_pengiriman_ids = fields.Many2many('x.kebutuhan.pengiriman', string="Kebutuhan Pengiriman")
+    is_berikat = fields.Char('berikat')
 
     # Cek apakah user login adalah marketing
     @api.one
@@ -31,8 +54,8 @@ class res_partner(models.Model):
         res_user = self.env['res.users'].search([('id', '=', self._uid)])
         if res_user:
             id = res_user.id
-            # Jika yg login pak fahrur atau bu erlina
-            if id == 20:
+            # Jika yg login pak fahrur atau ikawati
+            if id == 20 or id == 124:
                 self.is_mkt = False
 
             elif res_user.has_group('sales_team.group_sale_salesman') or \
@@ -73,3 +96,8 @@ class res_partner(models.Model):
 
             else:
                 return res
+
+class KebutuhanPengiriman(models.Model):
+    _name = 'x.kebutuhan.pengiriman'
+
+    name = fields.Char('Kebutuhan Pengiriman')

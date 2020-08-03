@@ -33,15 +33,30 @@
         'views/mail_template_sph.xml',
         'views/sph_report_template.xml',
         'views/history_duedate.xml',
-
         # 'views/admin_input_product.xml',
         'views/sale_view.xml',
         'views/crm.xml',
         'views/print_quo.xml',
         'views/report_quotation.xml',
+        'views/config_bahan.xml',
+        'views/config_feature.xml',
+        'views/config_diecut.xml',
+        'views/config_tinta.xml',
+        'views/config_mesin.xml',
+        'views/config_product_type.xml',
+        'views/config_process_cost.xml',
+        'views/config_plate_cost.xml',
+        'views/config_waste_table.xml',
+        'views/config_profit_margin.xml',
+        'views/history_precosting.xml',
+        'views/report_quotation_ppn.xml',
+        'views/config_qty_roundup.xml',
+        'views/approval_gm.xml',
+        'views/sale_report_inherit.xml',
+        'views/config_kategori.xml',
+        'views/precost_price_range.xml',
         'views/menu.xml',
-
-
+        'views/purchase_req.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+        <!-- Helpdesk Asset Tree View  -->
+        <record id="helpdesk_assets_tree_view" model="ir.ui.view">
+            <field name="name">asset.helpdesk_asset.tree.view</field>
+            <field name="model">asset.helpdesk</field>
+            <field name="arch" type="xml">
+                <tree string="Helpdesk Assets">
+                    <field name="asset_number"/>
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="user_id"/>
+                </tree>
+            </field>
+        </record>
+
+
+         <!-- Membuat tampilan form Assets -->
+        <record model="ir.ui.view" id="helpdesk_assets_problem_form">
+        <field name="name">New Assets Form</field>
+        <field name="model">asset.helpdesk</field>
+        <field name="arch" type="xml">
+            <form string="New Assets">
+                <!--<header>-->
+                    <!--<field name="maintenance_state_id" widget="statusbar" clickable="True" groups="asset.group_mro_user"/>-->
+                <!--</header>-->
+                <sheet>
+                    <div class="oe_right oe_button_box" style="width: 300px;" name="buttons"></div>
+                    <field name="image_medium" widget="image" class="oe_avatar oe_left"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                            <!--<field name="category_ids" widget="many2many_tags" placeholder="Tags..."/>-->
+                        </div>
+                    <!--<group>-->
+                        <!--<field name="property_stock_asset" domain="[('usage','=','asset')]"/>-->
+                    <!--</group>-->
+                    <group>
+                        <group>
+                            <field name="asset_number"/>
+                            <field name="model"/>
+                            <field name="serial"/>
+                        </group>
+                        <group>
+                            <field name="description"/>
+                            <field name="user_id"/>
+                        </group>
+                    </group>
+                    <!--<notebook>-->
+                        <!--<page name="info" string="Warranty">-->
+                            <!--<group> &lt;!&ndash; string="Warranty"> &ndash;&gt;-->
+                                <!--<group>-->
+                                    <!--<field name="manufacturer_id"/>-->
+                                    <!--<field name="start_date"/>-->
+                                    <!--<field name="warranty_start_date"/>-->
+                                <!--</group>-->
+                                <!--<group>-->
+                                    <!--<field name="vendor_id"/>-->
+                                    <!--<field name="purchase_date"/>-->
+                                    <!--<field name="warranty_end_date"/>-->
+                                    <!--</group>-->
+                                <!--</group>-->
+                        <!--</page>-->
+                    <!--</notebook>-->
+                </sheet>
+                <div class="oe_chatter">
+                    <!--<field name="message_follower_ids" widget="mail_followers"/>-->
+                    <!--<field name="message_ids" widget="mail_thread"/>-->
+                </div>
+            </form>
+        </field>
+        </record>
+
+
+
+
+
+
+        <!-- Action Assets -->
+         <record id="helpdesk_asset_act" model="ir.actions.act_window">
+            <field name="res_model">asset.helpdesk</field>
+            <field name="name">Assets</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,pivot,graph</field>
+            <field name="view_id" eval="False"/>
+            <field name="domain" eval=""/>
+            <field name="help" type="html">
+                <p>
+                    The Odoo ticket tracker allows you to efficiently manage things
+                    like internal requests, software development bugs, customer
+                    complaints, project troubles, material breakdowns, etc.
+                </p>
+            </field>
+         </record>
+
+
+ 	</data>
+</odoo>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Inherit Form View to Modify it -->
+        <record id="partner_efaktur" model="ir.ui.view">
+            <field name="name">res.partner_efaktur</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+
+                <notebook position="inside">
+                    <page string="E-Faktur" name="efaktur">
+                        <group>
+                            <group>
+                                <field name="npwp" placeholder='99.999.999.9-999.999'/>
+                                <field name="blok"/>
+                                <field name="nomor"/>
+                                <field name="rt"/>
+                                <field name="rw"/>
+                                <field name="kota_id" domain="[('state_id','=', state_id)]"/>
+                                <field name="kecamatan_id" domain="[('kota_id','=', kota_id)]"/>
+                                <field name="kelurahan_id" domain="[('kecamatan_id','=', kecamatan_id)]"/>
+                                <field name="alamat_lengkap" readonly="1" />
+                            </group>
+                            <group>
+                                <field name="is_efaktur_exported"/>
+                                <field name="date_efaktur_exported"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+
+    </data>
+</openerp>
+

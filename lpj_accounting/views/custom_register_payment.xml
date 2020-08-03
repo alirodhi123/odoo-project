@@ -1,0 +1,105 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="register_payment_custom_tree_view">
+          <field name="name">Register Payment Tree</field>
+          <field name="model">x.register.payment</field>
+          <field name="arch" type="xml">
+              <tree string="Register Payment List" create="false">
+                <field name="name"></field>
+                <field name="x_vendor"></field>
+                <field name="x_payment_date"></field>
+              </tree>
+          </field>
+        </record>
+
+        <!-- Membuat tampilan form -->
+        <record model="ir.ui.view" id="register_payment_custom_form_view">
+        <field name="name">Register Payment Form</field>
+        <field name="model">x.register.payment</field>
+        <field name="arch" type="xml">
+          <form string="Register Payment Form" create="false">
+            <header>
+                <button name="payment_action"
+                        type="object"
+                        class="btn-primary"
+                        string="Print Payment"/>
+            </header>
+            <sheet>
+                <div class="oe_title">
+                    <h2><field name="name" placeholder="Name" readonly="1"/></h2>
+                </div>
+              <group>
+                <group>
+                  <field name="x_vendor"></field>
+                  <field name="x_payment_date"></field>
+                  <field name="x_memo"></field>
+                  <field name="x_tampilan_amount" invisible="1"></field>
+                  <field name="amount_to_text" invisible="1"></field>
+                </group>
+                <group>
+                  <field name="x_account_bank"></field>
+                  <field name="x_flag_paid" invisible="1"></field>
+                </group>
+              </group>
+              <notebook>
+                <page string="Register Payment Line">
+                  <field name="x_register_payment_line">
+                    <tree editable="bottom">
+                      <field name="x_no_bill"></field>
+                      <field name="x_origin"></field>
+                      <field name="x_account"></field>
+                      <field name="x_bill_date"></field>
+                      <field name="x_due_date"></field>
+                      <field name="x_untaxed_amount_payment"></field>
+                      <field name="x_tax_payment"></field>
+                      <field name="x_total_payment"></field>
+                      <field name="x_tampungan_payment" invisible="1"></field>
+                    </tree>
+                  </field>
+
+                <!-- Perhitungan -->
+                <group class="oe_subtotal_footer">
+                  <field name="x_untaxed_amount_foot"></field>
+                  <field name="x_tax_foot"></field>
+                  <field name="x_total_amount_foot" class="oe_subtotal_footer_separator"/>
+                </group>
+                </page>
+              </notebook>
+            </sheet>
+          </form>
+        </field>
+        </record>
+
+          <!-- Filter untuk custom payment -->
+        <record model="ir.ui.view" id="register_payment_custom_search_view">
+          <field name="name">Register Payment Filter</field>
+          <field name="model">x.register.payment</field>
+          <field name="arch" type="xml">
+             <search>
+                 <field name="name"/>
+                 <field name="x_vendor"/>
+                 <group expand="0" string="Group By">
+                    <filter string="Vendor" icon="terp-personal"
+                            domain="[]"
+                            context="{'group_by':'x_vendor'}"/>
+
+                </group>
+             </search>
+          </field>
+        </record>
+
+        <!-- Action button create custom payment -->
+        <record model="ir.actions.act_window" id="payment_list_action">
+          <field name="name">Register Payment</field>
+          <field name="res_model">x.register.payment</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="domain">[('x_flag_paid', '=', False)]</field>
+          <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Create a new payment</p>
+          </field>
+        </record>
+
+    </data>
+</odoo>

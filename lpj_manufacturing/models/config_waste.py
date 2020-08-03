@@ -51,6 +51,7 @@ class config_waste(models.Model):
           for x in self.move_raw_ids:
                category = x.product_tmpl_id.categ_id.name
                category_utama = x.product_tmpl_id.categ_id.sts_bhn_utama.name
+               category_pldc = x.product_tmpl_id.categ_id.sts_bhn_utama.id
 
                if category_utama == 'Bahan Utama':
 
@@ -59,10 +60,9 @@ class config_waste(models.Model):
                     product_uom_qty_temp = x.product_uom_qty
                     self.x_product_uom_qty = product_uom_qty_temp
 
-               if category == 'PL':
+               if category_pldc == 3:
                     x.product_uom_qty = x.product_uom_qty + self.x_confirm_waste
-               if category == 'DC':
-                    x.product_uom_qty = x.product_uom_qty + self.x_confirm_waste
+
 
      # Untuk perhitungan confirm waste yg ada di OK Lines
      @api.multi
@@ -73,6 +73,7 @@ class config_waste(models.Model):
                for x in self.move_raw_ids:
                     category = x.product_tmpl_id.categ_id.name
                     category_utama = x.product_tmpl_id.categ_id.sts_bhn_utama.name
+                    category_pldc = x.product_tmpl_id.categ_id.sts_bhn_utama.id
 
                     if category_utama == 'Bahan Utama':
                          x.product_uom_qty = x.product_uom_qty + self.x_confirm_waste
@@ -80,9 +81,8 @@ class config_waste(models.Model):
                          product_uom_qty_temp = x.product_uom_qty
                          self.x_product_uom_qty = product_uom_qty_temp
 
-                    if category == 'PL':
-                         x.product_uom_qty = x.product_uom_qty + self.x_confirm_waste
-                    if category == 'DC':
+                    # Kategori PL&DC
+                    if category_pldc == 3:
                          x.product_uom_qty = x.product_uom_qty + self.x_confirm_waste
 
           self.x_last_confirm_waste = temp_confirm_waste
@@ -91,25 +91,26 @@ class config_waste(models.Model):
      # Untuk simpan BU To consume pada move_raw_ids (REPORT) MINIMAL
      @api.model
      def get_min_to_consume(self):
-          for o in self.move_raw_ids:
-               category = o.product_tmpl_id.categ_id.name
-               category_utama = o.product_tmpl_id.categ_id.sts_bhn_utama.name
+          for row in self:
+               for o in row.move_raw_ids:
+                    category = o.product_tmpl_id.categ_id.name
+                    category_utama = o.product_tmpl_id.categ_id.sts_bhn_utama.name
 
-               if category_utama == 'Bahan Utama' and category != 'Hot Foil':
-                    product_uom_qty_temp = o.product_uom_qty
-                    product_uom_qty_first = product_uom_qty_temp - self.x_confirm_waste
-                    # Simpan dalam variable baru
-                    self.product_uom_qty_first = product_uom_qty_first
-
-               elif category == 'Hot Foil':
-                    product_uom_qty_temp = 0
-                    min_bahan_hotfoil = o.product_uom_qty
-
-                    if min_bahan_hotfoil != product_uom_qty_temp:
-                         # Set bahan hot foil = bahan utama
-                         min_bahan_hotfoil = self.x_product_uom_qty
+                    if category_utama == 'Bahan Utama' and category != 'Hot Foil':
+                         product_uom_qty_temp = o.product_uom_qty
+                         product_uom_qty_first = product_uom_qty_temp - row.x_confirm_waste
                          # Simpan dalam variable baru
-                         self.product_uom_qty_first = min_bahan_hotfoil - self.x_confirm_waste
+                         row.product_uom_qty_first = product_uom_qty_first
+
+                    elif category == 'Hot Foil':
+                         product_uom_qty_temp = 0
+                         min_bahan_hotfoil = o.product_uom_qty
+
+                         if min_bahan_hotfoil != product_uom_qty_temp:
+                              # Set bahan hot foil = bahan utama
+                              min_bahan_hotfoil = row.x_product_uom_qty
+                              # Simpan dalam variable baru
+                              row.product_uom_qty_first = min_bahan_hotfoil - row.x_confirm_waste
 
 
      # Untuk simpan BU To consume pada move_raw_ids (REPORT) MAXIMAL

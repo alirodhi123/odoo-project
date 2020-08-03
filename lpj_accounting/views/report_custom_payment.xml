@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+         <report
+            id="custom_payment_report"
+            model="x.register.payment"
+            string="Draft Payment"
+            report_type="qweb-pdf"
+            name="lpj_accounting.custom_report_payment"
+            file="lpj_accounting.custom_report_payment"
+        />
+
+        <record id="paperformat_custom_payment" model="report.paperformat">
+            <field name="name">European A4 low margin</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">6</field>
+            <field name="margin_bottom">4</field>
+            <field name="margin_left">6</field>
+            <field name="margin_right">6</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field> <!-- Jika ingin header muncul ubah nilai - 0 -->
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="lpj_accounting.custom_payment_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="lpj_accounting.paperformat_custom_payment" />
+        </record>
+
+
+        <template id="report_custom_payment_document">
+            <t t-call="report.html_container">
+                <t t-set="o" t-value="o.with_context({'lang':o.x_vendor.lang})" />
+                <div class="page">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="text-center">
+                                <h4>BUKTI BANK KELUAR</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Untuk garis horizontal-->
+                    <div class="row zero_min_height">
+                        <div class="col-xs-12">
+                            <div style="border-bottom: 1px solid black;"/>
+                        </div>
+                    </div>
+
+                    <!-- Dibayarkan kepada / dari -->
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <span><b>Dibayarkan Kepada:</b></span>
+                            <div name="invoice_address">
+                                <address t-field="o.x_vendor" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: True}"/>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <table>
+                                <tr t-if="o.name">
+                                    <td style="padding-right: 35px; padding-bottom: 5px;"><b>Payment Draft</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px;">:</td>
+                                    <td style="padding-bottom: 5px;"><span t-field="o.name"/></td>
+                                </tr>
+                                <tr t-if="o.x_payment_date">
+                                    <td style="padding-right: 35px; padding-bottom: 5px;"><b>Tanggal</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px;">:</td>
+                                    <td style="padding-bottom: 5px;"><span t-field="o.x_payment_date" t-field-options='{"format": "d/MM/y"}'></span></td>
+                                </tr>
+                                <tr t-if="o.x_memo">
+                                    <td style="padding-right: 35px; padding-bottom: 5px;"><b>Memo</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px;">:</td>
+                                    <td style="padding-bottom: 5px;"><span t-field="o.x_memo"/></td>
+                                </tr>
+                                <tr t-if="o.amount_to_text">
+                                    <td style="padding-right: 35px; padding-bottom: 5px;"><b>Terbilang</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px;">:</td>
+                                    <td style="padding-bottom: 5px;"><span t-field="o.amount_to_text"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div> <!-- Tutup dibayarkan kepada -->
+
+                    <!-- Tabel transaksi -->
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <table style="border: 1px solid; width: 100%;">
+                               <tr>
+                                   <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px;">Bank</th>
+                                   <th class="text-center" style="border: 1px solid; width: 40%; padding: 5px;">Uraian</th>
+                                   <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px;">Perkiraan</th>
+                                   <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px;">Jumlah</th>
+                               </tr>
+
+                                <tr t-foreach="o.x_register_payment_line" t-as="line">
+<!--                                   <tr t-foreach="line.invoice_line_ids" t-as="row">-->
+                                       <td class="text-center" style="border: 1px solid; width: 20%; padding: 5px; vertical-align: middle;">
+                                           <span>
+                                               <span t-field="o.x_account_bank"></span>
+                                           </span>
+                                       </td>
+                                       <td style="border: 1px solid; width: 40%; padding: 5px;"><span t-field="line.x_origin"></span> - <span t-field="line.x_no_bill.reference"></span></td>
+                                       <td class="text-center" style="border: 1px solid; width: 20%; padding: 5px; vertical-align: middle;"><span t-field="line.x_account"></span></td>
+                                       <td class="text-right" style="border: 1px solid; width: 20%; padding: 5px; vertical-align: middle;">Rp
+                                            <span t-field="line.x_tampungan_payment"></span>
+                                       </td>
+<!--                                   </tr>-->
+                                </tr>
+                                <tr>
+                                   <td class="text-center" style="border: 1px solid; width: 20%; padding: 25px;"></td>
+                                   <td class="text-center" style="border: 1px solid; width: 40%; padding: 25px;"></td>
+                                   <td class="text-center" style="border: 1px solid; width: 20%; padding: 25px;"></td>
+                                   <td class="text-center" style="border: 1px solid; width: 20%; padding: 25px;"></td>
+                               </tr>
+                                <tr>
+                                   <td class="text-center" style="border: 1px solid; width: 20%; padding: 25px;"></td>
+                                   <td class="text-center" style="border: 1px solid; width: 40%; padding: 25px;"></td>
+                                   <td class="text-center" style="border: 1px solid; width: 20%; padding: 25px;"></td>
+                                   <td class="text-center" style="border: 1px solid; width: 20%; padding: 25px;"></td>
+                               </tr>
+                           </table>
+                        </div>
+                    </div>
+                    <!-- Tutup table transaksi -->
+
+                    <!-- Footer -->
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <table style="border: 1px solid; width: 100%;">
+                                 <tr>
+                                    <td class="text-right" style="border: 1px solid; padding: 5px;" colspan="3"><b>TOTAL</b></td>
+                                    <td class="text-right" style="border: 1px solid; padding: 5px;">Rp <span t-field="o.x_tampilan_amount"></span></td>
+                                </tr>
+                           </table>
+                        </div>
+                    </div>
+                    <!-- Tutup footer -->
+
+                    <!-- Table verifikasi -->
+                    <div class="row">
+                        <div class="col-xs-12" style="margin-top: 10px">
+                            <table style="border: 1px solid; width: 100%;">
+                                <tr>
+                                    <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px">Pemeriksa</th>
+                                    <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px" colspan="2">Pembukuan</th>
+                                    <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px">Mengetahui</th>
+                                    <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px">Menyetujui</th>
+                                    <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px">Kasir</th>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid; padding-top: 55px;"></td>
+                                    <td style="border: 1px solid; padding-top: 55px;"></td>
+                                    <td style="border: 1px solid; padding-top: 55px;"></td>
+                                    <td style="border: 1px solid; padding-top: 55px;"></td>
+                                    <td style="border: 1px solid; padding-top: 55px;"></td>
+                                    <td style="border: 1px solid; padding-top: 55px;"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Tutup table verifikasi -->
+
+                </div> <!-- Tutup page -->
+            </t>
+        </template>
+
+        <template id="custom_report_payment">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="lpj_accounting.report_custom_payment_document" t-lang="o.x_vendor.lang"/>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

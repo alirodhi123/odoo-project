@@ -13,6 +13,7 @@ class ProductCategory_msr(models.Model):
     sts_bhn_utama = fields.Many2one('x.tipe.bahan',string="Component Type", help="Field ini digunakan untuk perhitungan "
                                                                                     "1. Qty Max OK. "
                                                                                     "2. Domain untuk product OK (Tinta, PLDC, Bahan Utama).")
+    x_kode_item = fields.Char(string="Kode Item", required=True)
 
 class Product_Categories_msr(models.Model):
      _name = 'x.tipe.bahan'

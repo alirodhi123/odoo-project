@@ -21,6 +21,53 @@ class quality_inspection(models.Model):
     x_jumlah_awal_foot = fields.Float(string="Total Qty Awal", compute='compute_footer')
     x_jumlah_awal_persegi_foot = fields.Float(string="Total Qty Awal Persegi", compute='compute_footer')
     x_keterangan = fields.Text(string="Keterangan")
+    state = fields.Selection(
+        [('1', 'Open'), ('2', 'Identifikasi'), ('3', 'Rework'), ('4', 'Follow Up'),
+         ('5', 'Done')], default='1')
+
+    # field line pindah ke header
+    x_category_permasalahan_baru = fields.Many2one('problem.tags', string="Category Masalah")
+    x_deskripsi_permasalahan = fields.Text(string="Deskripsi")
+    x_name_issue = fields.Text(string='Nama Issue', store=True, readonly=True)
+    x_repeat = fields.Boolean(string='Repeat')
+    x_tanggal_inspeksi = fields.Date(string="Tanggal Inspeksi")
+    x_mesin = fields.Many2many('x.mesin.tags', string="Type Mesin")
+    x_asal_product = fields.Selection([('produksi', 'Produksi'),
+                                       ('reture', 'Reture Customer'),
+                                       ('warehouse', 'Warehouse')], string="Asal Product")
+    x_status_qc = fields.Selection([('hold', 'Hold'), ('reject', 'Reject')], string="Status QC")
+    x_nama_operator = fields.Many2one('hr.employee', string="Nama Operator")
+    x_tindakan_perbaikan = fields.Text(string="Tindakan Perbaikan")
+    x_status_akhir = fields.Selection([('release', 'Release'), ('rework', 'Rework'), ('reject', 'Reject')],
+                                      string="Status Akhir")
+    image = fields.Binary(string="Gmbr Defect")
+    x_department = fields.Many2one('hr.department', string='Department')
+
+    @api.onchange('x_category_permasalahan_baru')
+    def nama_issue(self):
+        if self.x_partner_id:
+            if self.x_category_permasalahan_baru:
+                self.x_name_issue = self.x_partner_id.name + ' - ' + self.x_category_permasalahan_baru.name
+            else:
+                self.x_name_issue = self.x_partner_id.name + ' - '
+        else:
+            if self.x_category_permasalahan_baru:
+                self.x_name_issue = ' - ' + self.x_category_permasalahan_baru.name
+            else:
+                self.x_name_issue = ' - '
+
+
+    @api.multi
+    def action_next(self):
+        new_state = int(self.state) + 1
+        self.state = str(new_state)
+        self.color = 3
+
+    @api.multi
+    def action_prev(self):
+        new_state = int(self.state) - 1
+        self.state = str(new_state)
+        self.color = 3
 
 
     # Sequence
@@ -88,8 +135,9 @@ class quality_inspection_line(models.Model):
     _name = 'quality.inspection.line'
 
     quality_inspection_id = fields.Many2one('quality.inspection', ondelete='cascade')
-    x_deskripsi_permasalahan = fields.Text(string="Permasalahan")
+    x_deskripsi_permasalahan = fields.Text(string="Deskripsi")
     x_category_permasalahan = fields.Many2many('problem.tags', string="Category Masalah")
+    x_category_permasalahan_baru = fields.Many2one('problem.tags', string="Category Masalah")
     x_asal_product = fields.Selection([('produksi', 'Produksi'),
                                        ('reture', 'Reture Customer'),
                                        ('warehouse', 'Warehouse')], string="Asal Product")
@@ -105,7 +153,16 @@ class quality_inspection_line(models.Model):
     image = fields.Binary(string="Gmbr Defect")
     second_image = fields.Binary(string="Gmbr Keseluruhan")
     x_mesin = fields.Many2many('x.mesin.tags', string="Type Mesin")
+    x_department = fields.Many2one('hr.department', string='Department')
+    x_name_issue = fields.Text(string='Nama Issue', store=True)
+    x_repeat = fields.Boolean(string='Repeat')
 
+    @api.onchange('x_category_permasalahan_baru')
+    def nama_issue(self):
+        if self.x_category_permasalahan_baru:
+            self.x_name_issue = self.quality_inspection_id.x_partner_id.name + ' - ' + self.x_category_permasalahan_baru.name
+        else:
+            self.x_name_issue = self.quality_inspection_id.x_partner_id.name + ' - '
 
     # METER PERSEGI Akhir
     # Rumus mencari meter persegi

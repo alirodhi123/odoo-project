@@ -16,6 +16,7 @@
                      <field name="x_confirmation_date_so"></field>
                      <field name="x_note_so_tree"></field>
                      <field name="x_status_product"></field>
+                     <field name="x_reason_dont_need_ok"></field>
 
                      <button name="pop_message_ok"
                              string="Create OK"
@@ -48,9 +49,9 @@
                  </xpath>
 
                 <!-- Menambahkan field produced ok pada open SO -->
-<!--                <xpath expr="/tree/field[@name='qty_invoiced']" position="after">-->
-<!--                    <field name="x_qty_produced_ok"></field>-->
-<!--                 </xpath>-->
+                <xpath expr="/tree/field[@name='qty_invoiced']" position="after">
+                    <field name="x_qty_produced_ok"></field>
+                 </xpath>
 
             </field>
         </record>
@@ -59,18 +60,18 @@
             INHERIT SALE ORDER
             MENAMBAHKAN PRODUCED QTY DI SALE ORDER LINE
         -->
-<!--        <record model="ir.ui.view" id="sale_order_inherit_view_custom">-->
-<!--            <field name="name">sale.order</field>-->
-<!--            <field name="model">sale.order</field>-->
-<!--            <field name="inherit_id" ref="sale.view_order_form"/>-->
-<!--            <field name="arch" type="xml">-->
+        <record model="ir.ui.view" id="sale_order_inherit_view_custom">
+            <field name="name">sale.order</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
 
-<!--                <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='qty_invoiced']" position="after">-->
-<!--                    <field name="x_qty_produced_ok"></field>-->
-<!--                </xpath>-->
+                <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='qty_invoiced']" position="after">
+                    <field name="x_qty_produced_ok"></field>
+                </xpath>
 
-<!--            </field>-->
-<!--        </record>-->
+            </field>
+        </record>
 
         <record id="view_sale_order_line_search_inherit" model="ir.ui.view">
             <field name="name">sale.order.line.list.select</field>

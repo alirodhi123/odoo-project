@@ -10,6 +10,7 @@ class sale_custom(models.Model):
 
      x_tcm_second = fields.Float(digits=dp.get_precision('mrp routing'),string = 'Default Duration in second')
      x_speed_per_mnt = fields.Float(string = 'Meter per Menit' , digits=(16, 4))
+     x_kategori_proses = fields.Many2one('x.category.process', string="Process Category")
 
      @api.onchange('x_tcm_second')
      def set_value(self):

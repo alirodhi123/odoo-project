@@ -1,17 +1,40 @@
 <odoo>
     <data>
 
+        <!-- Inherite tree view -->
+         <record id="vendor_bill_inherit_tree" model="ir.ui.view">
+            <field name="inherit_id" ref="account.invoice_supplier_tree"/>
+            <field name="model">account.invoice</field>
+            <field name="arch" type="xml">
+                <field name="origin" position="after">
+                    <field name="x_custom_payment_id"></field>
+                </field>
+            </field>
+        </record>
+
+        <!-- Inherite Form view -->
         <record id="vendor_bill_inherit_form" model="ir.ui.view">
             <field name="inherit_id" ref="account.invoice_supplier_form"/>
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
                 <field name="reference" position="after">
-                    <field name="x_no_receipt" domain="[('partner_id', '=', partner_id), ('origin', '=', origin),
-                                                        ('state', '=', 'done')]"></field>
-                </field>
+                    <label for="x_no_receipt"></label>
+                    <div class="o_row">
+                        <field name="x_no_receipt" domain="[('partner_id', '=', partner_id), ('origin', '=', origin),
+                                                        ('state', '=', 'done'), ('picking_type_id', '=', 1),
+                                                        ('x_flag_receipt', '=', False)]"></field>
 
+                        <button name="insert_bill"
+                                type="object"
+                                string="Insert Bill"
+                                class="oe_highlight"
+                                attrs="{'invisible': ['|', ('state', 'in', ['paid', 'open']),
+                                                           ('x_no_receipt', '=', False)]}"/>
+                    </div>
+                    <field name="x_sjk_supplier"></field>
+                    <field name="x_custom_payment_id"></field>
+                </field>
             </field>
         </record>
-
     </data>
 </odoo>

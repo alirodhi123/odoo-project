@@ -1,0 +1,59 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="range_price_tree">
+            <field name="name">x.range.price.sq.tree</field>
+            <field name="model">x.range.price.sq</field>
+            <field name="arch" type="xml">
+
+                <tree>
+                    <field name="x_quantity_range" string="Quantity Range"/>
+                    <!--<field name="x_quantity_roundup" string="Quantity Roundup"/>-->
+                    <!--<field name="x_quantity_m2" string="Quantity m2"/>-->
+                    <field name="x_price_pcs" string="Price per pcs"/>
+                    <!--<field name="x_coba" string="Coba"/>-->
+                    <!--<field name="x_price_pcs_range" string="Price per pcs range"/>-->
+                    <!--<field name="x_price_m2" string="Price per m2"/>-->
+                    <field name="x_price_total_range" string="Price Total"/>
+                </tree>
+            </field>
+        </record>
+
+         <record model="ir.ui.view" id="range_price_form">
+            <field name="name">x.range.price.sq.form</field>
+            <field name="model">x.range.price.sq</field>
+            <field name="arch" type="xml">
+                <form>
+                        <group>
+                            <field name="x_quantity_range" string="Quantity Range"/>
+                            <!--<field name="x_quantity_roundup" string="Quantity Roundup"/>-->
+                            <!--<field name="x_quantity_m2" string="Quantity m2"/>-->
+                            <field name="x_price_pcs" string="Price per pcs"/>
+                            <!--<field name="x_coba" string="Coba"/>-->
+                            <!--<field name="x_price_pcs_range" string="Price per pcs range"/>-->
+                            <!--<field name="x_price_m2" string="Price per m2"/>-->
+                            <field name="x_price_total_range" string="Price Total"/>
+                            <!--<field name="x_hpp_pcs" string="HPP per pcs" groups="base.group_system"/>-->
+                            <!--<field name="x_hpp_m2" string="HPP per m2" />-->
+                            <!--<field name="x_hpp_total_range" string="HPP Total" groups="base.group_system"/>-->
+                            <!--<field name="x_prosentase_profit" string="Prosentase Profit" groups="base.group_system"/>-->
+                        </group>
+
+
+                    <!--<button name="act_req_dk" type="object" string="Request" class="oe_highlight" attrs="{'invisible':['|','|',('x_status_cr','=','reject'),('x_flag_reqdk','=',True),('x_flag_appdk','=',True)]}"/>-->
+                    <!--<button name="act_approve" type="object" string="Approve" class="oe_highlight" attrs="{'invisible':['|', '|','|',('x_status_cr','=','approve'), ('x_status_cr','=','reject'),('x_status_cr','=','done'),('x_is_salemanager', '=', False)]}"/>-->
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="list_range_price">
+            <field name="name">Range Price</field>
+            <field name="res_model">x.range.price.sq</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <!--<menuitem id="price_range" name="price range"-->
+                  <!--parent="sales_team.menu_sales" sequence="9"-->
+                  <!--action="list_range_price"/>-->
+    </data>
+</odoo>

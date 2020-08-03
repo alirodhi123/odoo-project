@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="act_open_vit_efaktur_pm_wizard" model="ir.actions.act_window">
+            <field name="name">Export Faktur Pajak Masukan</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">vit.efaktur_pm</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="view_vit_efaktur_pm_form" model="ir.ui.view">
+            <field name="name">view_vit_efaktur_pm_form</field>
+            <field name="model">vit.efaktur_pm</field>
+            <field name="type">form</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Export Pajak Masukan" version="7.0">
+
+                    <p>
+                        Klik tombol Export di bawah untuk mulai export Faktur Pajak Masukan.
+                        Data yang diexport adalah Invoice Supplier yang berstatus Open dan belum diexport ke E-Faktur.
+                    </p>
+
+
+                    <p>
+                        Setelah proses export Faktur Pajak Masukan selesai dilakukan,
+                        download file:
+                    </p>
+                    <p>
+                        <a href="/vit_efaktur/static/fpm.csv">
+                            <img src="/vit_efaktur/static/src/img/export.png"/>
+                            <b>fpm.csv</b>
+                        </a>
+                    </p>
+
+
+                    <p>
+                        Lalu import ke program E-Faktur DJP melalui menu <b>Referensi - Pajak Masukan - Import</b>
+                    </p>
+
+                    <footer>
+                        <button string="Export" name="confirm_button" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel" />
+                    </footer>
+
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>

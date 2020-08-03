@@ -23,6 +23,8 @@
                                 class="oe_stat_button"
                                 attrs="{'invisible': [('state', 'in', ['sale', 'done'])]}"/>
                     </div>
+                     <field name="x_status_so"></field>
+                    <field name="x_product_double" invisible="1"></field>
                 </xpath>
 
                 <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='product_id']"
@@ -32,7 +34,14 @@
                     <field name="x_trial" invisible = '1' />
 
                     <field name="x_st_cr" invisible = '1'/>
+                    <field name="x_so_name" invisible="1"/>
                     <field name="x_duedate_kirim"/>
+                </xpath>
+
+                <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='name']"
+                       position="after">
+                    <field name="x_manufacturing_type"></field>
+                    <field name="x_planning_type" invisible="1"></field>
                 </xpath>
 
                 <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='product_uom']"
@@ -50,9 +59,37 @@
                     <field name="x_harga_material"
                            attrs="{'invisible': [('x_pecah_harga', '!=', 'yes')]}"
                            groups="sales_team.group_sale_manager,sales_team.group_sale_salesman"/>
-
+                    <field name="x_status_so_line" invisible="1"></field>
                 </xpath>
 
+                <!-- Hidden description pada so line -->
+                <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='name']"
+                       position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+
+
+        <!-- Inherite tree view -->
+        <record model="ir.ui.view" id="quotation_cr_tree_view">
+            <field name="name">sale.order.tree.view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree"></field>
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="x_status_so"></field>
+
+                </field>
+                <field name="invoice_status" position="after">
+                    <button name="action_close_so"
+                         string="Close SO"
+                         type="object"
+                         attrs="{'invisible': [('x_status_so', '=', 'close')]}"
+                         help="calls python function"/>
+                </field>
             </field>
         </record>
 

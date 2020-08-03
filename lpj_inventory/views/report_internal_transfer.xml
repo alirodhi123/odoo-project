@@ -4,7 +4,7 @@
     <data>
 
         <report
-            string="Internal Transfer"
+            string="Internal Transfer / Receipt"
             id="action_report_internal_transfer"
             model="stock.picking"
             report_type="qweb-pdf"
@@ -55,18 +55,26 @@
                         <!-- Judul -->
                         <div class="row">
                             <div class="col-xs-12 text-center">
-                                <h3>Internal Transfer</h3>
+                                <h3>
+                                    <span t-if="o.picking_type_code == 'internal'">Internal Transfer</span>
+                                    <span t-if="o.picking_type_code == 'incoming'">Surat Retur</span>
+                                </h3>
                                 <h4 t-field="o.name" class="mt0"/>
                             </div>
                         </div>
 
                         <!-- Row Informasi Internal Transfer -->
                         <div class="row mt32 mb32">
-                            <div t-if="o.location_id" class="col-xs-3" style="margin-top: -20px">
+                            <div t-if="o.picking_type_code == 'incoming'" class="col-xs-3" style="margin-top: -20px">
+                                <strong>Partner:</strong><br/>
+                                <span t-field="o.partner_id"/>
+                            </div>
+
+                            <div t-if="o.location_id and o.picking_type_code == 'internal'" class="col-xs-3" style="margin-top: -20px">
                                 <strong>Source Location:</strong><br/>
                                 <span t-field="o.location_id"/>
                             </div>
-                            <div t-if="o.location_dest_id" class="col-xs-3" style="margin-top: -20px">
+                            <div t-if="o.location_dest_id and o.picking_type_code == 'internal'" class="col-xs-3" style="margin-top: -20px">
                                 <strong>Destination Location:</strong><br/>
                                 <span t-field="o.location_dest_id"/>
                             </div>
@@ -125,11 +133,58 @@
                             </div>
                         </div>
 
+                        <!-- Row TTD -->
+                        <div t-if="o.picking_type_code == 'incoming'" class="row">
+                            <table>
+                                <div style="margin-top: -23px">
+                                    <div style="float: left; margin-left: 40px;">
+                                        <h5 class="text-center"><b>Penerima</b></h5>
+                                        <br></br>
+                                        <br></br>
+                                        <p class="text-center">........................</p>
+                                    </div>
+                                    <div style="float: left; margin-left: 151px;">
+                                        <h5 class="text-center"><b>Pengirim</b></h5>
+                                        <br></br>
+                                        <br></br>
+                                        <p class="text-center">........................</p>
+                                    </div>
+                                    <div style="float: left; margin-left: 208px;">
+                                        <h5 class="text-center"><b>Driver</b></h5>
+                                        <br></br>
+                                        <br></br>
+                                        <p class="text-center">........................</p>
+                                    </div>
+                                    <div style="float: Right; margin-right: 40px;">
+                                        <h5 class="text-center"><b>Satpam</b></h5>
+                                        <br></br>
+                                        <br></br>
+                                        <p class="text-center">........................</p>
+                                    </div>
+                                </div>
+                            </table>
+                        </div>
+
                         <p t-if="o.state in ['draft', 'waiting', 'confirmed']">
                             You do not have any products reserved for this picking.  Please click the 'Reserve' button
                             to check if products are available.
                         </p>
                         <p t-field="o.note"/>
+                        <br/>
+                        <!-- Footer -->
+                        <div class="row" t-if="o.picking_type_code == 'incoming'">
+                            <div class="col-xs-12" style="width: 100%; margin-top: -15px;">
+                                <div class="text-center" style="border-top: 1px solid black;">
+                                    <ul t-if="not res_company.custom_footer" style="list-style: none; margin: 0 auto;">
+                                        <t t-set="res_company" t-value="res_company.sudo()"/>
+                                        <li t-if="res_company.street">Office: <span t-field="res_company.street"/></li>
+                                        <li t-if="res_company.phone">Phone: <span t-field="res_company.phone"/><span>, 99038051, 99038051, 99038064</span> • Fax: <span t-field="res_company.fax"/> </li>
+                                        <li t-if="res_company.email">Email: <span t-field="res_company.email"/> • Website: <span t-field="res_company.website"></span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    <!-- Tutup Footer -->
                     </div> <!-- Tutup page -->
                 </t>
              </t>

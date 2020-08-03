@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-
+from odoo.exceptions import UserError
 import subprocess
 import odoo.addons.decimal_precision as dp
 
@@ -12,6 +12,7 @@ import odoo.addons.decimal_precision as dp
 class sale_custom(models.Model):
      _inherit = 'mrp.workorder'
 
+     x_mrp_routing = fields.Many2one('mrp.routing.workcenter')
      x_prod_temp = fields.Many2one('product.template',related = 'product_id.product_tmpl_id')
      x_layout_product = fields.One2many(related = 'x_prod_temp.x_layout_product_ids')
      # x_type_lebaran = fields.Selection(related='x_layout_product.x_type', domain = [('x_layout_product.x_type', '=', 'Arround')])
@@ -23,6 +24,7 @@ class sale_custom(models.Model):
      x_ids_duration = fields.Float(related = 'time_ids.duration')
      x_total_duration = fields.Float(string = 'Total Durasi')
      x_shift_leader = fields.Many2one('hr.employee', string='Shift Leader')
+     x_kategori_proses = fields.Many2one('x.category.process', string="Kategori Proses", track_visibility='onchange')
      # CALENDAR
      date_planned_start = fields.Datetime(
          'Scheduled Date Start',
@@ -33,6 +35,9 @@ class sale_custom(models.Model):
          compute='create_date_planned_finished')
      # CUSTOM
      custom_move_lot_ids = fields.One2many('x.move.lots', 'workorder_id')
+     x_berat_per_lot = fields.Float(string="Berat per Lot", required=True, help="Quantity ini dihasilkan dari berat per pcs * qty per lot")
+     x_berat_per_pcs = fields.Float(string="Berat per Pcs", compute='compute_berat_pcs', store=True, digits=(12,4))
+     x_qty_sisa_produksi = fields.Float(string="Qty Sisa", readonly=True)
 
 
      @api.onchange('x_qty_meter')
@@ -54,7 +59,6 @@ class sale_custom(models.Model):
          for workorder in self:
              workorder.delete_generate_lot_action()
              workorder.generate_lot_reference_action()
-
 
      # Function untuk Generate lot reference
      @api.multi
@@ -146,6 +150,111 @@ class sale_custom(models.Model):
              start_date_var = datetime.strptime(str(start_date), format)
              self.date_planned_finished = start_date_var + relativedelta(hours=float(self.duration_expected / 60))
 
+     # Function update kategori proses di master routing
+     @api.multi
+     def write(self, vals):
+         res = super(sale_custom, self).write(vals)
+         var_operation_ids = []
+         production_id_var = self.production_id.id
+         mrp_production_obj = self.env['mrp.production'].search([('id', '=', production_id_var)])
+
+         operation_id = self.operation_id
+         kategori_proses = self.x_kategori_proses
+
+         if mrp_production_obj:
+             for row in mrp_production_obj:
+                 routing_id = row.routing_id
+
+                 # Cek apakah routing sama dengan routing yang di OK
+                 mrp_routing_obj = self.env['mrp.routing'].search([('id', '=', routing_id.id)])
+                 if mrp_routing_obj:
+                     mrp_routing_workcenter_obj = self.env['mrp.routing.workcenter'].search([('id', '=', operation_id.id)])
+                     if mrp_routing_workcenter_obj:
+                         values = {}
+                         values['x_kategori_proses'] = kategori_proses
+                         # Update existing record berdasarkan operation id
+                         var_operation_ids.append((1, operation_id.id, values))
+
+                     mrp_routing_obj.update({'operation_ids': var_operation_ids})
+
+                 return res
+
+     # Fungsi store berat pada stock production lot
+     @api.multi
+     def store_berat_stc(self):
+         nomor_lot = self.final_lot_id
+
+         if nomor_lot:
+            lot_obj = self.env['stock.production.lot'].search([('id', '=', nomor_lot.id)])
+            if lot_obj:
+                berat_stc = self.x_berat_per_lot
+                berat_pcs = self.x_berat_per_pcs
+
+                return lot_obj.update({
+                    'x_berat_per_pcs_lot': berat_pcs
+                })
+
+     # Inherite button record production (tombol done)
+     @api.multi
+     def record_production(self):
+         for row in self:
+             row.store_berat_stc()
+             row.check_qty_wip_header()
+
+             res = super(sale_custom, row).record_production()
+             return res
+
+     @api.depends('x_berat_per_lot', 'qty_producing')
+     def compute_berat_pcs(self):
+         for row in self:
+             berat_per_lot = row.x_berat_per_lot * 1000 # Dari kg dikonversi ke gram
+             current_qty = row.qty_producing
+
+             if current_qty != 0:
+                row.x_berat_per_pcs = float(berat_per_lot) / float(current_qty)
+
+     # CEK QTY PRODUCT WIP
+     # fungsi untuk checking qty product
+     @api.multi
+     def check_qty_wip_header(self):
+         for row in self:
+             active_move_lot_ids = row.active_move_lot_ids
+             product_temp = []
+
+             for line in active_move_lot_ids:
+                 values = {}
+                 qty_wip = 0
+                 lot_wip = 0
+                 qty_line = 0
+                 lot_id_line = 0
+                 nama = ""
+
+                 product_id_line = line.product_id
+                 lot_id_line = line.lot_id
+                 qty_line = line.quantity_done
+
+                 stock_quant_obj = row.env['stock.quant'].search([('product_id', '=', product_id_line.id)])
+                 if stock_quant_obj:
+                     for stock in stock_quant_obj:
+                         location_wip = stock.location_id.id
+
+                         if location_wip == 22:
+                             qty_wip += stock.qty
+                             lot_wip = stock.lot_id
+
+                     # Jika qty di wip tidak cukup, maka tampung ke dalam array.
+                     if qty_line > qty_wip and lot_id_line == lot_wip:
+                        product_temp.append((product_id_line))
+
+             # Jika array ada isinya, maka keluarkan isi array
+             if product_temp:
+                 i = 1
+                 for isi in product_temp:
+                     nama += "\n" + str(i) + ". " + isi.barcode
+                     i += 1
+
+                 raise UserError(_(
+                     'Quantity in WIP is not enough, please check the quantity on hand of : ' + nama + ''))
 
 
 class lot_operation(models.Model):
@@ -169,14 +278,12 @@ class mrp_inherit(models.Model):
     x_wo_lot = fields.Char(string='Nomor Lot')
     x_keterangan = fields.Text(string="Keterangan")
     x_qty = fields.Float(string="Qty")
-    # x_total_qty = fields.Float()
-    # x_shift_leader = fields.Many2one('hr.employee', string='Shift Leader')
 
-    # @api.onchange('x_qty')
-    # def total_qty(self):
-    #     self.x_total_qty = 0
-    #     for x in self.time_ids:
-    #         self.x_total_qty = self.x_total_qty + x.x_qty
+
+
+
+
+
 
 
 

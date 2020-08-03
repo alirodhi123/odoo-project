@@ -43,6 +43,12 @@
               sequence="16"
               action="serah_terima_sjk_accounting"></menuitem>
 
+    <!-- Menu Custom Register Payment -->
+    <menuitem name="Draft Payments" id="menu_custom_payment"
+              parent="account.menu_finance_payables"
+              sequence="116"
+              action="payment_list_action"></menuitem>
+
     <!-- Sub menu down payment -->
     <!--<menuitem name="Down Payment" id="sub_menu_dp"-->
               <!--parent="account.menu_finance_receivables"-->

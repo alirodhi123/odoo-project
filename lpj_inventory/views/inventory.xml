@@ -11,17 +11,19 @@
                     <field name="x_tgl_kedatangan_bahan" attrs="{'invisible': [('picking_type_id', '!=', 1)]}"/>
                 </xpath>
                 <xpath expr="//field[@name='min_date']" position="after">
+                    <field name="x_status_pengiriman" attrs="{'invisible': [('picking_type_id', '!=', 4)]}"></field>
                     <field name="x_tkr_guling"  attrs="{'invisible': [('picking_type_id', '!=', 4)]}"/>
-                    <field name="x_send_to_fac" groups="mrp.group_mrp_user"
-                           attrs="{'invisible': [('picking_type_id', '!=', 4)]}"></field>
+                    <field name="id_ticket_helpdesk" readonly="1" attrs="{'invisible': [('picking_type_id', '!=', 5)]}"></field>
                 </xpath>
                 
                 <!-- Stock pack operation -->
                 <field name="qty_done" position="after">
-                   <field name="keterangan"></field>
+                    <field name="x_total_berat_stc"></field>
+                    <field name="keterangan"></field>
                </field>
             </field>
         </record>
+
         <record model="ir.ui.view" id="stock_inventory">
             <field name="name">stock.inventory.lineids</field>
             <field name="model">stock.inventory</field>
@@ -97,9 +99,9 @@
             <field name="arch" type="xml">
 
                 <!-- Hidden button print di Delivery Order -->
-                <button name="%(stock.action_report_delivery)d" position="attributes">
-                    <attribute name="invisible">True</attribute>
-                </button>
+<!--                <button name="%(action_report_delivery)d" position="attributes">-->
+<!--                    <attribute name="invisible">True</attribute>-->
+<!--                </button>-->
 
                 <!-- Hidden button print di Delivery Order -->
                 <button name="do_print_picking" position="attributes">
@@ -108,11 +110,52 @@
 
                 <!-- Add button print SJK -->
                 <xpath expr="//button[@name='do_print_picking']" position="after">
+                    <!-- Button print SJK untuk selain IT -->
                     <button name="print_sjk"
                             class="oe_highlight"
                             string="Print SJK"
                             type="object"
-                            attrs="{'invisible':['|', ('picking_type_code', '!=', 'outgoing'),('state','not in',['assigned','partially_available','done'])]}"/>
+                            attrs="{'invisible':['|', '|', '|', ('picking_type_code', '!=', 'outgoing'),
+                                                      ('state','not in',['assigned','partially_available', 'done']),
+                                                      ('is_delivery', '=', True),
+                                                      ('x_is_it', '=', True)]}"/>
+
+                    <!-- Button print SJK sementara -->
+<!--                    <button name="print_sjk"-->
+<!--                            class="oe_highlight"-->
+<!--                            string="Print SJK"-->
+<!--                            type="object"-->
+<!--                            attrs="{'invisible':['|', '|', ('picking_type_code', '!=', 'outgoing'),-->
+<!--                                                      ('state','not in',['assigned','partially_available', 'done'])]}"/>-->
+
+                    <!-- Button print SJK untuk IT -->
+                    <button name="print_sjk_it"
+                            class="oe_highlight"
+                            string="Print SJK"
+                            type="object"
+                            attrs="{'invisible':['|', '|', ('picking_type_code', '!=', 'outgoing'),
+                                                      ('state','not in',['assigned','partially_available','done']),
+                                                      ('x_is_it', '=', False)]}"/>
+
+                    <button name="action_kirim_barang"
+                            class="oe_highlight"
+                            string="Kirim Barang"
+                            type="object"
+                            attrs="{'invisible':['|', '|', ('picking_type_code', '!=', 'outgoing'),
+                                                      ('state','not in',['assigned','partially_available']),
+                                                      ('x_flag_kirim_barang', '=', True)]}"/>
+
+                    <button name="action_terima_cust"
+                            class="oe_highlight"
+                            string="Diterima Cust"
+                            type="object"
+                            attrs="{'invisible':['|', '|', '|', ('picking_type_code', '!=', 'outgoing'),
+                                                      ('state','not in',['assigned','partially_available']),
+                                                      ('x_flag_terima_cust', '=', True),
+                                                      ('x_flag_kirim_barang', '=', False)]}"/>
+
+                    <field name="x_flag_kirim_barang" invisible="1"></field>
+                    <field name="x_flag_terima_cust" invisible="1"></field>
                 </xpath>
 
                 <!-- Replace button validate -->
@@ -137,44 +180,58 @@
                                                        ('state', 'not in', ('draft', 'partially_available', 'assigned'))]}"/>
                 </button>
 
-                <!-- Add flagging delivery -->
+                <!-- Add button insert material untuk internal TF -->
                 <field name="origin" position="after">
                     <field name="is_delivery" invisible="1"></field>
                     <field name="x_po_cus" invisible="1"></field>
                     <field name="x_group_id_so" invisible="1"></field>
+                    <field name="x_flag_receipt" invisible="1"></field>
+                    <field name="x_is_it" invisible="1"></field>
+
+                    <t t-elif="partner_id.parent_id != null">
+                        <field name="x_kebutuhan_pengiriman_ids2" string="Kebutuhan Pengiriman" widget="many2many_tags" readonly="1"></field>
+
+                    </t>
+                    <t t-if="partner_id.parent_id == null">
+
+                        <field name="x_kebutuhan_pengiriman_ids" string="Kebutuhan Pengiriman" widget="many2many_tags" readonly="1"></field>
+                    </t>
+                    <!--<br/>-->
+
                 </field>
+
+                <field name="origin" position="replace">
+                    <label for="origin"></label>
+                    <div class="o_row">
+                        <field name="origin"></field>
+                        <button class="oe_highlight"
+                             name="insert_material"
+                             string="Insert Material"
+                             type="object"
+                             help="calls python function"
+                             attrs="{'invisible': ['|', '|', ('state', 'in', ('done', 'cancel', 'assigned')),
+                                                   ('picking_type_code', '!=', 'internal'),
+                                                   ('origin', '=', False)]}">
+                        </button>
+                    </div>
+                </field>
+
 
                 <!-- Hidden button cancel (WH/OUT, IN) -->
                 <button name="action_cancel" position="attributes">
+<!--                    <attribute name="groups">mrp.group_mrp_manager</attribute>-->
                     <attribute name="groups">base.group_system</attribute>
                 </button>
-            </field>
-        </record>
 
-        <!-- Inherit stock.picking TREE -->
-        <record model="ir.ui.view" id="stock_picking_tree_view_inherit">
-            <field name="name">stock.picking.tree</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.vpicktree"/>
-            <field name="arch" type="xml">
-                <field name="state" position="after">
-                     <button class="oe_highlight"
-                             name="send_action_fac"
-                             string="Send FAC"
-                             type="object"
-                             help="calls python function"
-                             attrs="{'invisible': ['|', '|', ('picking_type_code', '!=', 'outgoing'),
-                                                             ('x_send_to_fac', '=', 'yes'),
-                                                             ('state', '!=', 'done')]}">
-                     </button>
-                    <field name="picking_type_code" invisible="1"></field>
-                    <field name="x_send_to_fac" invisible="1"></field>
+                <!-- Inherit no sj internal -->
+                <field name="picking_type_id" position="after">
+                    <field name="x_no_sj_internal" attrs="{'invisible': [('picking_type_id', '!=', 4)]}"></field>
                 </field>
-
             </field>
         </record>
 
     </data>
 </odoo>
+
 
 

@@ -152,6 +152,11 @@
                                 string="Don't Need Trial"
                                 states="4,5"/>
 
+                        <button name="action_cancel"
+                                type="object"
+                                string="Cancel"
+                                attrs="{'invisible':[('state','in',('9', 'cancel'))]}"/>
+
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -176,7 +181,7 @@
                             <group>
 
                                 <field name="x_sq"/>
-                                <button name="btn_sq" string="Insert Attribute SQ" type="object" attrs="{'invisible':['|', ('state', '!=', '1')]}" />
+                                <button name="btn_sq" string="Insert Attribute SQ" type="object" attrs="{'invisible':['|', ('state', '!=', '0')]}" />
                                <br></br>
                                 <field name="item_description"/>
                                 <field name="x_repeat_order"/>
@@ -198,7 +203,7 @@
                                 <!--<field name="x_sale_order_line_ids" invisible = '1'/>-->
                             </group>
                             <group>
-                                <field name="x_duedate_drawing" attrs="{'readonly': [('state', '!=', '1')]}"/>
+                                <field name="x_duedate_drawing" attrs="{'readonly': [('state', '!=', '0')]}"/>
                                 <field name="x_staff_drawing"/>
                                 <field name="x_duedate_startdrawing"/>
                                 <field name="x_estimated_duration"/>
@@ -265,7 +270,7 @@
                                                     type="object"
                                                     string="Create Drawing"
                                                     class="oe_highlight oe_inline"
-                                                    attrs="{'invisible':['|', ('state', '!=', '2')]}" />
+                                                    attrs="{'invisible':['|', ('state', '!=', '1')]}" />
                                         </div>
                                         <field name="x_length_prd"/>
                                         <field name="x_width_prd"/>
@@ -377,6 +382,21 @@
                 </form>
             </field>
         </record>
+
+        <!-- Filter search design request -->
+        <record id="view_cusreq_filter" model="ir.ui.view">
+            <field name="name">x.cusrequirement.filter</field>
+            <field name="model">x.cusrequirement</field>
+            <field name="arch" type="xml">
+                <search string="Design Request">
+                    <field name="name"></field>
+                    <separator/>
+                    <field name="x_product"></field>
+                    <field name="item_description"></field>
+                    <field name="x_customer_id"></field>
+                </search>
+            </field>
+         </record>
 
         <!--Template autoemail proof notification-->
         <record model="mail.template" id="template_mail_proof">

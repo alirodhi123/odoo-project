@@ -8,9 +8,60 @@
             <field name="inherit_id" ref="account.view_account_payment_form"></field>
             <field name="arch" type="xml">
                 <field name="communication" position="after">
+                    <field name="move_name"></field>
                     <field name="amount_to_text" invisible="1"></field>
                     <field name="x_amount_total" invisible="1"></field>
                     <field name="x_perkiraan_journal" invisible="1"></field>
+                    <field name="x_nomor_journal" invisible="1"></field>
+                </field>
+            </field>
+        </record>
+
+        <!-- Inherit tree view account payment invoice -->
+        <record model="ir.ui.view" id="payment_tree_view">
+            <field name="name">account.payment.form.view</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_tree"></field>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="move_name"></field>
+                </field>
+            </field>
+        </record>
+
+        <!-- Filter untuk account payment -->
+        <record model="ir.ui.view" id="account_payment_search_view">
+          <field name="name">account.payment.search</field>
+          <field name="model">account.payment</field>
+          <field name="inherit_id" ref="account.view_account_payment_search"></field>
+          <field name="arch" type="xml">
+             <search>
+                 <field name="move_name"/>
+             </search>
+          </field>
+        </record>
+
+        <!-- PAYMENT PURCHASE -->
+        <!-- Inherit tree view account payment vendor bill -->
+        <record model="ir.ui.view" id="payment_tree_view_vendor_bill">
+            <field name="name">account.payment.form.view</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_supplier_payment_tree"></field>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="move_name"></field>
+                </field>
+            </field>
+        </record>
+
+        <!-- INHERITE PAYMENT FORM WIZARD -->
+        <record model="ir.ui.view" id="payment_form_view_wizard">
+            <field name="name">account.payment.form.view</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_invoice_form"></field>
+            <field name="arch" type="xml">
+                <field name="communication" position="after">
+                    <field name="x_draft_payment"></field>
                 </field>
             </field>
         </record>

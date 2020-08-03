@@ -24,6 +24,7 @@
                     <field name="x_variant_value" string='Value Variant'/>
                     <field name="qty_available"/>
                     <field name="x_qty_mpersegi"/>
+                    <field name="x_gsm_bahan"/>
                 </field>
             </field>
         </record>
@@ -33,6 +34,7 @@
             <field name="arch" type="xml">
                 <field name="x_width" position="after">
                     <field name="x_qty_mpersegi"/>
+                    <field name="x_gsm_bahan"/>
                 </field>
             </field>
         </record>

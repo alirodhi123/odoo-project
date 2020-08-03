@@ -19,6 +19,7 @@ class _drawing(models.Model):
     x_file_template = fields.Binary("Drawing with template", attachment=True,track_visibility='onchange', help="Upload file drawing with template (will send to customer)")
     x_description = fields.Char(string='Description', copy=False,track_visibility='onchange')
     x_partner = fields.Many2one('res.partner', string="Customer", track_visibility='onchange')
+    x_level_dwg = fields.Many2one('x.level.drawing', string="Level Drawing")
 
     @api.model
     def create(self, vals):
@@ -37,3 +38,8 @@ class _drawing(models.Model):
 
                 result = super(_drawing, self).create(vals)
                 return result
+
+class level_drawing(models.Model):
+    _name = 'x.level.drawing'
+
+    name = fields.Char(string="Level")

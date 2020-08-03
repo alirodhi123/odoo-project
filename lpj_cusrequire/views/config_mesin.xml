@@ -1,0 +1,44 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="config_mesin_tree">
+            <field name="name">x.config.mesin.tree</field>
+            <field name="model">x.config.mesin</field>
+            <field name="arch" type="xml">
+
+                <tree>
+                    <field name="name" string = "Jenis Mesin"/>
+                    <field name="x_harga_m2" string = "Harga m2"/>
+                    <!--<button name="act_req_dk" type="object" string="Request" class="oe_highlight" attrs="{'invisible':['|','|',('x_status_cr','=','reject'),('x_flag_reqdk','=',True),('x_flag_appdk','=',True)]}"/>-->
+                    <!--<button name="act_approve" type="object" string="Approve" class="oe_highlight" attrs="{'invisible':['|', '|','|',('x_status_cr','=','approve'), ('x_status_cr','=','reject'),('x_status_cr','=','done'),('x_is_salemanager', '=', False)]}"/>-->
+                </tree>
+            </field>
+        </record>
+
+         <record model="ir.ui.view" id="config_mesin_form">
+            <field name="name">x.config.mesin.form</field>
+            <field name="model">x.config.mesin</field>
+            <field name="arch" type="xml">
+                <form>
+
+                        <group>
+                            <field name="name" string = "Jenis Mesin"/>
+                            <field name="x_harga_m2" string = "Harga m2"/>
+                        </group>
+
+
+                    <!--<button name="act_req_dk" type="object" string="Request" class="oe_highlight" attrs="{'invisible':['|','|',('x_status_cr','=','reject'),('x_flag_reqdk','=',True),('x_flag_appdk','=',True)]}"/>-->
+                    <!--<button name="act_approve" type="object" string="Approve" class="oe_highlight" attrs="{'invisible':['|', '|','|',('x_status_cr','=','approve'), ('x_status_cr','=','reject'),('x_status_cr','=','done'),('x_is_salemanager', '=', False)]}"/>-->
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="list_config_mesin">
+            <field name="name">Config Mesin</field>
+            <field name="res_model">x.config.mesin</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

@@ -25,7 +25,7 @@ class ShiftEmployee(models.Model):
 
         if date_start:
             format_date = datetime.strptime(str(date_start), '%Y-%m-%d')
-            for row in range(13):
+            for row in range(14):
                 values = {}
 
                 values['x_mesin_id'] = mesin.id

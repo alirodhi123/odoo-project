@@ -5,11 +5,11 @@
 
         <report
             string="Delivery Slip"
-            id="action_report_delivery"
+            id="action_report_delivery_custom"
             model="stock.picking"
             report_type="qweb-pdf"
-            name="lpj_inventory.report_deliveryslip"
-            file="lpj_inventory.report_deliveryslip"
+            name="lpj_inventory.report_deliveryslip_custom"
+            file="lpj_inventory.report_deliveryslip_custom"
         />
 
         <!--<report-->
@@ -38,11 +38,11 @@
             <field name="dpi">90</field>
         </record>
 
-        <record id="lpj_inventory.action_report_delivery" model="ir.actions.report.xml">
+        <record id="lpj_inventory.action_report_delivery_custom" model="ir.actions.report.xml">
             <field name="paperformat_id" ref="lpj_inventory.paperformat_surat_jalan" />
         </record>
 
-        <template id="report_delivery_document">
+        <template id="report_delivery_document_custom">
             <t t-call="report.html_container">
                 <t t-call="report.html_container">
                     <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})" />
@@ -73,12 +73,17 @@
                             <div class="col-xs-6" style="margin-top: 7px">
                                 <table>
                                     <tr>
-                                        <td style="padding-right: 35px; padding-bottom:8px;"><b>No SJ</b></td>
+                                        <td style="padding-right: 45px; padding-bottom:8px;"><b>No SJ</b></td>
                                         <td style="padding-right: 10px">:</td>
                                         <td><p t-if="o.name"><span t-field="o.name"></span></p></td>
                                     </tr>
                                     <tr>
-                                        <td style="padding-right: 35px; padding-bottom:8px;"><b>Tanggal</b></td>
+                                        <td style="padding-right: 45px; padding-bottom:8px;"><b>No SJ Internal</b></td>
+                                        <td style="padding-right: 10px">:</td>
+                                        <td><p t-if="o.name"><span t-field="o.x_no_sj_internal"></span></p></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-right: 45px; padding-bottom:8px;"><b>Tanggal</b></td>
                                         <td style="padding-right: 10px">:</td>
                                         <td><p t-if="o.min_date"><span t-field="o.min_date" t-field-options='{"format": "d/MM/y"}'></span></p></td>
                                     </tr>
@@ -139,7 +144,8 @@
                                             <tr>
                                                 <th><strong>Product</strong></th>
                                                 <th><strong>Total Qty</strong></th>
-                                                <th><strong>Keterangan</strong></th>
+                                                <th><strong>Total Weight</strong></th>
+                                                <th><strong>Description</strong></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -149,6 +155,12 @@
                                                     <span t-field="pack_operation.qty_done"></span>
                                                     <span t-field="pack_operation.product_uom_id"></span>
                                                 </td>
+                                                <td>
+                                                    <span>
+                                                        <span t-field="pack_operation.x_total_berat_stc"></span>
+                                                        <span> Kg</span>
+                                                    </span>
+                                                </td>
                                                 <td><span t-field="pack_operation.keterangan"></span></td>
                                             </tr>
                                         </tbody>
@@ -157,11 +169,11 @@
                                 <p t-if="o.backorder_id">
                                     This shipment is a backorder of <t t-esc="o.backorder_id.name"/>.
                                 </p>
-                                <p>
+                                <!--<p>
                                     <t t-if="o.search([('backorder_id', '=', o.id), ('state', 'not in', ['cancel', 'done'])])">
                                         All items couldn't be shipped, the remaining ones will be shipped as soon as they become available.
                                     </t>
-                                </p>
+                                </p> -->
                             </div>
                         </div>
 
@@ -204,7 +216,7 @@
                         </div>
                         <br/>
 
-<!-- Footer -->
+                        <!-- Footer -->
                         <div class="row">
                             <div class="col-xs-12" style="width: 100%; margin-top: -15px;">
                                 <div class="text-center" style="border-top: 1px solid black;">
@@ -223,9 +235,9 @@
              </t>
         </template>
 
-        <template id="report_deliveryslip">
+        <template id="report_deliveryslip_custom">
             <t t-foreach="docs" t-as="o">
-                <t t-call="lpj_inventory.report_delivery_document" t-lang="o.partner_id.lang"/>
+                <t t-call="lpj_inventory.report_delivery_document_custom" t-lang="o.partner_id.lang"/>
             </t>
         </template>
 

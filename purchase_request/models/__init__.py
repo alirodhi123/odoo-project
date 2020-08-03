@@ -8,3 +8,4 @@ from . import purchase_order_inherit
 from . import manufacturing_order
 from . import partner
 from . import pop_message_pr
+

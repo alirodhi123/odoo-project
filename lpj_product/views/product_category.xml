@@ -9,6 +9,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='type']" position="before">
                     <field name = "sts_bhn_utama"/>
+                    <field name="x_kode_item"></field>
                 </xpath>
             </field>
         </record>

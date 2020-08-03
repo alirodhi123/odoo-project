@@ -13,8 +13,9 @@
                         name="compare_bom"
                         type="object"
                         help="calls python function"
-                        attrs="{'invisible': ['|', ('state', 'not in', ['confirmed']),('availability', '=', 'none')]}"
+                        groups="base.group_no_one"
                         options="{'reload_on_button': true}">
+<!--                        attrs="{'invisible': ['|', ('state', 'not in', ['confirmed']),('availability', '=', 'none')]}"-->
                     </button>
                 </xpath>
             </field>

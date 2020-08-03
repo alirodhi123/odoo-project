@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+         <report
+            id="journal_entry_report"
+            model="account.move"
+            string="Bukti Kas Keluar"
+            report_type="qweb-pdf"
+            name="lpj_accounting.report_journal_entry"
+            file="lpj_accounting.report_journal_entry"
+            menu="True"
+        />
+
+        <record id="paperformat_journal_entry" model="report.paperformat">
+            <field name="name">European A4 low margin</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">6</field>
+            <field name="margin_bottom">4</field>
+            <field name="margin_left">6</field>
+            <field name="margin_right">6</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field> <!-- Jika ingin header muncul ubah nilai - 0 -->
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="lpj_accounting.journal_entry_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="lpj_accounting.paperformat_journal_entry" />
+        </record>
+
+
+        <template id="report_journal_entry_document">
+            <t t-call="report.html_container">
+              <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="text-center">
+                                <h4>BUKTI KAS KELUAR</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Untuk garis horizontal-->
+                    <div class="row zero_min_height">
+                        <div class="col-xs-12">
+                            <div style="border-bottom: 1px solid black;"/>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <table>
+                                <tr t-if="o.name">
+                                    <td style="padding-right: 35px; padding-bottom: 5px;"><b>No</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px;">:</td>
+                                    <td style="padding-bottom: 5px;"><span t-field="o.name"/></td>
+                                </tr>
+                                <tr t-if="o.date">
+                                    <td style="padding-right: 35px; padding-bottom: 5px;"><b>Tanggal</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px;">:</td>
+                                    <td style="padding-bottom: 5px;"><span t-field="o.date" t-field-options='{"format": "d/MM/y"}'></span></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-xs-6">
+                            <table>
+                                <tr t-if="o.ref">
+                                    <td style="padding-right: 35px; padding-bottom: 5px;"><b>Memo</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px;">:</td>
+                                    <td style="padding-bottom: 5px;"><span t-field="o.ref"/></td>
+                                </tr>
+                                <tr t-if="o.journal_id">
+                                    <td style="padding-right: 35px; padding-bottom: 5px;"><b>Account Journal</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px;">:</td>
+                                    <td style="padding-bottom: 5px;"><span t-field="o.journal_id"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div> <!-- Tutup dibayarkan kepada -->
+
+                    <!-- Tabel transaksi -->
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <table style="border: 1px solid; width: 100%;">
+                               <tr>
+                                   <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px;">Account</th>
+                                   <th class="text-center" style="border: 1px solid; width: 60%; padding: 5px;">Label</th>
+                                   <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px;">Jumlah</th>
+                               </tr>
+
+                                <t t-if="o.x_count_debit == 1">
+                                    <tr t-foreach="o.line_ids" t-as="line">
+    <!--                                   <tr t-foreach="line.invoice_line_ids" t-as="row">-->
+                                            <t t-if="line.debit != 0">
+                                               <td class="text-center" style="border: 1px solid; width: 20%; padding: 2px; height: 55; vertical-align: middle;">
+                                                   <span>
+                                                       <span t-field="line.account_id.code"></span> - <span t-field="line.account_id.name"></span>
+                                                   </span>
+                                               </td>
+                                               <td style="border: 1px solid; width: 60%; padding: 2px;"><span t-field="line.name"></span></td>
+                                               <td class="text-right" style="border: 1px solid; width: 20%; padding: 2px; vertical-align: middle;">
+                                                    <span t-field="line.debit"></span>
+                                               </td>
+                                            </t>
+        <!--                                   </tr>-->
+                                    </tr>
+                                    <tr>
+                                       <td class="text-center" style="border: 1px solid; width: 20%; height: 55;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 60%;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 20%;"></td>
+                                   </tr>
+                                    <tr>
+                                       <td class="text-center" style="border: 1px solid; width: 20%; height: 55;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 60%;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 20%;"></td>
+                                   </tr>
+                                    <tr>
+                                       <td class="text-center" style="border: 1px solid; width: 20%; height: 55;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 60%;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 20%;"></td>
+                                   </tr>
+                                    <tr>
+                                       <td class="text-center" style="border: 1px solid; width: 20%; height: 55;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 60%;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 20%;"></td>
+                                   </tr>
+                                    <tr>
+                                       <td class="text-center" style="border: 1px solid; width: 20%; height: 55;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 60%;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 20%;"></td>
+                                   </tr>
+                                    <tr>
+                                       <td class="text-center" style="border: 1px solid; width: 20%; height: 55;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 60%;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 20%;"></td>
+                                   </tr>
+                                </t>
+
+                                <!-- jika debit == 2 -->
+                                <t t-if="o.x_count_debit == 2">
+                                    <tr t-foreach="o.line_ids" t-as="line">
+    <!--                                   <tr t-foreach="line.invoice_line_ids" t-as="row">-->
+                                            <t t-if="line.debit != 0">
+                                               <td class="text-center" style="border: 1px solid; width: 20%; padding: 2px; height: 55; vertical-align: middle;">
+                                                   <span>
+                                                       <span t-field="line.account_id.code"></span> - <span t-field="line.account_id.name"></span>
+                                                   </span>
+                                               </td>
+                                               <td style="border: 1px solid; width: 60%; padding: 2px;"><span t-field="line.name"></span></td>
+                                               <td class="text-right" style="border: 1px solid; width: 20%; padding: 2px; vertical-align: middle;">
+                                                    <span t-field="line.debit"></span>
+                                               </td>
+                                            </t>
+        <!--                                   </tr>-->
+                                    </tr>
+                                    <tr>
+                                       <td class="text-center" style="border: 1px solid; width: 20%; height: 55;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 60%;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 20%;"></td>
+                                   </tr>
+                                    <tr>
+                                       <td class="text-center" style="border: 1px solid; width: 20%; height: 55;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 60%;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 20%;"></td>
+                                   </tr>
+                                    <tr>
+                                       <td class="text-center" style="border: 1px solid; width: 20%; height: 55;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 60%;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 20%;"></td>
+                                   </tr>
+                                    <tr>
+                                       <td class="text-center" style="border: 1px solid; width: 20%; height: 55;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 60%;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 20%;"></td>
+                                   </tr>
+                                    <tr>
+                                       <td class="text-center" style="border: 1px solid; width: 20%; height: 55;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 60%;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 20%;"></td>
+                                   </tr>
+                                </t>
+
+                                <t t-if="o.x_count_debit == 3">
+                                    <tr t-foreach="o.line_ids" t-as="line">
+    <!--                                   <tr t-foreach="line.invoice_line_ids" t-as="row">-->
+                                            <t t-if="line.debit != 0">
+                                               <td class="text-center" style="border: 1px solid; width: 20%; padding: 2px; height: 55; vertical-align: middle;">
+                                                   <span>
+                                                       <span t-field="line.account_id.code"></span> - <span t-field="line.account_id.name"></span>
+                                                   </span>
+                                               </td>
+                                               <td style="border: 1px solid; width: 60%; padding: 2px;"><span t-field="line.name"></span></td>
+                                               <td class="text-right" style="border: 1px solid; width: 20%; padding: 2px; vertical-align: middle;">
+                                                    <span t-field="line.debit"></span>
+                                               </td>
+                                            </t>
+        <!--                                   </tr>-->
+                                    </tr>
+                                    <tr>
+                                       <td class="text-center" style="border: 1px solid; width: 20%; height: 55;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 60%;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 20%;"></td>
+                                   </tr>
+                                    <tr>
+                                       <td class="text-center" style="border: 1px solid; width: 20%; height: 55;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 60%;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 20%;"></td>
+                                   </tr>
+                                    <tr>
+                                       <td class="text-center" style="border: 1px solid; width: 20%; height: 55;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 60%;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 20%;"></td>
+                                   </tr>
+                                    <tr>
+                                       <td class="text-center" style="border: 1px solid; width: 20%; height: 55;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 60%;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 20%;"></td>
+                                   </tr>
+                                </t>
+
+                                <t t-if="o.x_count_debit == 4">
+                                    <tr t-foreach="o.line_ids" t-as="line">
+    <!--                                   <tr t-foreach="line.invoice_line_ids" t-as="row">-->
+                                            <t t-if="line.debit != 0">
+                                               <td class="text-center" style="border: 1px solid; width: 20%; padding: 2px; height: 55; vertical-align: middle;">
+                                                   <span>
+                                                       <span t-field="line.account_id.code"></span> - <span t-field="line.account_id.name"></span>
+                                                   </span>
+                                               </td>
+                                               <td style="border: 1px solid; width: 60%; padding: 2px;"><span t-field="line.name"></span></td>
+                                               <td class="text-right" style="border: 1px solid; width: 20%; padding: 2px; vertical-align: middle;">
+                                                    <span t-field="line.debit"></span>
+                                               </td>
+                                            </t>
+        <!--                                   </tr>-->
+                                    </tr>
+                                    <tr>
+                                       <td class="text-center" style="border: 1px solid; width: 20%; height: 55;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 60%;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 20%;"></td>
+                                   </tr>
+                                    <tr>
+                                       <td class="text-center" style="border: 1px solid; width: 20%; height: 55;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 60%;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 20%;"></td>
+                                   </tr>
+                                    <tr>
+                                       <td class="text-center" style="border: 1px solid; width: 20%; height: 55;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 60%;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 20%;"></td>
+                                   </tr>
+                                </t>
+
+                                <t t-if="o.x_count_debit == 5">
+                                    <tr t-foreach="o.line_ids" t-as="line">
+    <!--                                   <tr t-foreach="line.invoice_line_ids" t-as="row">-->
+                                            <t t-if="line.debit != 0">
+                                               <td class="text-center" style="border: 1px solid; width: 20%; padding: 2px; height: 55; vertical-align: middle;">
+                                                   <span>
+                                                       <span t-field="line.account_id.code"></span> - <span t-field="line.account_id.name"></span>
+                                                   </span>
+                                               </td>
+                                               <td style="border: 1px solid; width: 60%; padding: 2px;"><span t-field="line.name"></span></td>
+                                               <td class="text-right" style="border: 1px solid; width: 20%; padding: 2px; vertical-align: middle;">
+                                                    <span t-field="line.debit"></span>
+                                               </td>
+                                            </t>
+        <!--                                   </tr>-->
+                                    </tr>
+                                    <tr>
+                                       <td class="text-center" style="border: 1px solid; width: 20%; height: 55;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 60%;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 20%;"></td>
+                                   </tr>
+                                    <tr>
+                                       <td class="text-center" style="border: 1px solid; width: 20%; height: 55;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 60%;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 20%;"></td>
+                                   </tr>
+                                </t>
+
+                                <t t-if="o.x_count_debit == 6">
+                                    <tr t-foreach="o.line_ids" t-as="line">
+    <!--                                   <tr t-foreach="line.invoice_line_ids" t-as="row">-->
+                                            <t t-if="line.debit != 0">
+                                               <td class="text-center" style="border: 1px solid; width: 20%; padding: 2px; height: 55; vertical-align: middle;">
+                                                   <span>
+                                                       <span t-field="line.account_id.code"></span> - <span t-field="line.account_id.name"></span>
+                                                   </span>
+                                               </td>
+                                               <td style="border: 1px solid; width: 60%; padding: 2px;"><span t-field="line.name"></span></td>
+                                               <td class="text-right" style="border: 1px solid; width: 20%; padding: 2px; vertical-align: middle;">
+                                                    <span t-field="line.debit"></span>
+                                               </td>
+                                            </t>
+        <!--                                   </tr>-->
+                                    </tr>
+                                    <tr>
+                                       <td class="text-center" style="border: 1px solid; width: 20%; height: 55;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 60%;"></td>
+                                       <td class="text-center" style="border: 1px solid; width: 20%;"></td>
+                                   </tr>
+                                </t>
+
+                                <t t-if="o.x_count_debit > 6">
+                                    <tr t-foreach="o.line_ids" t-as="line">
+    <!--                                   <tr t-foreach="line.invoice_line_ids" t-as="row">-->
+                                            <t t-if="line.debit != 0">
+                                               <td class="text-center" style="border: 1px solid; width: 20%; padding: 2px; height: 55; vertical-align: middle;">
+                                                   <span>
+                                                       <span t-field="line.account_id.code"></span> - <span t-field="line.account_id.name"></span>
+                                                   </span>
+                                               </td>
+                                               <td style="border: 1px solid; width: 60%; padding: 2px;"><span t-field="line.name"></span></td>
+                                               <td class="text-right" style="border: 1px solid; width: 20%; padding: 2px; vertical-align: middle;">
+                                                    <span t-field="line.debit"></span>
+                                               </td>
+                                            </t>
+        <!--                                   </tr>-->
+                                    </tr>
+                                </t>
+                           </table>
+                        </div>
+                    </div>
+                    <!-- Tutup table transaksi -->
+
+                    <!-- Footer -->
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <table style="border: 1px solid; width: 100%;">
+                                 <tr>
+                                    <td class="text-right" style="border: 1px solid; padding: 5px;" colspan="3"><b>TOTAL</b></td>
+                                    <td class="text-right" style="border: 1px solid; padding: 5px;"><span t-field="o.x_total_debit"></span></td>
+                                </tr>
+                           </table>
+                        </div>
+                    </div>
+                    <!-- Tutup footer -->
+
+                    <!-- Table verifikasi -->
+                    <div class="row">
+                        <div class="col-xs-12" style="margin-top: 10px">
+                            <table style="border: 1px solid; width: 100%;">
+                                <tr>
+                                    <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px">Pemeriksa</th>
+                                    <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px" colspan="2">Pembukuan</th>
+                                    <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px">Mengetahui</th>
+                                    <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px">Menyetujui</th>
+                                    <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px">Kasir</th>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid; padding-top: 55px;"></td>
+                                    <td style="border: 1px solid; padding-top: 55px;"></td>
+                                    <td style="border: 1px solid; padding-top: 55px;"></td>
+                                    <td style="border: 1px solid; padding-top: 55px;"></td>
+                                    <td style="border: 1px solid; padding-top: 55px;"></td>
+                                    <td style="border: 1px solid; padding-top: 55px;"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Tutup table verifikasi -->
+
+                </div> <!-- Tutup page -->
+              </t>
+            </t>
+        </template>
+
+        <template id="report_journal_entry">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="lpj_accounting.report_journal_entry_document"/>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

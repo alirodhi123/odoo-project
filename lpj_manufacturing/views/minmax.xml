@@ -15,12 +15,25 @@
                         <field name="x_product_order_line" domain="[('order_id','=', order), ('x_flag_mo','=', False)]" attrs="{'invisible': [('x_type_mo', '!=', 'stc')]}" invisible="1"></field>
                     </xpath>
                     <xpath expr="//field[@name='bom_id'][not(ancestor::field)]" position="before">
+                        <label for="x_gram_stc"></label>
+                        <div class="o_row">
+                            <field name="x_gram_stc"></field>
+                            gram
+                        </div>
+                        <label for="x_gram_per_pcs"></label>
+                        <div class="o_row">
+                            <field name="x_gram_per_pcs"></field>
+                            gram
+                        </div>
                         <field name="x_toleransi" />
                         <field name="x_quantity_max"/>
                         <field name="x_due_kirim"/>
                     </xpath>
                     <field name="routing_id" position="after">
                         <field name="x_note_so"></field>
+                        <field name="x_manufacturing_type_ok"></field>
+                        <field name="x_status_ok"></field>
+                        <field name="x_planning_type_ok" invisible="1"></field>
                     </field>
                     <xpath expr="//field[@name='origin'][not(ancestor::field)]" position="before">
                         <field name="x_keterangan"></field>
@@ -35,6 +48,8 @@
                         <field name="x_arround_number" invisible="1"></field>
                         <field name="jumlah_druk_min" invisible="1"></field>
                         <field name="jumlah_druk_max" invisible="1"></field>
+                        <field name="x_across_druk" invisible="1"></field>
+                        <field name="x_arround_druk" invisible="1"></field>
                     </xpath>
 
 
@@ -43,6 +58,12 @@
                         <group>
                             <group string="Print Lot Barang">
                                 <field name="x_type_print"/>
+                                <field name="x_qty_per_lot"></field>
+                                <label for="x_berat_per_lot"></label>
+                                <div class="o_row">
+                                    <field name="x_berat_per_lot"></field>
+                                    gram
+                                </div>
                                 <field name="jml_lot" attrs="{'invisible': [('x_type_print', '=', 'specific')]}"/>
                                 <field name="x_kode_awal" attrs="{'invisible': [('x_type_print', '=', 'all')]}"/>
                                 <field name="x_kode_akhir" attrs="{'invisible': [('x_type_print', '=', 'all')]}"/>
@@ -52,9 +73,13 @@
                                 <button name="action_next" type="object" string="Print All" class="oe_highlight"/>
                                 <!--<button name="action_" type="object" string="Print Specific code" class="oe_highlight" attrs="{'invisible': [('x_type_print', '=', 'all')]}"/>-->
                             </group>
+                            <group>
+                                <field name="x_tipe_packing_ok"></field>
+                                <field name="x_pcs_units_ok"></field>
+                                <field name="x_packing_box_ok"></field>
+                            </group>
                         </group>
                     </page>
-
                 </notebook>
             </field>
         </record>

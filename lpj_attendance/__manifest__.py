@@ -35,7 +35,9 @@
         'wizard/wizard_view.xml',
         'wizard/get_employee_view.xml',
         'wizard/validate_view.xml',
+        # 'wizard/wizard_print_shift.xml',
         'views/menu.xml',
+        # 'report/report_shift.xml',
 
     ],
     # only loaded in demonstration mode

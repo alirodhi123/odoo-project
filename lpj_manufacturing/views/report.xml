@@ -237,9 +237,13 @@
                                         <th class="text-center" style="border: 1px solid black; width: 22%; padding: 1px;"><span>Jml Druk Max</span></th>
                                     </tr>
                                     <tr>
-                                        <td style="border: 1px solid black; width: 56%; font-size: 15px;"><span t-field="o.x_keterangan"></span></td>
+                                        <td style="border: 1px solid black; width: 56%; font-size: 15px; margin-left: 1px;"><span t-field="o.x_keterangan"></span></td>
                                         <td class="text-center" style="border: 1px solid black; width: 22%; font-size: 16px;"><span t-field="o.jumlah_druk_min" t-options='{"widget": "float", "precision": 1}'></span><span> druk</span></td>
                                         <td class="text-center" style="border: 1px solid black; width: 22%; font-size: 16px;"><span t-field="o.jumlah_druk_max" t-options='{"widget": "float", "precision": 1}'></span><span> druk</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; margin-left: 1px;"><span><strong>Status OK : </strong><span t-field="o.x_status_ok"></span></span></td>
+                                        <td class="text-center" style="border: 1px solid black;" colspan="2"><span><strong>Berat per lot : </strong><span t-field="o.x_berat_per_lot"></span><span> gram</span></span></td>
                                     </tr>
                                 </table>
                             </div>
@@ -250,6 +254,18 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Row status ok dan berat stc -->
+<!--                        <div class="row">-->
+<!--                            <div class="col-xs-6" style="margin-top: -25px; margin-left: -15px;">-->
+<!--                                <div class="col-xs-6">-->
+<!--                                    -->
+<!--                                </div>-->
+<!--                                <div class="col-xs-6">-->
+<!--                                    -->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
 
                         <div class="oe_structure"/>
                     </div> <!-- Tutup Page -->

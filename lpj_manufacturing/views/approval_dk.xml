@@ -11,7 +11,8 @@
                     <field name="x_customer" string = "Customer"/>
                     <field name="x_item" string = "Item"/>
                     <field name="x_qty" string = "Quantity"/>
-                    <field name="x_mesin"/>
+                    <field name="x_quantity_m2" string = "Qty m2"/>
+                    <field name="x_mesin" invisible="1"/>
                     <field name="x_material_type_id"/>
 <!--                    <field name="x_acc_cust"/>-->
                     <field name="x_flag_appdk" invisible = "1"/>
@@ -29,27 +30,34 @@
             <!--<field name="inherit_id" ref="crm.crm_stage_form"/>-->
             <field name="arch" type="xml">
                 <form string="Approval Duedate Kirim SQ">
-                    <header>
-                    </header>
-                    <group>
+                    <sheet>
                         <group>
-                            <field name="name" string = "Kode SQ"/>
-                            <field name="x_sales" string = "Sales Person"/>
-                            <field name="x_customer" string = "Customer"/>
-                            <field name="x_item" string = "Barang"/>
-                            <field name="x_qty" string = "Quantity"/>
-                            <field name="x_mesin" string = "Mesin"/>
-                            <field name="x_material_type_id"/>
-<!--                            <field name="x_acc_cust"/>-->
+                            <group>
+                                <field name="name" string = "Kode SQ"/>
+                                <field name="x_sales" string = "Sales Person"/>
+                                <field name="x_customer" string = "Customer"/>
+                                <field name="x_item" string = "Barang"/>
+                                <field name="x_qty" string = "Quantity"/>
+                                <field name="x_quantity_m2" string = "Qty m2"/>
+                                <field name="x_mesin" string = "Mesin" invisible="1"/>
+                                <field name="x_material_type_id"/>
+                            </group>
+                            <group>
+                                <field name="x_flag_appdk" invisible = "1"/>
+                                <field name="x_flag_reqdk" invisible = "1"/>
+                                <field name="x_tgl_kirim" string = "Permintaan Tanggal Kirim"/>
+                                <field name="x_manufacturing_type" />
+                                <field name="x_planning_type" />
+                                <button name="act_approve_dk" type="object" string="Approve" class="oe_highlight" attrs="{'invisible':['|',('x_flag_appdk','=',True),('x_flag_reqdk','=',False)]}"/>
+                                <!--<button name="act_reject_dk" type="object" string="Reject" class="oe_highlight" attrs="{'invisible':['|',('x_flag_appdk','=',True),('x_flag_reqdk','=',False)]}"/>-->
+                            </group>
                         </group>
-                        <group>
-                            <field name="x_flag_appdk" invisible = "1"/>
-                            <field name="x_flag_reqdk" invisible = "1"/>
-                            <field name="x_tgl_kirim" string = "Permintaan Tanggal Kirim"/>
-                            <button name="act_approve_dk" type="object" string="Approve" class="oe_highlight" attrs="{'invisible':['|',('x_flag_appdk','=',True),('x_flag_reqdk','=',False)]}"/>
-                            <!--<button name="act_reject_dk" type="object" string="Reject" class="oe_highlight" attrs="{'invisible':['|',('x_flag_appdk','=',True),('x_flag_reqdk','=',False)]}"/>-->
-                        </group>
-                    </group>
+                    </sheet>
+
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>

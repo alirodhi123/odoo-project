@@ -215,17 +215,6 @@ class kuitansi_line(models.Model):
     x_diskon = fields.Monetary(related='x_invoice.x_discount_foot', string="Discount")
     x_bruto_kwt = fields.Monetary(related='x_invoice.x_bruto')
 
-class stock_picking(models.Model):
-    _inherit = 'stock.picking'
 
-    is_responsible = fields.Boolean(string="SJK Status", default=False)
-    x_confirmation_sjk = fields.Selection([('yes', 'Yes'), ('no', 'No')],
-                                          default='no', readonly=True, string="Confirmation SJK")
-
-
-    @api.multi
-    def sjk_confirmatipn(self):
-        for picking in self:
-            return picking.update({'x_confirmation_sjk': 'yes'})
 
 

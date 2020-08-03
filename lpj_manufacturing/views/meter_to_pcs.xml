@@ -7,12 +7,27 @@
             <field name="inherit_id" ref="mrp.mrp_production_workcenter_form_view_inherit"/>
             <field name="arch" type="xml">
                 <field name = "qty_producing" position="before">
-                    <field name="x_qty_meter"/>
                     <field name="x_layout_product" invisible = '1'/>
-                    <!--<field name="x_type_lebaran"/>-->
                     <field name="x_lebaran_bahan" invisible = '1'/>
                     <field name="x_jml_prod" invisible = '1'/>
+                    <field name="x_qty_meter"/>
+                    <label for="x_berat_per_lot"></label>
+                    <div class="o_row">
+                        <field name="x_berat_per_lot"></field>
+                        Kg
+                    </div>
+                    <label for="x_berat_per_pcs"></label>
+                    <div class="o_row">
+                        <field name="x_berat_per_pcs"></field>
+                        gram
+                    </div>
                 </field>
+
+                <!-- Dikomen sementara -->
+<!--                <field name="qty_producing" position="after">-->
+<!--                    <field name="x_qty_sisa_produksi"></field>-->
+<!--                </field>-->
+
                  <field name = "date_start" position = "after">
                      <field name = "x_ids_duration" widget="float_time" invisible = "1"/>
                  </field>

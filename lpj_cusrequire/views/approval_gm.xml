@@ -1,0 +1,70 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="x_sq_tree_view_app_gm">
+            <field name="name">x.sq.tree.app.gm</field>
+            <field name="model">x.sales.quotation</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" string = "Code"/>
+                    <field name="x_sales_id" string = "Sales"/>
+                    <field name="x_customer_id" string = "Customer"/>
+                    <field name="item_description" string = "Item Name"/>
+                    <field name="x_repeat_order" string = "Repeat Order"/>
+                    <!--<field name="x_desc_sq" string = "Description"/>-->
+                    <field name="x_status_cr" string = "Status SQ" invisible="1"/>
+                    <field name="x_qty"/>
+                    <field name="x_qty_m2"/>
+                    <field name="x_price_high" string = "Harga Standart"/>
+                    <field name="x_price_total" string = "Harga Standart Total"/>
+                    <field name="x_profit_standart"/>
+                    <field name="x_harga_renego" string = "Harga Renego"/>
+                    <field name="x_renego_total"/>
+                    <field name="x_profit_renego"/>
+                    <field name="x_hpp_pcs"/>
+                    <!--<field name="x_hpp_m2"/>-->
+                    <field name="x_state_renego" string = "Status Renego"/>
+                    <field name="x_flag_reqdk" invisible="1"/>
+                    <field name="x_flag_appdk" invisible="1"/>
+                    <field name="x_is_salemanager" invisible="1"/>
+
+                    <!--<button name="act_req_dk" type="object" string="Request" class="oe_highlight" attrs="{'invisible':['|','|',('x_status_cr','=','reject'),('x_flag_reqdk','=',True),('x_flag_appdk','=',True)]}"/>-->
+                    <!--<button name="act_approve" type="object" string="Approve" class="oe_highlight" attrs="{'invisible':['|', '|','|',('x_status_cr','=','approve'), ('x_status_cr','=','reject'),('x_status_cr','=','done'),('x_is_salemanager', '=', False)]}"/>-->
+                    <!--<button name="action_confirm_dir"-->
+                                <!--type="object"-->
+                                <!--string="Confirm"-->
+                                <!--class="oe_highlight"-->
+                                <!--attrs="{'invisible':[('x_state_renego', '!=', '3')]}"/>-->
+                    <button name="action_pricing"
+                                type="object"
+                                string="Confirm"
+                                class="oe_highlight"
+                                groups="base.group_system"
+                                attrs="{'invisible':[('x_state_renego', '!=', '3')]}"/>
+                    <button name="act_reject" type="object" string="Reject" class="oe_highlight" attrs="{'invisible':['|',('x_status_cr','=','reject'),('x_status_cr','=','done')]}"/>
+
+                </tree>
+            </field>
+        </record>
+
+          <record model="ir.actions.act_window" id="x_sq_app_gm">
+            <field name="name">Approval GM</field>
+            <field name="res_model">x.sales.quotation</field>
+            <field name="view_id" ref="x_sq_tree_view_app_gm"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('x_state_renego', 'in', ['3'])]</field>
+
+        </record>
+
+
+        <menuitem id="x_sales_quotation_app_gm" name="Approval GM"
+                  parent="menu_precosting" sequence="10"
+
+                  action="x_sq_app_gm"/>
+
+
+    </data>
+</odoo>
+
+

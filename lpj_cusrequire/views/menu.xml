@@ -10,7 +10,7 @@
                   parent="main_approval_odoo_menu" action="approval_list_action" sequence="5"/>
 
         <menuitem id="requirement_menu" name="Request Drawing"
-                  parent="sales_team.menu_sales" sequence="10"
+                  parent="sales_team.menu_sales" sequence="12"
                   action="requirement_list_action"/>
 
         <menuitem id="history_duedate_menu" name="History Duedate"
@@ -22,6 +22,9 @@
                   sequence="112"
                   action="lpj_manufacturing.action_product_sale_list"></menuitem>
 
+        <!--<menuitem id="config_mesin" name="Config Mesin"-->
+                  <!--parent="sub_menu_config" sequence="119"-->
+                  <!--action="list_config_mesin"/>-->
 
 	 <menuitem id="x_crm_menu" name="CRM"
 		          parent="sales_team.menu_base_partner" sequence="2"/>
@@ -55,6 +58,64 @@
 
         <!-- <menuitem id="stage_menu" parent="approval_odoo_menu" name="Stage"
             action="stage_list_action"/> -->
+        
+
+        <menuitem name="Sale Order" id="menu_sale_order"
+                  parent="sales_team.menu_sales" sequence="15"/>
+
+        <menuitem name="Config Master Precost" id="menu_config_new"
+                  parent="sales_team.menu_base_partner"/>
+
+        <menuitem id="config_kategori" name="Config Kategori"
+                  parent="menu_config_new" sequence="115"
+                  action="list_config_kategori"/>
+
+
+        <menuitem id="config_bahan_new" name="Config Bahan"
+                  parent="menu_config_new" sequence="116"
+                  action="list_config_bahan"/>
+
+
+        <menuitem id="config_feature_new" name="Config Feature"
+                  parent="menu_config_new" sequence="117"
+                  action="list_config_feature"/>
+
+
+
+        <menuitem id="config_tinta_new" name="Config Tinta"
+                  parent="menu_config_new" sequence="118"
+                  action="list_config_tinta"/>
+
+        <menuitem id="config_plate_new" name="Config Plate"
+                  parent="menu_config_new" sequence="119"
+                  action="list_plate_cost"/>
+
+        <menuitem id="config_process_new" name="Config Process"
+                  parent="menu_config_new" sequence="120"
+                  action="list_process_cost"/>
+
+        <menuitem id="config_product_type_new" name="Config Product Type"
+                  parent="menu_config_new" sequence="121"
+                  action="list_product_type"/>
+
+        <menuitem id="config_diecut_new" name="Config Diecut"
+                  parent="menu_config_new" sequence="122"
+                  action="list_config_diecut"/>
+
+        <menuitem id="config_profit_margin_new" name="Config Profit Margin"
+                  parent="menu_config_new" sequence="123"
+                  action="list_profit_margin"/>
+
+        <menuitem id="config_waste_table_new" name="Config Waste Table"
+                  parent="menu_config_new" sequence="124"
+                  action="list_waste_table"/>
+
+        <menuitem id="config_qty_roundup_new" name="Config Qty Roundup"
+                  parent="menu_config_new" sequence="125"
+                  action="list_config_qty_roundup"/>
+
+
+
 
     </data>
 </odoo>

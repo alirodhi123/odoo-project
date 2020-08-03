@@ -33,6 +33,7 @@
                     <field name="name"/>
                     <field name="location_dest_id"/>
                     <field name="partner_id"/>
+                    <field name="x_no_sj_internal"></field>
                     <field name="date" invisible="1"/>
                     <field name="min_date"/>
                     <field name="origin"/>
@@ -49,13 +50,25 @@
                              groups="account.group_account_invoice"
                              help="calls python function"
                              attrs="{'invisible': ['|', ('x_confirmation_sjk', '=', 'yes'),
-                                                        ('x_send_to_fac', '=', 'no')]}">
+                                                        ('state', '!=', 'done')]}">
                       </button>
-                      <field name="x_send_to_fac" invisible="1"></field>
                       <field name="x_confirmation_sjk" invisible="1"></field>
+                      <field name="x_confirmation_date" invisible="1"></field>
                 </tree>
             </field>
         </record>
+
+        <!-- Inherite search view -->
+        <record id="inherit_stock_picking_search" model="ir.ui.view">
+              <field name="name">stock.picking.search</field>
+              <field name="model">stock.picking</field>
+              <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+              <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="x_no_sj_internal"></field>
+                </field>
+              </field>
+            </record>
 
         <!--
             ACTION
@@ -67,8 +80,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="vpicktree_custom"/>
-            <field name="domain">['|',
-                ('x_send_to_fac', 'in', ['yes']), ('is_delivery', '=', True)]
+            <field name="domain">[('picking_type_id', '=', 4),
+                                  ('state', 'in', ['done', 'assigned', 'partially_available']),
+                                  ('x_confirmation_sjk', '=', 'no'),
+                                  ('is_delivery', '=', True)]
             </field>
         </record>
     </data>

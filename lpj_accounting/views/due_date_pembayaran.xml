@@ -23,7 +23,7 @@
                     <sheet>
                       <group string="Due Date Pembayaran">
                         <group>
-                          <field name="x_customer"></field>
+                          <field name="x_customer" domain="[('type', 'in', ('invoice', 'contact'))]"></field>
                             <field name="x_lama_pembayaran"></field>
                             <field name="x_keterangan"></field>
                         </group>

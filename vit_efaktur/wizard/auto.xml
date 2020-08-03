@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="act_open_vit_efaktur_auto_wizard" model="ir.actions.act_window">
+            <field name="name">Auto Number eFaktur</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">vit.efaktur_auto</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="view_vit_efaktur_auto_form" model="ir.ui.view">
+            <field name="name">vit.efaktur_auto.form</field>
+            <field name="model">vit.efaktur_auto</field>
+            <field name="type">form</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="eFaktur">
+                    <group colspan="4">
+                        <field name="start" />
+                        <field name="end" />
+                    </group>
+
+                    <notebook colspan="4">
+                        <page string="Invoices">
+                            <field name="invoice_ids"/>
+                        </page>
+                    </notebook>
+
+                    <footer>
+                        <button string="Find Invoices" name="find_invoices" type="object" class="btn-primary"/>
+                        <button string="Fill Nomor Seri Faktur Pajak" name="confirm_button" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel" />
+                    </footer>
+
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>

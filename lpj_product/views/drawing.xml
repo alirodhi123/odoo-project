@@ -38,6 +38,9 @@
                                 <field name="x_partner" options="{'no_create': True, 'no_create_edit':True}"/>
                                 <field name="x_description"/>
                             </group>
+                            <group>
+                                <field name="x_level_dwg"></field>
+                            </group>
                         </group>
 
                     </sheet>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_vit_efaktur_tree" model="ir.ui.view">
+            <field name="name">vit.efaktur.tree</field>
+            <field name="model">vit.efaktur</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <tree string="E-Faktur">
+                    <field name="year"/>
+                    <field name="name"/>
+                    <field name="is_used"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_vit_efaktur_form" model="ir.ui.view">
+            <field name="name">vit.efaktur.form</field>
+            <field name="model">vit.efaktur</field>
+            <field name="type">form</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="E-Faktur" version="7.0">
+                    <sheet>
+                        <group colspan="4">
+                            <group>
+                                <field name="year"/>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="is_used"/>
+                            </group>
+                        </group>
+
+                        <notebook colspan="4">
+                            <page string="Invoices">
+                                <field name="invoice_ids">
+                                    <tree string="Invoices">
+                                        <field name="number"/>
+                                        <field name="name"/>
+                                        <field name="partner_id"/>
+                                        <field name="date_invoice"/>
+                                        <field name="amount_untaxed"/>
+                                        <field name="amount_tax"/>
+                                        <field name="amount_total"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_vit_efaktur_search" model="ir.ui.view">
+            <field name="name">vit.efaktur.search</field>
+            <field name="model">vit.efaktur</field>
+            <field name="type">search</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <search string="E-Faktur">
+                    <field name="name" select="True"/>
+                    <field name="year" select="True"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Year" icon="terp-camera_test" name="year" context="{'group_by':'year'}"/>
+                        <filter string="Is Used" icon="terp-camera_test" name="is_used" context="{'group_by':'is_used'}"/>
+                    </group>
+
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_open_vit_efaktur_view">
+            <field name="name">Nomor E-Faktur</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">vit.efaktur</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_vit_efaktur_search"/>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="act_open_vit_efaktur_view_form">
+            <field name="act_window_id" ref="act_open_vit_efaktur_view"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_vit_efaktur_form"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="act_open_vit_efaktur_view_tree">
+            <field name="act_window_id" ref="act_open_vit_efaktur_view"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_vit_efaktur_tree"/>
+        </record>
+
+        <menuitem id="menu_vit_efaktur"
+                  parent="account.menu_finance"
+                  sequence="10"
+                  name="E-Faktur"
+                  />
+
+        <menuitem id="menu_vit_efaktur_nomor"
+                  parent="menu_vit_efaktur"
+                  sequence="20"
+                  name="Nomor Seri Faktur Pajak"
+                  action="act_open_vit_efaktur_view"/>
+
+        <menuitem id="menu_vit_efaktur_wizard"
+                  parent="menu_vit_efaktur"
+                  sequence="30"
+                  name="Generate Nomor Seri Faktur Pajak"
+                  action="act_open_vit_efaktur_wizard"/>
+
+        <menuitem id="menu_vit_efaktur_export_product"
+                  parent="menu_vit_efaktur"
+                  sequence="40"
+                  name="Export Products"
+                  action="act_open_vit_efaktur_product_wizard"/>
+
+        <menuitem id="menu_vit_efaktur_export_partner"
+                  parent="menu_vit_efaktur"
+                  sequence="50"
+                  name="Export Partner"
+                  action="act_open_vit_efaktur_partner_wizard"/>
+
+        <menuitem id="menu_vit_efaktur_keluaran"
+                  parent="menu_vit_efaktur"
+                  sequence="60"
+                  name="Faktur Pajak Keluaran"
+                  />
+
+        <menuitem id="menu_vit_efaktur_export_pk"
+                  parent="menu_vit_efaktur_keluaran"
+                  sequence="60"
+                  name="Export FP. Keluaran"
+                  action="act_open_vit_efaktur_pk_wizard"/>
+
+        <menuitem id="menu_vit_efaktur_auto"
+                  parent="menu_vit_efaktur_keluaran"
+                  sequence="70"
+                  name="Auto Numbering"
+                  action="act_open_vit_efaktur_auto_wizard"/>
+
+
+
+
+        <menuitem id="menu_vit_efaktur_masukan"
+                  parent="menu_vit_efaktur"
+                  sequence="70"
+                  name="Faktur Pajak Masukan"
+                  />
+
+        <menuitem id="menu_vit_efaktur_export_pm"
+                  parent="menu_vit_efaktur_masukan"
+                  sequence="60"
+                  name="Export FP. Masukan"
+                  action="act_open_vit_efaktur_pm_wizard"/>
+    </data>
+</openerp>

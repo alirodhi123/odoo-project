@@ -24,10 +24,10 @@ class prod_requirement(models.Model):
 
     color = fields.Integer('Warna')
     state = fields.Selection(
-        [('1', 'Marketing'), ('2', 'Drawing'), ('3', 'Approval Cus (Drawing)'), ('4', 'PDE (Tech. Spec) '),
+        [('0', 'Marketing'), ('1', 'Drawing'), ('2', 'Approval Cus (Drawing)'), ('3', 'Drawing Approved'), ('4', 'PDE (Tech. Spec) '),
          ('5', 'Digital Proof'),
-         ('6', 'Trial Product'), ('7', 'Approval Trial'), ('8', 'Finalize TDS'), ('9', 'Done'),
-         ], default='1', track_visibility='onchange', string="Status Product")
+         ('6', 'Trial Product'), ('7', 'Approval Trial'), ('8', 'Finalize TDS'), ('9', 'Done'), ('cancel', 'Cancel')
+         ], default='0', track_visibility='onchange', string="Status Product")
 
     x_product = fields.Many2one('product.product', string='Product Name', related = 'x_sq.x_product', domain=[('sale_ok', '=', True)])
     x_locked_product = fields.Boolean(related='x_product.x_locked_ok', string="Locked Product", readonly=True, store=True)
@@ -181,13 +181,18 @@ class prod_requirement(models.Model):
     # State untuk PDE button (Confirm dan Reset To Previous)
     @api.one
     def is_pde(self):
-        state = int(self.state)
-        if state == 7:
-            self.is_pde_check = True
-        elif state == 3:
-            self.is_pde_check = True
-        elif state == 1:
-            self.is_pde_check = True
+        if self.state == 'cancel':
+            pass
+        else:
+            state = int(self.state)
+            if state == 7:
+                self.is_pde_check = True
+            elif state == 3:
+                self.is_pde_check = True
+            elif state == 2:
+                self.is_pde_check = True
+            elif state == 0:
+                self.is_pde_check = True
 
 
     x_price_low = fields.Float('Price Low', digits=dp.get_precision('Prroduct Price'))
@@ -323,7 +328,7 @@ class prod_requirement(models.Model):
         self.state = str(new_state)
         self.color = 3
         # self.x_length_prd = 1234
-        if self.state == '3':
+        if self.state == '2':
             template = self.env.ref('lpj_cusrequire.template_mail_proof')
             mail = self.env['mail.template'].browse(template.id)
             mail.send_mail(self.id, force_send=True)  # langsung kirim email
@@ -332,19 +337,19 @@ class prod_requirement(models.Model):
     def action_prev(self):
         new_state = int(self.state) - 1
         self.state = str(new_state)
-        self.color = 3
+        self.color = 2
 
     @api.multi
     def action_draft(self):
-        self.state = '1'
+        self.state = '0'
 
     @api.multi
     def action_confirm(self):
-        self.state = '2'
+        self.state = '1'
 
     @api.multi
     def action_done(self):
-        self.state = '3'
+        self.state = '2'
 
     @api.multi
     def write(self, vals):
@@ -380,7 +385,7 @@ class prod_requirement(models.Model):
     @api.multi
     def act_reject(self):
         self.x_status_cr = 'reject'
-        self.state = '9'
+        self.state = '10'
         ac = self.env['ir.model.data'].xmlid_to_res_id('lpj_cusrequire.reject_reason_form', raise_if_not_found=True)
         # for o in self:
         sq = self.name
@@ -443,6 +448,9 @@ class prod_requirement(models.Model):
             }
             return result
 
+    @api.multi
+    def action_cancel(self):
+        self.state = 'cancel'
 
 class approval_stage(models.Model):
     _name = 'x.approvalstage'

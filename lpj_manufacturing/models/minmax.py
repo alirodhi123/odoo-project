@@ -28,6 +28,13 @@ class minmax_mo(models.Model):
      x_keterangan = fields.Text(string="Keterangan")
      x_width = fields.Float(string="Width", compute='get_value')
      quantity_so = fields.Float(string="Quantity SO", compute='get_value_qty_so')
+     x_qty_per_lot = fields.Float(string="Qty per Lot")
+     x_berat_per_lot = fields.Float(string="Berat per Lot", compute='gram_per_lot')
+     x_tipe_packing_ok = fields.Selection([('roll', 'Roll'), ('sheet', 'Sheet'), ('fanfold ', 'Fan Fold')],
+                                       track_visibility='onchange', string='Type Packing', related='product_id.x_type_packing', readonly=True)
+     x_pcs_units_ok = fields.Float(string='Pcs per Roll/Sheet/Fold', track_visibility='onchange', related='product_id.x_pcs_units', readonly=True)
+     x_packing_box_ok = fields.Float(string='Pack/Fold per Box', track_visibility='onchange', related='product_id.x_packing_box', readonly=True)
+
 
      # Untuk OK otomatis parsing value dari open SO (SQ)
      # POP MESSAGE OK
@@ -55,28 +62,13 @@ class minmax_mo(models.Model):
      x_arround_number = fields.Integer(compute='get_jumlah_druk')
      jumlah_druk_min = fields.Float(compute='calculate_jumlah_druk')
      jumlah_druk_max = fields.Float(compute='calculate_jumlah_druk')
+     x_across_druk = fields.Float(compute='get_druk')
+     x_arround_druk = fields.Float(compute='get_druk')
 
+     # Konversi Pcs ke gram
+     x_gram_stc = fields.Float(string='Berat Stc', store=True, compute='calculate_pcs_to_gram')
+     x_gram_per_pcs = fields.Float(string='Berat per Pcs', compute='berat_per_pcs')
 
-     # MANUFACTURING ORDER
-     # Update x_flag MO ketika klik button save
-     @api.model
-     def create(self, vals):
-          sale_order_line_id = vals['x_product_order_line']  # ambil sale order line id
-          sale_order_id = vals['order']  # ambil sale order id
-          product_ok = vals['product_id']  # ambil product id yang ada di OK
-
-          if sale_order_line_id:
-               # Cek apakah no SO yang ada di OK sama dengan no SO yang ada di sale order
-               sale_order = self.env['sale.order'].search([('id', '=', sale_order_id)])
-               for row in sale_order.order_line:
-                    sale_order_line = self.env['sale.order.line'].search([('id', '=', sale_order_line_id)])
-                    if sale_order_line:
-                         prodcut_so = row.product_id.id
-                         if product_ok == prodcut_so:
-                              sale_order_line.write({'x_flag_mo': True})
-
-          result = super(minmax_mo, self).create(vals)
-          return result
 
      # ORDER KERJA
      # Ubah product sesuai dengan product yang ada di order line (Berdasarkan Open SO yang di klik
@@ -161,24 +153,26 @@ class minmax_mo(models.Model):
      # Get one2many order_line qty SO (REPORT)
      @api.depends('product_id', 'x_toleransi')
      def get_value_qty_so(self):
-          toleransi_so = self.x_toleransi
-          id = self.order.id
-          qty_so = self.env['sale.order'].search([('id', '=', id)])
-          for o in qty_so.order_line:
-               if self.product_id == o.product_id:
-                    # Get qty SO REAL
-                    qty = o.product_uom_qty
-                    # Menghitung TOLERANSI + QTY SO REAL
-                    valToleransi = ((toleransi_so / 100) * qty) # (5/100) : 20000 = 1000
-                    valQtyFix = valToleransi + qty # Hasil toleransi + qty SO REAL (1000 + 20000)
-                    # Put in new variable
-                    self.quantity_so = valQtyFix
+          for row in self:
+               toleransi_so = row.x_toleransi
+               id = row.order.id
+               qty_so = row.env['sale.order'].search([('id', '=', id)])
+               for o in qty_so.order_line:
+                    if row.product_id == o.product_id:
+                         # Get qty SO REAL
+                         qty = o.product_uom_qty
+                         # Menghitung TOLERANSI + QTY SO REAL
+                         valToleransi = ((toleransi_so / 100) * qty) # (5/100) : 20000 = 1000
+                         valQtyFix = valToleransi + qty # Hasil toleransi + qty SO REAL (1000 + 20000)
+                         # Put in new variable
+                         row.quantity_so = valQtyFix
 
      # Convert pcs to meter untuk REPORT OK
      @api.depends('x_jarak_druk', 'x_pcs_units')
      def convert_pcs_to_meter(self):
-          hasil = self.x_pcs_units * self.x_jarak_druk #Masih dalam mm
-          self.pcs_to_meter = hasil / 1000 # Convert hasil (mm) ke meter
+          for row in self:
+               hasil = row.x_pcs_units * row.x_jarak_druk #Masih dalam mm
+               row.pcs_to_meter = hasil / 1000 # Convert hasil (mm) ke meter
 
 
      # MAX QTY MO
@@ -239,33 +233,159 @@ class minmax_mo(models.Model):
      # Ambil dari fungsi get_jumlah_druk
      @api.depends('product_qty', 'x_quantity_max', 'x_across_number', 'x_arround_number')
      def calculate_jumlah_druk(self):
-          self.ensure_one()
-          qty_to_produce = self.product_qty
-          qty_max = self.x_quantity_max
-          var_across_number = self.x_across_number
-          var_arround_number = self.x_arround_number
+          for row in self:
+               qty_to_produce = row.product_qty
+               qty_max = row.x_quantity_max
+               var_across_number = row.x_across_number
+               var_arround_number = row.x_arround_number
 
-          if var_across_number != 0 and var_arround_number != 0:
-               druk_min = qty_to_produce / (var_across_number * var_arround_number)
-               druk_max = qty_max / (var_across_number * var_arround_number)
-               self.jumlah_druk_min = druk_min
-               self.jumlah_druk_max = druk_max
+               if var_across_number != 0 and var_arround_number != 0:
+                    druk_min = qty_to_produce / (var_across_number * var_arround_number)
+                    druk_max = qty_max / (var_across_number * var_arround_number)
+                    row.jumlah_druk_min = druk_min
+                    row.jumlah_druk_max = druk_max
 
      # Get kode customer SO
      # Untuk PRINT NO LOT
      @api.one
      def get_kode_customer(self):
-          sale_order = self.order
+          for data in self:
+               sale_order = data.order
 
-          if sale_order:
-               for row in sale_order:
-                    customer = row.partner_id
-                    if customer:
-                         for o in customer:
-                              kode_customer = o.x_kode_customer
-                              if kode_customer:
-                                   self.customer_code = kode_customer
-                              pass
+               if sale_order:
+                    for row in sale_order:
+                         customer = row.partner_id
+                         if customer:
+                              for o in customer:
+                                   kode_customer = o.x_kode_customer
+                                   if kode_customer:
+                                        data.customer_code = kode_customer
+                                   pass
+
+     # Untuk mendapatkan druk across dan arround
+     @api.one
+     def get_druk(self):
+          # Product product
+          for product in self.product_id:
+               for line in product.x_layout_product_ids:
+                    type = line.x_type
+                    if type == 'arround':
+                         size_arround = line.x_size
+                         space_arround = line.x_space
+                         self.x_arround_druk = size_arround + space_arround
+
+                    else:
+                         size_across = line.x_size
+                         space_across = line.x_space
+                         self.x_across_druk = size_across + space_across
+
+     # Hitung berat sticker
+     @api.depends('product_qty')
+     def calculate_pcs_to_gram(self):
+          qty_to_produce = self.product_qty
+          across_number = self.x_across_number
+          arround_number = self.x_arround_number
+          across_druk = self.x_across_druk
+          arround_druk = self.x_arround_druk
+          std_afalan_arround = 0
+          std_afalan_across = 0
+
+          if self.x_type_mo == 'stc':
+               for product in self.product_id:
+                    for line in product.x_layout_product_ids:
+                         type = line.x_type
+                         if type == 'arround':
+                              std_afalan_arround += line.x_std_afalan
+                              ref_lebaran_arround =  (arround_number * arround_druk) + std_afalan_arround
+
+                         else:
+                              std_afalan_across += line.x_std_afalan
+                              ref_lebaran_across = (across_number * across_druk) + std_afalan_across
+
+               # Get lebaran bahan OK (jika sudah ada move raw ids)
+               if self.move_raw_ids:
+                    for row in self.move_raw_ids:
+                         categ_product = row.product_id.categ_id.sts_bhn_utama.name
+                         if categ_product == 'Bahan Utama':
+                              bahan_utama_mm = row.product_id.x_variant_value
+                              gsm_bahan = row.product_id.x_gsm_bahan
+
+
+               # Jika belum ada move raw ids
+               else:
+                    for row_bom in self.bom_id:
+                         for bom_line in row_bom.bom_line_ids:
+                              categ_product = bom_line.product_id.categ_id.sts_bhn_utama.name
+                              if categ_product == 'Bahan Utama':
+                                   bahan_utama_mm = bom_line.product_id.x_variant_value
+                                   gsm_bahan = bom_line.product_id.x_gsm_bahan
+
+               # Get gram per pcs
+               if across_number != 0 or arround_number != 0:
+                    panjang_bahan_m = ((qty_to_produce / (across_number * arround_number)) * ref_lebaran_arround) / 1000
+                    # pcs_to_m = (((qty_to_produce / (across_number * arround_number)) * (ref_lebaran_arround * 1000))) * (ref_lebaran_across / 1000)
+                    pcs_to_m2 = float(panjang_bahan_m) * float(bahan_utama_mm)
+
+                    if gsm_bahan:
+                         self.x_gram_stc = pcs_to_m2 * (gsm_bahan + 60)
+                    else:
+                         self.x_gram_stc = pcs_to_m2 * 140
+
+     # Hitung gram per pcs dari stiker
+     @api.one
+     def berat_per_pcs(self):
+          across_number = self.x_across_number
+          arround_number = self.x_arround_number
+          across_druk = self.x_across_druk
+          arround_druk = self.x_arround_druk
+          std_afalan_arround = 0
+          std_afalan_across = 0
+
+          if self.x_type_mo == 'stc':
+               for product in self.product_id:
+                    for line in product.x_layout_product_ids:
+                         type = line.x_type
+                         if type == 'arround':
+                              std_afalan_arround += line.x_std_afalan
+                              ref_lebaran_arround =  (arround_number * arround_druk) + std_afalan_arround
+
+                         else:
+                              std_afalan_across += line.x_std_afalan
+                              ref_lebaran_across = (across_number * across_druk) + std_afalan_across
+
+               # Get lebaran bahan OK (jika sudah ada move raw ids)
+               if self.move_raw_ids:
+                    for row in self.move_raw_ids:
+                         categ_product = row.product_id.categ_id.sts_bhn_utama.name
+                         if categ_product == 'Bahan Utama':
+                              bahan_utama_mm = row.product_id.x_variant_value
+                              gsm_bahan = row.product_id.x_gsm_bahan
+
+               else:
+                    for row_bom in self.bom_id:
+                         for bom_line in row_bom.bom_line_ids:
+                              categ_product = bom_line.product_id.categ_id.sts_bhn_utama.name
+                              if categ_product == 'Bahan Utama':
+                                   bahan_utama_mm = bom_line.product_id.x_variant_value
+                                   gsm_bahan = bom_line.product_id.x_gsm_bahan
+
+               # Get gram per pcs
+               if across_number != 0 or arround_number != 0:
+                    panjang_bahan_m = (float(1 / float(across_number * arround_number)) * float(ref_lebaran_arround)) / 1000
+                    # pcs_to_m = (((qty_to_produce / (across_number * arround_number)) * (ref_lebaran_arround * 1000))) * (ref_lebaran_across / 1000)
+                    pcs_to_m2 = float(panjang_bahan_m) * float(bahan_utama_mm)
+
+                    if gsm_bahan:
+                         self.x_gram_per_pcs = float(pcs_to_m2) * (gsm_bahan + 60)
+                    else:
+                         self.x_gram_per_pcs = float(pcs_to_m2) * 140
+
+     @api.one
+     def gram_per_lot(self):
+          qty_per_pcs = self.x_gram_per_pcs
+          hasil = float(qty_per_pcs) * float(self.x_qty_per_lot)
+          self.x_berat_per_lot = hasil
+
 
 
 class lot_barang(models.Model):

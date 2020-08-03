@@ -25,7 +25,61 @@ class x_crm(models.Model):
     x_partner = fields.Many2one('res.partner', related = 'partner_id')
     x_status_lead = fields.Many2one('x.lead.status', string='Lead Status', required=True)
     x_source_lead = fields.Many2one('x.lead.source', string='Lead Source', required=True)
+    x_repeat_product = fields.One2many('x.product.repeat.crm','x_crm_lead_repeat')
+    currency_id = fields.Many2one('res.currency', store=True, readonly=True)
+    # x_activity_id = fields.Many2one('crm.activity')
+    # x_coba = fields.Datetime(related='x_partner.x_partnerdate_deadline')
+    x_partnerdate_deadline = fields.Datetime(related='x_partner.x_partnerdate_deadline')
+    x_partnernext_activity_id = fields.Many2one('crm.activity', 'Activity', store = True, related='x_partner.x_partnernext_activity_id')
+    # fields.Char(related='x_partner.x_partnernext_activity_id')
+    x_partnertitle_action = fields.Char(related='x_partner.x_partnertitle_action')
+    x_PIC_action = fields.Many2one('res.users', store=True, related='x_partner.x_PIC_action')
+    x_mail_message = fields.One2many('mail.message', 'x_lead_jobpotential', string='Mail Message')
 
+    # Menjumlahkan untaxed amount, taxes, amount total
+
+    @api.one
+    @api.depends('x_estimated_product.x_harga_so')
+    def _compute_amount(self):
+        amount_untaxed = 0
+        taxes = 0
+        amount_total = 0
+
+
+        for m in self.x_estimated_product:
+            amount_untaxed += m.x_harga_so
+            taxes += m.x_harga_so*0.1
+
+        amount_total = amount_untaxed+taxes
+
+        self.x_untaxed_amount = amount_untaxed
+        self.x_tax_amount = taxes
+        self.x_amount_total = amount_total
+
+    @api.depends('x_repeat_product.x_harga_so')
+    def _compute_amount_rep(self):
+        amount_untaxed_rep = 0
+        taxes_rep = 0
+        amount_total_rep = 0
+
+        for m in self.x_repeat_product:
+            amount_untaxed_rep += m.x_harga_so
+            taxes_rep += m.x_harga_so * 0.1
+
+        amount_total_rep = amount_untaxed_rep + taxes_rep
+
+        self.x_untaxed_amount_rep = amount_untaxed_rep
+        self.x_tax_amount_rep = taxes_rep
+        self.x_amount_total_rep = amount_total_rep
+
+
+
+    x_untaxed_amount = fields.Monetary(string='Untaxed Amount', compute='_compute_amount', readonly=True)
+    x_tax_amount = fields.Monetary(string='Taxes', compute='_compute_amount', readonly=True)
+    x_amount_total = fields.Monetary(string='Total', compute='_compute_amount', readonly=True)
+    x_untaxed_amount_rep = fields.Monetary(string='Untaxed Amount', compute='_compute_amount_rep', readonly=True)
+    x_tax_amount_rep = fields.Monetary(string='Taxes', compute='_compute_amount_rep', readonly=True)
+    x_amount_total_rep = fields.Monetary(string='Total', compute='_compute_amount_rep', readonly=True)
     # @api.onchange('stage_id')
     # def status_customer(self):
     #     self.partner_id.x_status_cust = "ABC"
@@ -130,55 +184,232 @@ class x_partner(models.Model):
         mail = self.env['mail.template'].browse(template.id)
         mail.send_mail(self.id, force_send=True)
 
+class product_repeat(models.Model):
+    _name = 'x.product.repeat.crm'
+    x_qty = fields.Integer(string = 'Estimated Quantity')
+    x_uom = fields.Many2one('product.uom', string = 'Unit of Measure')
+    x_crm_lead_repeat = fields.Many2one('crm.lead', string='CRM Lead')
+    x_product_repeat_crm = fields.Many2one('product.product', string='Product Name', domain=[('sale_ok', '=', True)],track_visibility='always')
+    x_desc = fields.Text (string = 'Description')
+    x_flag_harga = fields.Boolean(string = 'flag sudah create SQ', default = False)
+    x_sq = fields.Many2one('x.sales.quotation', string='SQ', compute='get_id_sq')
+    x_status_sq = fields.Selection(related = 'x_sq.x_status_cr', readonly=True, string='Status SQ')
+    x_so = fields.Many2one('sale.order', string='SO', compute='get_id_sq')
+    x_status_so = fields.Selection(related = 'x_so.state', readonly=True, string='Status SO')
+    x_harga_so = fields.Integer(string='Harga SO', compute='get_id_sq')
+
+    @api.multi
+    def crm_sq(self):
+        for crm in self:
+
+
+                sales_quo_obj = crm.env['x.sales.quotation']
+                ac = crm.env['ir.model.data'].xmlid_to_res_id('lpj_cusrequire.x_sq_view', raise_if_not_found=True)
+                for o in crm:
+                    id_produk_repeat = o.id
+
+                    id_product_repeat_crm = o.x_product_repeat_crm
+                    id_lead = o.x_crm_lead_repeat
+                    qty = o.x_qty
+
+
+                    for row in id_product_repeat_crm:
+                        ppid = row.id
+                        name = '[' + row.barcode + '] ' + row.name
+                        lgth = row.x_length
+                        wdth = row.x_width
+
+                    for row2 in id_lead:
+                        id_crm_lead = row2.id
+                        id_customer = row2.partner_id.id
+                        id_sales = row2.user_id
+                        if row2.x_status_job == 'repeat':
+                            status_repeat = True
+                        else:
+                            status_repeat = False
+
+                        for row3 in id_sales:
+                            id_nama_sales = row3.partner_id.id
+
+                    # sales_quo_obj.create({
+                    #     'x_id_estimated_product': id_estimated_produk,
+                    #     'item_description': name,
+                    #     'x_id_lead': id_crm_lead,
+                    #     'x_qty': qty,
+                    #     'x_length': lgth,
+                    #     'x_width': wdth,
+                    #     'x_req_dk': datetime.now()
+                    # })
+                    #
+                    # sales_quo_obj_cek = self.env['x.sales.quotation'].search([('x_id_estimated_product', '=', id_estimated_produk)])
+                    # if sales_quo_obj_cek:
+                    #     for ali in sales_quo_obj_cek:
+                    #         crm.update({'x_sq': ali.id})
+
+                result = {
+                    'name': 'Sales Quotation',
+                    'view_type': 'form',
+                    'res_model': 'x.sales.quotation',
+                    'view_id': ac,
+                    'context': {
+                        'default_x_id_product_repeat': id_produk_repeat,
+                        'default_x_repeat_order': status_repeat,
+                        'default_item_description': name,
+                        'default_x_id_lead': id_crm_lead,
+                        'default_x_product': ppid,
+                        'default_x_qty': qty,
+                        'default_x_length': lgth,
+                        'default_x_width': wdth,
+                        'default_x_customer_id': id_customer,
+                        'default_x_sales_id': id_nama_sales
+                    },
+                    'type': 'ir.actions.act_window',
+                    'view_mode': 'form',
+                    'target': 'current',
+                }
+                return result
+
+
+    @api.one
+    def get_id_sq(self):
+        id = self.id
+        id_lead = self.x_crm_lead_repeat.id
+
+        if id and id_lead:
+            self.env.cr.execute("select id from x_sales_quotation "
+                                "where (x_id_product_repeat = '" + str(
+                id) + "') "
+                                                                           "and x_id_lead = '" + str(id_lead) + "'")
+
+            sql = self.env.cr.fetchone()
+            if sql:
+                self.x_sq = sql[0]
+                quot_id = self.x_sq.id
+                self.env.cr.execute("select so.id, sol.price_subtotal, so.state from x_sales_quotation quot "
+                                    "LEFT JOIN sale_order_line sol on quot.name = sol.x_customer_requirement "
+                                    "LEFT JOIN sale_order so on sol.order_id = so.id "
+                                    "where quot.id = '" + str(quot_id) + "'")
+                sql_so = self.env.cr.fetchone()
+                if sql_so:
+                    self.x_so = sql_so[0]
+                    if sql_so[2] == 'done':
+                        self.x_harga_so = sql_so[1]
+
 class estimated_product(models.Model):
     _name = 'x.estimated.product.crm'
-    x_qty = fields.Integer(string = 'estimated quantity')
+    x_qty = fields.Integer(string = 'Estimated Quantity')
     x_uom = fields.Many2one('product.uom', string = 'Unit of Measure')
     x_crm_lead = fields.Many2one('crm.lead', string='CRM Lead')
     x_product_product_crm = fields.Many2one('x.product.product.crm', string='Estimated Product')
     x_desc = fields.Text (string = 'Description')
     x_flag_harga = fields.Boolean(string = 'flag sudah create SQ', default = False)
-    x_sq = fields.Text(string='SQ')
+    x_sq = fields.Many2one('x.sales.quotation', string='SQ', compute='get_id_sq')
+    x_status_sq = fields.Selection(related = 'x_sq.x_status_cr', readonly=True, string='Status SQ')
+    x_so = fields.Many2one('sale.order', string='SO', compute='get_id_sq')
+    x_status_so = fields.Selection(related = 'x_so.state', readonly=True, string='Status SO')
+    x_harga_so = fields.Integer(string='Harga SO', compute='get_id_sq')
+
 
 
     @api.multi
     def crm_sq(self):
-        # self.x_flag_harga = True
-        ac = self.env['ir.model.data'].xmlid_to_res_id('lpj_cusrequire.x_sq_view', raise_if_not_found=True)
-        for o in self:
-            id_estimated_produk = o.id
-            id_product_product_crm = o.x_product_product_crm
-            id_lead = o.x_crm_lead
-            qty = o.x_qty
-
-            for row in id_product_product_crm:
-                name = row.x_name
-                lgth = row.x_length
-                wdth = row.x_width
-
-            for row2 in id_lead:
-                id_crm_lead = row2.id
+        for crm in self:
 
 
+                sales_quo_obj = crm.env['x.sales.quotation']
+                ac = crm.env['ir.model.data'].xmlid_to_res_id('lpj_cusrequire.x_sq_view', raise_if_not_found=True)
+                for o in crm:
+                    id_estimated_produk = o.id
 
-        result = {
-            'name': 'Sales Quotation',
-            'view_type': 'form',
-            'res_model': 'x.sales.quotation',
-            'view_id': ac,
-            'context': {
-                'default_x_id_estimated_product': id_estimated_produk,
-                'default_item_description': name,
-                'default_x_id_lead': id_crm_lead,
-                'default_x_qty': qty,
-                'default_x_length': lgth,
-                'default_x_width': wdth
-            },
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'target': 'current',
-        }
-        return result
+                    id_product_product_crm = o.x_product_product_crm
+                    id_lead = o.x_crm_lead
+                    qty = o.x_qty
+
+                    for row in id_product_product_crm:
+                        name = row.x_name
+                        lgth = row.x_length
+                        wdth = row.x_width
+
+                    for row2 in id_lead:
+                        id_crm_lead = row2.id
+                        id_customer = row2.partner_id.id
+                        id_sales = row2.user_id
+                        if row2.x_status_job == 'repeat':
+                            status_repeat = True
+                        else:
+                            status_repeat = False
+
+                        for row3 in id_sales:
+                            id_nama_sales = row3.partner_id.id
+
+                    # sales_quo_obj.create({
+                    #     'x_id_estimated_product': id_estimated_produk,
+                    #     'item_description': name,
+                    #     'x_id_lead': id_crm_lead,
+                    #     'x_qty': qty,
+                    #     'x_length': lgth,
+                    #     'x_width': wdth,
+                    #     'x_req_dk': datetime.now()
+                    # })
+                    #
+                    # sales_quo_obj_cek = self.env['x.sales.quotation'].search([('x_id_estimated_product', '=', id_estimated_produk)])
+                    # if sales_quo_obj_cek:
+                    #     for ali in sales_quo_obj_cek:
+                    #         crm.update({'x_sq': ali.id})
+
+                result = {
+                    'name': 'Sales Quotation',
+                    'view_type': 'form',
+                    'res_model': 'x.sales.quotation',
+                    'view_id': ac,
+                    'context': {
+                        'default_x_id_estimated_product': id_estimated_produk,
+                        'default_x_repeat_order': status_repeat,
+                        'default_item_description': name,
+                        'default_x_id_lead': id_crm_lead,
+                        'default_x_qty': qty,
+                        'default_x_length': lgth,
+                        'default_x_width': wdth,
+                        'default_x_customer_id': id_customer,
+                        'default_x_sales_id': id_nama_sales
+                    },
+                    'type': 'ir.actions.act_window',
+                    'view_mode': 'form',
+                    'target': 'current',
+                }
+                return result
+
+    @api.one
+    def get_id_sq(self):
+        id = self.id
+        id_lead = self.x_crm_lead.id
+
+        if id and id_lead:
+            self.env.cr.execute("select id from x_sales_quotation "
+                                "where (x_id_estimated_product = '"+ str(id) +"' or x_id_estimated_product_moved0 = '"+ str(id) +"') "
+                                "and x_id_lead = '"+ str(id_lead) +"'")
+
+            sql = self.env.cr.fetchone()
+            if sql:
+                self.x_sq = sql[0]
+                quot_id = self.x_sq.id
+                self.env.cr.execute("select so.id, sol.price_subtotal, so.state from x_sales_quotation quot "
+                                         "LEFT JOIN sale_order_line sol on quot.name = sol.x_customer_requirement "
+                                         "LEFT JOIN sale_order so on sol.order_id = so.id "
+                                    "where quot.id = '" + str(quot_id) + "'")
+                sql_so = self.env.cr.fetchone()
+                if sql_so:
+                    self.x_so = sql_so[0]
+                    if sql_so[2] == 'done':
+                        self.x_harga_so = sql_so[1]
+
+
+
+
+
+
+
+
 
 
 class product_product_crm(models.Model):
@@ -204,7 +435,6 @@ class crm_activities_inherit(models.Model):
     _inherit = 'crm.activity'
 
     x_type_activity = fields.Selection([('others', 'Others'), ('visit', 'Visit')], default='others', string="Type Activity")
-
 
 # class temporary_cust_state(models.Model):
 #     _name = 'x.cust.state'

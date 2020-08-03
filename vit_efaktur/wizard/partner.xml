@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="act_open_vit_efaktur_partner_wizard" model="ir.actions.act_window">
+            <field name="name">Export Lawan Transaksi</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">vit.efaktur_partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="view_vit_efaktur_partner_form" model="ir.ui.view">
+            <field name="name">view_vit_efaktur_partner_form</field>
+            <field name="model">vit.efaktur_partner</field>
+            <field name="type">form</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Export Product" version="7.0">
+                    <p>
+                        Klik tombol Export di bawah untuk mulai export data Lawan Transaksi.
+                        Data yang diexport adalah Customer yang memiliki NPWP dan belum diexport ke E-Faktur.
+                    </p>
+
+                    <p>
+                        Setelah proses export Lawan Transaksi selesai dilakukan,
+                        download file:
+                    </p>
+                    <p>
+                        <a href="/vit_efaktur/static/partner.csv">
+                            <img src="/vit_efaktur/static/src/img/export.png"/>
+                            <b>partner.csv</b>
+                        </a>
+
+                    </p>
+                    <p>
+                        Lalu import ke program E-Faktur DJP melalui menu <b>Referensi - Lawan Transaksi - Import</b>
+                    </p>
+
+                    <footer>
+                        <button string="Export" name="confirm_button" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel" />
+                    </footer>
+
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>

@@ -9,7 +9,6 @@
             <field name="arch" type="xml">
                 <field name="name" position="after">
                     <field name="x_customer_so"></field>
-                    <field name="create_date" ></field>
                 </field>
 
                 <!-- Menambahkan x_due_date SQ pada tree MO -->
@@ -51,7 +50,19 @@
                     <field name="panjang_bahan_max" invisible="1"></field>
                     <field name="x_tampungan_bu" invisible="1"></field>
                     <field name="x_is_administrator" invisible="1"></field>
+                    <field name="x_is_user_scm" invisible="1"></field>
                 </field>
+
+                <!-- Toggle button history purchase request -->
+                <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                    <button type="object"
+                        name="purchase_req_view_action"
+                        class="oe_stat_button"
+                        icon="fa-shopping-cart">
+
+                        <field name="purchase_request_count" widget="statinfo" string="Purchase" help="Purchase Request"/>
+                    </button>
+                </xpath>
             </field>
         </record>
 
@@ -77,9 +88,17 @@
                 </field>
 
                 <!-- Menambahkan groups pada button POST INVENTORY -->
-                <button name="post_inventory" position="attributes">
-                    <attribute name="groups">mrp.group_mrp_manager</attribute>
+                <button name="post_inventory" position="replace">
+                    <button name="post_inventory"
+                            string="Post Inventory"
+                            type="object"
+                            attrs="{'invisible': ['|', '|', ('post_visible', '=', False),
+                                                       ('availability', '!=', 'assigned'),
+                                                       ('x_is_user_scm', '=', False)]}"/>
+
                 </button>
+
+
 
                 <!-- Menambahkan groups pada button CANCEL OK -->
                 <button name="action_cancel" position="attributes">
@@ -120,6 +139,8 @@
                                 attrs="{'invisible':['|', ('x_cek_cr', '!=', True),('x_color_range_name','!=', False)]}" />
                     </div>
                     <field name = "x_cek_cr" invisible="1"/>
+                    <field name="x_qtytoproduce_temp" invisible="1"></field>
+                    <field name="x_temp_mo" invisible="1"></field>
                 </xpath>
             </field>
         </record>

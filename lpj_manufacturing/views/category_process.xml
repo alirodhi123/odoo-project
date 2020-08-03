@@ -1,0 +1,54 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="category_process_tree_view">
+          <field name="name">x.category.process.tree</field>
+          <field name="model">x.category.process</field>
+          <field name="arch" type="xml">
+              <tree string="Category Process">
+                <field name="name"></field>
+              </tree>
+          </field>
+        </record>
+
+        <!-- Membuat tampilan form -->
+        <record model="ir.ui.view" id="category_process_form_view">
+        <field name="name">x.category.process.form</field>
+        <field name="model">x.category.process</field>
+        <field name="arch" type="xml">
+          <form string="New">
+            <sheet>
+              <group>
+                <group>
+                  <field name="name"></field>
+                </group>
+              </group>
+            </sheet>
+          </form>
+        </field>
+        </record>
+
+          <!-- Filter untuk kuitansi -->
+        <record model="ir.ui.view" id="category_process_search_view">
+          <field name="name">x.category.process.search</field>
+          <field name="model">x.category.process</field>
+          <field name="arch" type="xml">
+             <search>
+                 <field name="name"/>
+             </search>
+          </field>
+        </record>
+
+        <!-- ### Membuat Action/Event Object Kursus ### -->
+        <record model="ir.actions.act_window" id="category_process_list_action">
+          <field name="name">Create Category Process</field>
+          <field name="res_model">x.category.process</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Create a new Category</p>
+          </field>
+        </record>
+
+
+    </data>
+</odoo>

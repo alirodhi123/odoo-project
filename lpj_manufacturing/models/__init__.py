@@ -13,5 +13,6 @@ from . import stock_production_lot
 from . import workcenter
 from . import color_range
 from . import approval_dk
+from . import category_process
 
 

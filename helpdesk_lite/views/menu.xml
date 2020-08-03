@@ -1,0 +1,57 @@
+<odoo>
+    <data>
+        <!-- Top menu item -->
+        <menuitem name="Helpdesk" id="menu_root_helpdesk" web_icon="helpdesk_lite,static/helpdesk.png"/>
+        <!-- menu categories -->
+        <menuitem name="Dashboard" id="menu_dash" parent="menu_root_helpdesk" sequence="0"/>
+
+        <!-- Menu Ticket -->
+        <menuitem name="Tickets" id="ticket" parent="menu_root_helpdesk" sequence="1"/>
+        <menuitem name="Request Tickets" id="req_ticket" parent="ticket" sequence="2" action="helpdesk_ticket_categ_act0"/>
+        <menuitem name="Tickets to Solved" id="my_ticket" parent="ticket" sequence="3" action="helpdesk_my_ticket_act"/>
+        <menuitem name="Solved Tickets" id="solved_ticket" parent="ticket" sequence="4" action="helpdesk_solved_ticket_act"/>
+
+        <menuitem name="Search" id="menu_tickets" parent="menu_root_helpdesk" sequence="10"/>
+
+        <!-- uswa-tambah Menu Asset -->
+        <menuitem name="Assets" id="assets_parent" parent="menu_root_helpdesk" sequence="5"/>
+        <menuitem name="Assets" id="assets" parent="assets_parent" sequence="6" action="helpdesk_asset_act"/>
+
+        <!--<menuitem name="Manage States" id="manage_states" parent="assets_parent" sequence="7" action="helpdesk_ticket_categ_act0"/> &lt;!&ndash; action="helpdesk_manage_states_act"/>&ndash;&gt;-->
+
+        <!--uswa-ini ngga tau idnya [id="menu_tickets"] ngambil dari mana?-->
+        <!--<menuitem name="Search" id="menu_tickets" parent="menu_root_helpdesk" sequence="10"/>-->
+
+        <!-- MENU CONFIGURATION -->
+        <menuitem name="Configuration" id="menu_config_new" parent="menu_root_helpdesk" sequence="20"/>
+        <menuitem name="Category Ticket" id="config_categ_ticket" parent="menu_config_new"
+                  sequence="21" groups="base.group_system" action="categ_ticket_list_action"/>
+        <menuitem name="Category Problem" id="config_categ_problem" parent="menu_config_new"
+                  sequence="22" groups="base.group_system" action="categ_problem_list_action"/>
+
+        <!-- actions -->
+<!--        <menuitem name="Tickets" id="menu_tickets_act" parent="menu_tickets"-->
+<!--                   action="helpdesk_ticket_categ_act0"/>-->
+
+        <!-- stage view -->
+<!--        <menuitem-->
+<!--            id="menu_helpdesk_stage_act"-->
+<!--            name="Stages"-->
+<!--            sequence="20"-->
+<!--            action="helpdesk_stage_action"-->
+<!--            parent="menu_config_new"-->
+<!--            groups="base.group_no_one"/>-->
+
+<!--        <menuitem-->
+<!--                id="support_team_config"-->
+<!--                name="Support teams"-->
+<!--                action="support_team_config_action"-->
+<!--                parent="menu_config_new"-->
+<!--                groups="base.group_system"-->
+<!--        />-->
+
+<!--        <menuitem id="menu_helpdesk_general_settings" name="Settings" parent="menu_config_new"-->
+<!--            sequence="0" action="action_config_settings" groups="base.group_system"/>-->
+
+    </data>
+</odoo>

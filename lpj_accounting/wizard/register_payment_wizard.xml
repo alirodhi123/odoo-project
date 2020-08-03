@@ -1,0 +1,47 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="wizard_form_view_register_payment">
+            <field name="name">Wizard Register Payment</field>
+            <field name="model">x.popup.register.payment</field>
+            <field name="arch" type="xml">
+                <form string="Register Payment">
+                    <newline/>
+                    <group>
+                        <field name="x_wizard_register_payment_line" nolabel="1" colspan="2">
+                            <tree create="false" editable="bottom">
+                                <field name="x_account_id"></field>
+                                <field name="x_vendor_wizard_line"></field>
+                                <field name="x_origin_wizard_line"></field>
+                                <field name="x_bill_date_line"></field>
+                                <field name="x_due_date_line"></field>
+                                <field name="x_untaxed_amount_wizard_line"></field>
+                                <field name="x_tax_wizard_line"></field>
+                                <field name="x_total_wizard_line"></field>
+                            </tree>
+                        </field>
+                    </group>
+
+                    <footer>
+                        <button class="oe_highlight"
+                                 name="pay_to_draft"
+                                 string="Pay to Draft"
+                                 type="object"
+                                 help="calls python function">
+                         </button>
+                        <button class="btn-default" special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+         </record>
+
+        <act_window id="launch_custom_register_payment_wizard"
+                name="Draft Register Payment"
+                src_model="account.invoice"
+                res_model="x.popup.register.payment"
+                view_mode="form"
+                target="new"
+                key2="client_action_multi"/>
+
+    </data>
+</odoo>

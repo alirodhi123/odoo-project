@@ -39,8 +39,13 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="text-center">
-                                <h4 t-if="o.partner_type == 'customer'">BUKTI BANK MASUK</h4>
-                                <h4 t-if="o.partner_type == 'supplier'">BUKTI BANK KELUAR</h4>
+                                <h4 t-if="o.partner_type == 'customer' and o.journal_id.id != 17 and o.journal_id.id != 18">BUKTI BANK MASUK</h4>
+                                <h4 t-if="o.partner_type == 'supplier' and o.journal_id.id != 17 and o.journal_id.id != 18">BUKTI BANK KELUAR</h4>
+
+                                <!--uswa-tambah ini, supaya pas print untuk journal_id = Kas Besar (IDR) -> jadi BUKTI KAS MASUK/KELUAR-->
+                                <h4 t-if="o.partner_type == 'customer' and (o.journal_id.id == 17 or o.journal_id.id == 18)">BUKTI KAS MASUK</h4>
+                                <h4 t-if="o.partner_type == 'supplier' and (o.journal_id.id == 17 or o.journal_id.id == 18)">BUKTI KAS KELUAR</h4>
+                                <!--end-->
                             </div>
                         </div>
                     </div>
@@ -55,8 +60,8 @@
                     <!-- Dibayarkan kepada / dari -->
                     <div class="row">
                         <div class="col-xs-6">
-                            <span t-if="o.partner_type == 'customer'"><b>Diabayarkan Dari:</b></span>
-                            <span t-if="o.partner_type == 'supplier'"><b>Diabayarkan Kepada:</b></span>
+                            <span t-if="o.partner_type == 'customer'"><b>Dibayarkan Dari:</b></span>
+                            <span t-if="o.partner_type == 'supplier'"><b>Dibayarkan Kepada:</b></span>
                             <div name="invoice_address">
                                 <address t-field="o.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: True}"/>
                             </div>
@@ -67,7 +72,7 @@
                                 <tr t-if="o.name">
                                     <td style="padding-right: 35px; padding-bottom: 5px;"><b>No</b></td>
                                     <td style="padding-right: 10px; padding-bottom: 5px;">:</td>
-                                    <td style="padding-bottom: 5px;"><span t-field="o.name"/></td>
+                                    <td style="padding-bottom: 5px;"><span t-field="o.x_nomor_journal"/></td>
                                 </tr>
                                 <tr t-if="o.payment_date">
                                     <td style="padding-right: 35px; padding-bottom: 5px;"><b>Tanggal</b></td>

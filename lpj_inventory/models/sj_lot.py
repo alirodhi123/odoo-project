@@ -35,6 +35,8 @@ class master_lot(models.Model):
 
      x_jml_print = fields.Integer(string='Jumlah Print: ')
      x_qty_akhir = fields.Integer(string = 'Quantity akhir bahan: ')
+     x_berat_per_lot_lot = fields.Float(string="Berat per Lot (gr)", compute='compute_berat_per_lot', digits=(12,4))
+     x_berat_per_pcs_lot = fields.Float(string="Berat per Pcs (gr)", readonly=True, digits=(12,4))
 
      @api.multi
      def action_master(self):
@@ -44,5 +46,13 @@ class master_lot(models.Model):
                'type': 'ir.actions.act_url',
                'url': 'http://192.168.1.8:8086/Lot?id=3&jumlah=' + '&name=' + str(self.name) + '&bahan='+ str(self.product_id.name)+ '&awal=False' + '&akhir=False' + '&print=' + str(self.x_jml_print) + '&cus='+ '&date=' + '&categ=' + '&qtyakhir=' + str(self.x_qty_akhir)
           }
+
+
+     @api.one
+     def compute_berat_per_lot(self):
+          berat_per_pcs = self.x_berat_per_pcs_lot
+          qty = self.product_qty
+
+          self.x_berat_per_lot_lot = qty * berat_per_pcs
 
 

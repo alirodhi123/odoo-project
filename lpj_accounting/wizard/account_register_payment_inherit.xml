@@ -1,0 +1,18 @@
+<odoo>
+    <data>
+
+        <!-- Menambahkan field draft payment -->
+        <record model="ir.ui.view" id="register_payment_form_view">
+            <field name="name">account.register.payment.form.view</field>
+            <field name="model">account.register.payments</field>
+            <field name="inherit_id" ref="account.view_account_payment_from_invoices"></field>
+            <field name="arch" type="xml">
+                <field name="communication" position="after">
+                    <field name="x_draft_payment"></field>
+
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

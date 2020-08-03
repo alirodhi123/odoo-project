@@ -36,13 +36,13 @@
                     <button name="action_pending"
                             string="Pending Order"
                             type="object"
-                            groups="purchase.group_purchase_manager"
+                            groups="purchase.group_purchase_manager, purchase_request.group_purchase_request_manager"
                             attrs="{'invisible':[('state','in',['done','pending','cancel'])]}"/>
 
                     <button name="action_back_to_rfq"
                             string="Continue Order"
                             type="object"
-                            groups="purchase.group_purchase_manager"
+                            groups="purchase.group_purchase_manager, purchase_request.group_purchase_request_manager"
                             states="pending"/>
                 </xpath>
 

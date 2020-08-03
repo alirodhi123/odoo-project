@@ -83,7 +83,7 @@
                             <page string="Notes Shrink" attrs="{'invisible':[('x_category_produk', '!=', 'Shrink')]}">
                                 <group>
                                     <group>
-                                       <field name="x_gramature_shrink"></field>
+                                       <field name="x_gramature_shrink" invisible="1"></field>
                                        <field name="x_thickness_shrink"></field>
                                        <field name="x_apperance_shrink"></field>
                                        <field name="x_colour_shrink"></field>

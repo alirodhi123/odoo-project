@@ -19,6 +19,7 @@
                 <page name="miscellaneous" position="attributes">
                     <attribute name="groups">mrp.group_mrp_user,mrp.group_mrp_manager</attribute>
                 </page>
+
             </field>
         </record>
 
@@ -36,6 +37,13 @@
                         options="{'reload_on_button': true}"
                         attrs="{'invisible': [('state', '=', 'done')]}">
                     </button>
+
+                    <button class="oe_highlight"
+                        string="Test"
+                        name="check_qty_wip_header"
+                        type="object"
+                        help="calls python function">
+                    </button>
                 </button>
 
                 <field name="quantity" position="after">
@@ -49,10 +57,29 @@
                         ('product_id', '=', product_id)]
                     </attribute>
                 </field>
+
+<!--                <field name="active_move_lot_ids" position="attributes">-->
+<!--                    <attribute name="domain">[('done_wo', '!=', False)]</attribute>-->
+<!--                </field>-->
             </field>
         </record>
 
-        <record model="ir.ui.view" id="mrp_workcenter_create_date_tree">
+        <!-- Menambahkan field category process -->
+        <record model="ir.ui.view" id="mrp_workorder_inherite">
+            <field name="name">mrp.workorder.create.date.tree</field>
+            <field name="model">mrp.workorder</field>
+            <field name="inherit_id" ref="mrp.mrp_production_workcenter_form_view_inherit"/>
+            <field name="arch" type="xml">
+
+                <!-- Menambahkan field category process -->
+                <field name="is_produced" position="after">
+                    <field name="x_kategori_proses"></field>
+                </field>
+
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="mrp_workcenter_inherite_category_process">
             <field name="name">mrp.workorder.create.date.tree</field>
             <field name="model">mrp.workorder</field>
             <field name="inherit_id" ref="mrp.mrp_production_workcenter_tree_view_inherit"/>

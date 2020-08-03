@@ -26,6 +26,13 @@
                         <field name="x_sale_order" invisible="1" readonly="1"></field>
                         <field name="x_sale_order_char" readonly="1"></field>
                         <field name="x_sale_order_line" readonly="1"></field>
+                        <field name="x_pop_message_ids">
+                            <tree create="0" edit="0" delete="0">
+                                <field name="product_text"></field>
+                                <field name="reference_text"></field>
+                            </tree>
+                        </field>
+                        <field name="x_reason_dont_need_ok"></field>
                     </group>
                     <footer>
                        <button name="create_ok" string="Create OK" class="oe_highlight" type="object"></button>

@@ -30,7 +30,6 @@
         "views/purchase_request_report.xml",
         "views/partner.xml",
         "views/pop_message_pr_view.xml",
-
     ],
     'demo': [
         "demo/purchase_request_demo.xml",

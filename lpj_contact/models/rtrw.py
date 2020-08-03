@@ -9,7 +9,7 @@ class inherit_contact_partner(models.Model):
 
      x_rt = fields.Char(string = 'RT')
      x_rw = fields.Char(string='RW')
-     x_npwp = fields.Char(string = 'NPWP')
+     x_npwp = fields.Char(string = 'NPWP', readonly=True)
      x_pkp = fields.Boolean(string = 'PKP')
      x_kode_customer = fields.Char(string ='kode customer')
      x_pipeline_customer = fields.Char(string='Pipeline Customer', compute = 'x_state_cust')

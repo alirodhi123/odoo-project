@@ -20,10 +20,10 @@
             <field name="page_height">0</field>
             <field name="page_width">0</field>
             <field name="orientation">Portrait</field>
-            <field name="margin_top">4</field>
-            <field name="margin_bottom">23</field>
-            <field name="margin_left">4</field>
-            <field name="margin_right">4</field>
+            <field name="margin_top">6</field>
+            <field name="margin_bottom">4</field>
+            <field name="margin_left">6</field>
+            <field name="margin_right">6</field>
             <field name="header_line" eval="False" />
             <field name="header_spacing">0</field> <!-- Jika ingin header muncul ubah nilai - 0 -->
             <field name="dpi">90</field>
@@ -35,53 +35,98 @@
 
         <template id="report_document_quo">
             <t t-foreach="docs" t-as="o">
-            <t t-call="report.external_layout">
+                <t t-call="report.html_container">
                     <div class="page">
-                        <div class="col-xs-6">
-                            <h1>TES</h1>
+                        <div class="row">
+                        <div class="col-xs-3">
+                            <img t-if="res_company.logo" t-att-src="'data:image/png;base64,%s' %res_company.logo" style="width: 180%"/>
                         </div>
+                    </div>
+                    <br></br>
+
+                    <!-- Untuk garis horizontal-->
+                    <div class="row zero_min_height">
+                        <div class="col-xs-12">
+                            <div style="border-bottom: 1px solid black;"/>
+                        </div>
+                    </div>
+
+                        <!--<div class="col-xs-6">-->
+                            <!--<h1></h1>-->
+                        <!--</div>-->
 
                         <!-- Row judul quotation  -->
-                        <div class="row">
-                            <div class="col-xs-12" style="margin-top: 200px">
-                                <h2>
-                                    <span>Quotation # </span>
-                                    <span t-field="o.name"/>
-                                </h2>
-                            </div>
-                        </div>
+                        <!--<div class="row">-->
+                            <!--<div class="col-xs-12" style="margin-top: 180px">-->
+                                <!--<h6>-->
+                                    <!--&lt;!&ndash;<span>Quotation # akbar </span>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<span t-field="o.name"/>&ndash;&gt;-->
+                                <!--</h6>-->
+                            <!--</div>-->
+                        <!--</div>-->
 
                         <!-- Row deskripsi field parent -->
                         <div class="row mt32 mb32" id="informations">
-                            <div t-if="o.x_cust" class="col-xs-3">
-                                <strong>Customer:</strong>
-                                <p t-field="o.x_cust"/>
+                            <div t-if="o.x_cust" class="col-xs-6">
+                                <span>
+                                    <span>No: </span> <span t-field="o.name"></span>
+                                    <br/>
+                                    <span>To: </span> <span t-field="o.x_cust"></span>
+                                    <br/>
+                                    <span>Tlp: </span> +62 <span t-field="o.x_cust.phone"></span>
+                                    <br/>
+                                    <span>Attn: </span> <span t-field="o.x_pic_cust"></span>
+                                    <br/>
+                                    <strong>Re: Perihal </strong> <strong><span t-field="o.x_jenis_sph"></span></strong>
+                                    <strong> Harga</strong>
+
+                                </span>
+
+                            </div>
+                            <div class="col-xs-6" style='text-align:right;'>
+                                <td>
+                                    Sidoarjo, <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d')"></span>
+                                </td>
                             </div>
                         </div>
+                            <!--<div class="row mt32 mb32" id="informations">-->
+                                <!--<div t-if="o.x_cust" class="col-xs-3">-->
+                                    <!--<strong>Customer:</strong>-->
+                                    <!--<p t-field="o.x_cust"/>-->
+                                <!--</div>-->
+                            <!--</div>-->
 
                         <!-- Row table -->
                         <div class="row" style="margin-top:30px;">
                             <div class="col-xs-12">
-                                <h4>Quotation Line</h4>
+                                <h5>Dengan Hormat,</h5>
+                                <h5>Bersama ini kami sampaikan penawaran harga dalam pokok surat ini sebagai berikut :</h5>
                                 <table class="table table-condensed">
                                     <thead>
                                         <tr>
                                             <th>Quotation</th>
-                                            <th>Item</th>
+                                            <!--<th>Item</th>-->
                                             <th>Product</th>
+                                            <th>Bahan</th>
+                                            <th>Finishing</th>
+                                            <th>Lebar (mm)</th>
+                                            <th>Panjang (mm)</th>
                                             <th class="text-right">Qty</th>
                                             <th class="text-right">Harga Pcs</th>
-                                            <th class="text-right">Total Harga</th>
+                                            <!--<th class="text-right">Total Harga</th>-->
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr t-foreach="o.x_quo_line" t-as="row">
                                             <td><span t-field="row.x_sq"></span></td>
                                             <td><span t-field="row.x_item_desc"></span></td>
-                                            <td><span t-field="row.x_prod"></span></td>
+                                            <td><span t-field="row.x_bahan"></span></td>
+                                            <td><span t-field="row.x_finishing"></span></td>
+                                            <td><span t-field="row.x_width"></span></td>
+                                            <td><span t-field="row.x_length"></span></td>
                                             <td class="text-right"><span t-field="row.x_qty"></span></td>
                                             <td class="text-right"><span t-field="row.x_price_pcs"></span></td>
-                                            <td class="text-right"><span t-field="row.x_total_price"></span></td>
+                                            <!--<td class="text-right"><span t-field="row.x_total_price"></span></td>-->
                                         </tr>
                                     </tbody>
                                 </table>
@@ -89,37 +134,109 @@
                         </div>
 
                         <!-- Row deskripsi total -->
-                        <div class="row">
-                            <div class="col-xs-4 pull-right">
-                                <table class="table table-condensed">
-                                    <tr class="border-black">
-                                        <td><strong>Total</strong></td>
-                                        <td class="text-right">
-                                            <span t-field="o.x_untaxed_amount"/>
-                                            <!--<span t-field="doc.x_untaxed_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>-->
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
+                        <!--<div class="row">-->
+                            <!--<div class="col-xs-4 pull-right">-->
+                                <!--<table class="table table-condensed">-->
+                                    <!--<tr class="border-black">-->
+                                        <!--<td><strong>Total</strong></td>-->
+                                        <!--<td class="text-right">-->
+                                            <!--<span t-field="o.x_untaxed_amount"/>-->
+                                            <!--&lt;!&ndash;<span t-field="doc.x_untaxed_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>&ndash;&gt;-->
+                                        <!--</td>-->
+                                    <!--</tr>-->
+                                <!--</table>-->
+                            <!--</div>-->
+                        <!--</div>-->
                         <!--keterangan pada SPH-->
                         <div class="row">
-                            <div class="pull-left">
+                            <div t-if="o.x_cust" class="col-xs-12">
                                 <td class="text-left">
-                                    <strong>Keterangan:</strong>
-                                    <br></br>
+                                    <h4><strong>KETERANGAN:</strong></h4>
                                     1. Harga belum termasuk PPN.
                                     <br></br>
-                                    2. Penawaran harga berlaku 30 hari sejak tanggal SPH dikirimkan.
+                                    2. Toleransi kirim +/-15%.
                                     <br></br>
-                                    3. Komplain maksimal 3 bulan setelah tanggal pengiriman, apabila lebih dari itu maka diluar tanggungjawab PT. Laprint Jaya.
+                                    3. Penawaran harga berlaku 30 hari dari tanggal penawaran.
                                     <br></br>
-                                    4. Tambahkan juga kolom untuk ukuran dan jenis bahan.
+                                    4. Termin pembayaran <span t-field="o.x_payment_term"></span>
+                                    <br></br>
+                                    5. Alamat Transfer Bank BCA a.n PT. Laprint Jaya a/c 7880 932 688.
+                                    <br></br>
+                                    6. Garansi kualitas 6 bulan dari tanggal pengiriman.
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                </td>
+                            </div>
+                            <div t-if="o.x_note" class="col-xs-12">
+                                <td>
+                                    nb: <span t-field="o.x_note"></span>
+                                    <br></br>
+                                    <br></br>
+                                    Demikian surat penawaran ini disampaikan, sambil menanti PO atas perhatian dan kerjasamanya kami ucapkan terima kasih.
+                                    <br></br>
+                                    <br></br>
+                                </td>
+                            </div>
+                        </div>
+
+                        <!--tanda tangan admin-->
+                        <div class="row">
+                            <div t-if="o.x_cust" class="col-xs-4" style='text-align:left;'>
+                                <td>
+                                    <br></br>
+                                    Hormat Kami,
+                                    <br></br>
+                                    PT. Laprint Jaya
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    <span t-field="o.x_user_id"></span>
+                                </td>
+                            </div>
+                            <div class="col-xs-4" style='text-align:center;'>
+                                <td>
+                                    <br></br>
+                                    Mengetahui,
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    Raymond Sutjiono
+                                </td>
+                            </div>
+                            <div class="col-xs-4" style='text-align:right;'>
+                                <td>
+                                    <br></br>
+                                    <strong>Konfirmasi (ACC) Pembeli,</strong>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    ________________________
                                 </td>
                             </div>
                         </div>
 
                         <div class="oe_structure"/>
+
+                        <!-- Footer -->
+                        <div class="row">
+                            <div class="col-xs-12" style="position: fixed; width: 100%; bottom: -1355px;">
+                                <div class="text-center" style="border-top: 1px solid black;">
+                                    <ul t-if="not res_company.custom_footer" style="list-style: none; margin: 0 auto;">
+                                        <t t-set="res_company" t-value="res_company.sudo()"/>
+                                        <li t-if="res_company.street">Office: <span t-field="res_company.street"/><span>, Sidoarjo 61254 - Indonesia</span></li>
+                                        <li t-if="res_company.phone">Phone: <span t-field="res_company.phone"/><span>, 99038051, 99038054, 99038064</span> • Fax: <span t-field="res_company.fax"/> </li>
+                                        <li t-if="res_company.email">Email: <span t-field="res_company.email"/> • Website: <span t-field="res_company.website"></span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Tutup Footer -->
                     </div> <!-- Tutup page -->
                 </t>
             </t>

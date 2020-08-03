@@ -9,20 +9,21 @@
                 <xpath expr='//tree/field[@name="origin"]' position="replace">
                     <field name="origin" invisible="1"/>
                 </xpath>
-                <xpath expr='//tree/field[@name="origin"]' position="after">
-                    <field name="x_no_ok"/>
+                <xpath expr='//tree/field[@name="origin"]' position="after" >
+                    <field name="x_no_ok"/> <!-- Uswa-Tambahin invisible  -->
+                    <field name="x_no_so"/>
                 </xpath>
             </field>
         </record>
 
         <!-- Inherit purchase request form -->
-        <record id="purchase_request_form" model="ir.ui.view">
+         <record id="purchase_request_form" model="ir.ui.view">
             <field name="inherit_id" ref="purchase_request.view_purchase_request_form"/>
             <field name="model">purchase.request</field>
             <field name="arch" type="xml">
                 <field name="description" position="after">
-                    <field name="x_no_ok"></field>
-
+                    <field name="x_no_ok" ></field> <!-- Uswa-Tambahin attr -->
+                    <field name="x_no_so" attrs="{'invisible': [('x_no_so', '=', False)]}"></field> <!-- Uswa-Tambahin field x_no_so dan attr -->
                 </field>
             </field>
         </record>
@@ -83,6 +84,7 @@
               <field name="arch" type="xml">
                     <field name="state" position="after">
                         <field name="x_no_ok"></field>
+                        <field name="x_no_so"></field>
                     </field>
               </field>
         </record>

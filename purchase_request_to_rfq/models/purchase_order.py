@@ -118,7 +118,9 @@ class PurchaseOrder(models.Model):
                             "left join res_users ru on mm.write_uid = ru.id "
                             "left join res_partner rp on ru.partner_id = rp.id "
                             "where mm.model = 'purchase.order' and mm.record_name like '%" + self.name + "%'" 
-                            "and mtv.new_value_char = 'Locked'")
+                            "and mtv.new_value_char = 'Locked' "
+                            "order by mtv.write_date DESC "
+                            "limit 1")
         row = self.env.cr.fetchone()
         if row:
             user = row[0]
@@ -126,6 +128,7 @@ class PurchaseOrder(models.Model):
             return self.x_user_approve
         else:
             self.x_user_approve = "Novrinda Ayu"
+
 
 class PurchaseOrderLine(models.Model):
     _inherit = "purchase.order.line"

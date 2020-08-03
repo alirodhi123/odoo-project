@@ -8,6 +8,8 @@
                 <xpath expr="//field[@name='ref']" position="after">
                     <field name="x_qty_akhir"/>
                     <field name="x_jml_print"/>
+                    <field name="x_berat_per_lot_lot"/>
+                    <field name="x_berat_per_pcs_lot"/>
                     <button name="action_master" type="object" string="Create Lot" class="oe_highlight"/>
                 </xpath>
 

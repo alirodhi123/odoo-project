@@ -15,11 +15,13 @@ class sale_order_line(models.Model):
      x_locked_product_so = fields.Boolean(string="Locked Product", default=True, readonly=True)
      x_status_product = fields.Selection([('false', 'Open'), ('true', 'Locked')], default='true', string="Status Product")
      x_m_qty = fields.Float(string="Quantity (m2)")
+     x_reason_dont_need_ok = fields.Text(string="Reason OK")
 
-     # Funsgi tampilkan pop up pesan
+     # Funsgi tampilkan pop up pesan create OK
      @api.multi
      def pop_message_ok(self):
           product_ok = self.product_id.x_locked_ok
+          terms = []
 
           # Jika prodcut tidak dicentang (Unlock)
           # Jalankan function create OK
@@ -27,6 +29,19 @@ class sale_order_line(models.Model):
                for o in self:
                     order_name = o.order_id.id
                     order_name_char = o.order_id.name
+                    product_tmpl_id = o.product_tmpl_id
+
+                    bom_obj = self.env['mrp.bom'].search([('product_tmpl_id', '=', product_tmpl_id.id)])
+                    if bom_obj:
+                         for row in bom_obj:
+                              product_text = row.product_tmpl_id.name
+                              reference_text = row.code
+
+                              values = {}
+                              values['product_text'] = product_text
+                              values['reference_text'] = reference_text
+                              terms.append((0, 0, values))
+
 
                return {
                     'name': 'Create Manufacturing Order',
@@ -38,6 +53,7 @@ class sale_order_line(models.Model):
                     'context': {
                          'default_x_sale_order': order_name,
                          'default_x_sale_order_char': order_name_char,
+                         'default_x_pop_message_ids': terms,
                          'default_name': "Are you sure want to create Manufacturing Order ?"
                     }
                }

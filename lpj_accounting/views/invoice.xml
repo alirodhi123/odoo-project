@@ -9,11 +9,13 @@
                 <field name="team_id" position="after">
                     <field name="x_tanda_terima"></field>
                     <field name="x_due_date_pembayaran"></field>
+                    <field name="x_due_date_tt"></field>
                 </field>
                 <field name="payment_term_id" position="after">
                     <field name="x_no_faktur"/>
                     <field name="x_no_sjk" domain="[('state', '=', 'done'), ('partner_id', '=', partner_shipping_id),
                                                     ('is_responsible', '=', False), ('x_group_id_so', '=', origin), ('picking_type_id', '=', 4)]"/>
+                    <field name="x_no_receipt" domain="[('state', '=', 'done'), ('partner_id', '=', partner_shipping_id), ('picking_type_id', '=', 1)]"></field>
                     <field name="x_no_po"></field>
                     <field name="x_tanggal_sjk" invisible="1"></field>
                     <field name="amount_to_text" invisible="1"></field>
@@ -71,6 +73,7 @@
                     <!-- Replace due date -->
                     <field name="date_due" position="replace">
                         <field name="x_due_date_pembayaran"></field>
+                        <field name="x_due_date_tt"></field>
                     </field>
                 </field>
             </record>
@@ -100,6 +103,7 @@
                   <field name="inherit_id" ref="account.view_account_invoice_filter"/>
                   <field name="arch" type="xml">
                         <field name="number" position="after">
+                            <field name="x_custom_payment_id"></field>
                             <field name="x_no_faktur"></field>
                             <field name="x_no_sjk"></field>
                             <field name="x_no_po"></field>

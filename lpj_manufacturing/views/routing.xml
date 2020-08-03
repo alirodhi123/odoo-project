@@ -10,6 +10,7 @@
                 </xpath>
                 <xpath expr="//field[@name='sequence']" position="after">
                     <field name="x_speed_per_mnt" class="oe_inline"/> meter
+                    <field name="x_kategori_proses"></field>
                 </xpath>
             </field>
         </record>
@@ -24,6 +25,7 @@
                         <tree>
                             <field name="name"/>
                             <field name="workcenter_id"/>
+                            <field name="x_kategori_proses"/>
                             <field name="x_speed_per_mnt"/>
                         </tree>
                     </field>

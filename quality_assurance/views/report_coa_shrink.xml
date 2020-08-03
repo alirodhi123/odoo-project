@@ -148,11 +148,6 @@
                                                     <th class="text-center" style="border: 1px solid black;">RESULT</th>
                                                 </tr>
                                                 <tr>
-                                                    <td class="text-center" style="border: 1px solid black;">GRAMATURE</td>
-                                                    <td class="text-center" style="border: 1px solid black;"><p><span t-field="o.x_gramature_shrink"></span> gsm</p></td>
-                                                    <td class="text-center" style="border: 1px solid black;"><p><span t-field="o.x_gramature_shrink"></span> gsm</p></td>
-                                                </tr>
-                                                <tr>
                                                     <td class="text-center" style="border: 1px solid black;">THICKNESS</td>
                                                     <td class="text-center" style="border: 1px solid black;"><p><span t-field="o.x_thickness_shrink"></span> mikron</p></td>
                                                     <td class="text-center" style="border: 1px solid black;"><p><span t-field="o.x_thickness_shrink"></span> mikron</p></td>

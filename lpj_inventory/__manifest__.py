@@ -28,8 +28,13 @@
         'views/sj_lot.xml',
         'views/lot_workorder.xml',
         'views/stock_scrap.xml',
+        'views/inventory_adjustment.xml',
+        'views/sequence.xml',
         'views/report_sjk.xml',
         'views/report_internal_transfer.xml',
+        'views/stock_report_view_inherite.xml',
+        'views/stock_pack_operation_lot_view.xml',
+        'views/message_block_pengiriman_view.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

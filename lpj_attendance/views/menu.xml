@@ -37,6 +37,15 @@
               parent="menu_shift"
               sequence="28" action="shift_detail_mesin_action"></menuitem>
 
+<!--        <menuitem name="Report Attendance" id="menu_hr_attendance_report"-->
+<!--              parent="hr_attendance.menu_hr_attendance_report"-->
+<!--              sequence="31" groups="hr_attendance.group_hr_attendance_user"-->
+<!--              action="hr_attendance.hr_attendance_action_graph"></menuitem>-->
+
+<!--        <menuitem name="Report Print Shift" id="menu_print_shift"-->
+<!--              parent="hr_attendance.menu_hr_attendance_report"-->
+<!--              sequence="32" action="action_wizard_shift"></menuitem>-->
+
         <!-- Remove menu from module attendance -->
         <delete model="ir.ui.menu" id="hr_attendance.menu_hr_attendance_my_attendances"/>
         <delete model="ir.ui.menu" id="hr_attendance.menu_hr_attendance_kiosk_mode"/>

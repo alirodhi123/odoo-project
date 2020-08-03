@@ -15,20 +15,46 @@
                                    sales_team.group_sale_salesman_all_leads">
 
                     </field>
+                    <field name="x_toleransi_pengiriman"></field>
+                    <field name="x_industry"></field>
+                    <field name="x_jumlah_karyawan"></field>
+                    <field name="x_block_pengiriman" groups="account.group_account_user, account.group_account_manager,
+                                                             account.group_account_invoice">
+                    </field>
+                    <field name="x_kebutuhan_pengiriman_ids" widget="many2many_tags"></field>
                     <field name="is_mkt" invisible="1"></field>
                     <field name="is_administrator" invisible="1"></field>
                 </field>
+
                 <field name="website" position="after">
-<!--                    <field name="x_company_size"></field>-->
+                    <field name="x_company_size"></field>
                     <field name="x_avg_kebutuhan"></field>
                     <field name="x_priority" widget="priority"></field>
                     <field name="x_status"></field>
+                    <!--<field name="is_berikat"></field>-->
                 </field>
-                
 
+                <field name="website" position="before">
+                    <field name="jalan"></field>
+                </field>
 
+                <!-- Required field email -->
+                <field name="email" position="attributes">
+                    <attribute name="required">True</attribute>
+                </field>
+
+                <!-- Required field phone -->
+                <field name="phone" position="attributes">
+                    <attribute name="required">True</attribute>
+                </field>
+
+                <!-- Required field street -->
+                <field name="street" position="attributes">
+                    <attribute name="required">True</attribute>
+                </field>
             </field>
         </record>
+
         <record model="ir.ui.view" id="x_priority_partner_kanban_view">
             <field name="name">res.partner.kanban.x.priority.inherit</field>
             <field name="model">res.partner</field>

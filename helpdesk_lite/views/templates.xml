@@ -1,0 +1,96 @@
+<odoo>
+    <data>
+         <template id="listing">
+           <ul>
+             <li t-foreach="objects" t-as="object">
+               <a t-attf-href="#{ root }/objects/#{ object.id }">
+                 <t t-esc="object.display_name"/>
+               </a>
+             </li>
+           </ul>
+         </template>
+         <template id="object">
+           <h1><t t-esc="object.display_name"/></h1>
+           <dl>
+             <t t-foreach="object._fields" t-as="field">
+               <dt><t t-esc="field"/></dt>
+               <dd><t t-esc="object[field]"/></dd>
+             </t>
+           </dl>
+         </template>
+            <template id="team_all">
+                <t t-call="website.layout">
+                    <div class="container">
+                        <h1 class="mb32">Our teams</h1>
+                        <div class="row">
+                            <div t-foreach="teams" t-as="team" class="col-sm-3 text-center mb32">
+                                <a t-attf-href="/team/#{ slug(team) }">
+                                    <div class="fa fa-5x fa-comment mb16"/>
+                                    <div t-field="team.name"/>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </template>
+            <template id="my_tickets" name="My Tickets">
+                <t t-call="website_portal.portal_layout">
+                    <h3 class="page-header">
+                        Your Tickets
+                        <div class="dropdown pull-right mr8">
+                            <button id="sortby" class="btn btn-default" type="button" data-toggle="dropdown">
+                                <span class="fa fa-sort" /> <span t-esc="sortings.get(sortby, {}).get('label', 'Newest')"/>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="sortby">
+                                <li t-foreach="sortings" t-as="option" t-att-class="sortby == option and 'active'">
+                                    <a t-att-href="default_url + '?' + keep_query('date_begin', 'date_end', 'project', sortby=option)"><span t-esc="sortings.get(option).get('label')"/></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="dropdown pull-right mr8">
+                            <button id="project_filters" class="btn btn-default" type="button" data-toggle="dropdown">
+                                Projects: <span t-esc="project_filters.get(project, {}).get('label', 'All')"/>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="project_filters">
+                                <li t-foreach="project_filters" t-as="option" t-att-class="project == option and 'active'">
+                                    <a t-att-href="default_url + '?' + keep_query('date_begin', 'date_end', 'sortby', project=option)"><span t-esc="project_filters.get(option).get('label')"/></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </h3>
+                    <div class="panel panel-default">
+                        <t t-if="not issues">
+                            <div class="alert alert-warning mt8" role="alert">
+                                There are no issues.
+                            </div>
+                        </t>
+                        <table t-if="issues" class="table table-hover status_table">
+                            <thead>
+                                <tr class="active">
+                                    <th>Issue</th>
+                                    <th class="col-md-8">Description</th>
+                                    <th>Stage</th>
+                                </tr>
+                            </thead>
+                            <t t-foreach="issues" t-as="issue">
+                                <tr>
+                                    <td>
+                                        <a t-attf-href="/my/issues/#{issue.id}?{{ keep_query() }}">Issue <t t-esc="issue.id" /></a>
+                                    </td>
+                                    <td><span t-field="issue.name"/></td>
+                                    <td>
+                                        <span class="label label-info" title="Current stage of the issue" t-esc="issue.stage_id.name" />
+                                    </td>
+                                </tr>
+                            </t>
+                        </table>
+                    </div>
+                    <div t-if="pager" class="o_portal_pager text-center">
+                        <t t-call="website.pager"/>
+                    </div>
+                </t>
+            </template>
+    </data>
+</odoo>

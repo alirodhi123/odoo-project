@@ -1,0 +1,55 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="config_diecut_tree">
+            <field name="name">x.config.diecut.tree</field>
+            <field name="model">x.diecut.cost.precost</field>
+            <field name="arch" type="xml">
+
+                <tree>
+                    <field name="name"/>
+                    <!--<field name="x_kategori_1"/>-->
+                    <!--<field name="x_kategori_2"/>-->
+                    <!--<field name="x_kategori_3"/>-->
+                    <!--<button name="act_req_dk" type="object" string="Request" class="oe_highlight" attrs="{'invisible':['|','|',('x_status_cr','=','reject'),('x_flag_reqdk','=',True),('x_flag_appdk','=',True)]}"/>-->
+                    <!--<button name="act_approve" type="object" string="Approve" class="oe_highlight" attrs="{'invisible':['|', '|','|',('x_status_cr','=','approve'), ('x_status_cr','=','reject'),('x_status_cr','=','done'),('x_is_salemanager', '=', False)]}"/>-->
+                </tree>
+            </field>
+        </record>
+
+         <record model="ir.ui.view" id="config_diecut_form">
+            <field name="name">x.config.diecut.form</field>
+            <field name="model">x.diecut.cost.precost</field>
+            <field name="arch" type="xml">
+                <form>
+
+                        <group>
+                            <field name="name"/>
+                            <!--<field name="x_kategori_1"/>-->
+                            <!--<field name="x_kategori_2"/>-->
+                            <!--<field name="x_kategori_3"/>-->
+                            <field name="x_kategori">
+                                <tree editable="bottom">
+                                    <field name="x_diecut_id" domain="[('id','=',parent.id)]" invisible="1"></field>
+                                    <field name="x_kategori_id"></field>
+                                    <field name="x_harga"></field>
+                                </tree>
+                            </field>
+                        </group>
+
+
+                    <!--<button name="act_req_dk" type="object" string="Request" class="oe_highlight" attrs="{'invisible':['|','|',('x_status_cr','=','reject'),('x_flag_reqdk','=',True),('x_flag_appdk','=',True)]}"/>-->
+                    <!--<button name="act_approve" type="object" string="Approve" class="oe_highlight" attrs="{'invisible':['|', '|','|',('x_status_cr','=','approve'), ('x_status_cr','=','reject'),('x_status_cr','=','done'),('x_is_salemanager', '=', False)]}"/>-->
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="list_config_diecut">
+            <field name="name">Config Diecut</field>
+            <field name="res_model">x.diecut.cost.precost</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>

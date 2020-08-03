@@ -1,0 +1,18 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="inv_adj_form_view">
+            <field name="name">Inventory Adj Inherit</field>
+            <field name="model">stock.inventory</field>
+            <field name="inherit_id" ref="stock.view_inventory_form"/>
+            <field name="arch" type="xml">
+                <field name="package_id" position="after">
+                    <field name="x_tipe_adj"></field>
+                    <field name="create_uid"></field>
+                </field>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

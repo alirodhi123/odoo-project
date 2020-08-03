@@ -1,5 +1,5 @@
 from odoo import models, fields, api, _
-
+from datetime import date
 
 dic = {
     'to_19': ('Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve',
@@ -117,6 +117,8 @@ class account_payment(models.Model):
 
     x_amount_total = fields.Monetary(compute='_amount_in_word')
     x_perkiraan_journal = fields.Char(compute='get_perkiraan_journal')
+    x_nomor_journal = fields.Char(compute='get_journal_entry')
+    x_draft_payment = fields.Many2one('x.register.payment', string="Draft Payment")
 
 
     # Untuk fungsi terbilang
@@ -128,8 +130,26 @@ class account_payment(models.Model):
 
             self.amount_to_text = terbilang(self.x_amount_total, 'idr', 'id')
 
+
     amount_to_text = fields.Text(string="Terbilang", store=True, readonly=True,
                                  compute='_amount_in_word')
+
+
+    # REPORT
+    # Mengambil jurnal entry
+    @api.one
+    def get_journal_entry(self):
+        for row in self:
+            i = 0
+            for o in row.move_line_ids:
+                journal_entry = o.move_id
+                row.x_nomor_bbk_bbm = o.move_id.name
+                if i == 0 and journal_entry:
+                    for journal in journal_entry:
+                        nomor_journal = journal.name
+                        row.x_nomor_journal = nomor_journal
+                        i+=1
+                        pass
 
 
     @api.one
@@ -147,6 +167,78 @@ class account_payment(models.Model):
         if code and name:
             self.x_perkiraan_journal = code + " " + name
 
+    @api.model
+    def default_get(self, fields):
+        res = super(account_payment, self).default_get(fields)
+        draft_payment = ""
+        terms = []
+        invoice_obj = self.env['account.invoice']
+        invoice_ids = self.env.context.get('active_ids', False)
+        invoice = invoice_obj.browse(invoice_ids)
+
+        for row in invoice:
+            draft_payment = row.x_custom_payment_id.id
+
+        if draft_payment:
+            res.update({
+                'x_draft_payment': draft_payment
+            })
+
+        return res
+
+    # Fungsi update flagging draft payment ketika sudah paid
+    @api.multi
+    def paid_draft_payment(self):
+        draft_pay = self.x_draft_payment
+
+        invoice_obj = self.env['x.register.payment'].search([('id', '=', draft_pay.id)])
+        if invoice_obj:
+            invoice_obj.write({'x_flag_paid': True})
+
+    @api.multi
+    def plafon_post(self):
+        invoice = self._context.get('invoice', False)
+
+        # FUNCTION CUSTOM ALI
+        if invoice == False:
+            partner_plafon = self.partner_id
+            payment_type = self.payment_type
+            terms = []
+            values = {}
+            amount_total_plafon = self.amount
+            state_plafon = 'Confirm'
+            name = self.name
+            memo = self.communication
+
+            # Find user input
+            res_user = self.env['res.users'].search([('id', '=', self._uid)])
+
+            partner_obj = self.env['res.partner'].search([('id', '=', partner_plafon.id)])
+            if partner_obj and payment_type == 'inbound':
+                values['x_date_plfn'] = date.today()
+                if memo:
+                    values['x_name_plfn'] = name + " " + "(" + memo + ")"
+                else:
+                    values['x_name_plfn'] = name
+                values['x_status_plfn'] = state_plafon
+                values['x_amount_plfn'] = amount_total_plafon
+                values['x_user_input_plfn'] = res_user.id
+
+                terms.append((0, 0, values))
+
+            partner_obj.update({'x_plafon_line': terms})
+
+
+    # INHERITE FUNCTION VALIDATE PAYMENT
+    @api.multi
+    def post(self):
+        # FUNCTION UPDATE DRAFT PAYMENT
+        self.paid_draft_payment()
+        # PLAFON
+        self.plafon_post()
+
+        res = super(account_payment, self).post()
+        return res
 
 
 

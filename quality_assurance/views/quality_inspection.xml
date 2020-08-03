@@ -8,13 +8,15 @@
             <field name="arch" type="xml">
                 <tree string="Quality Inspection">
                     <field name="x_production_id"></field>
+                    <field name="x_tanggal_inspeksi"></field>
                     <field name="x_product_id"></field>
                     <field name="x_type_product"></field>
                     <field name="x_partner_id"></field>
-                    <field name="x_jumlah_awal_foot"></field>
+                    <!--<field name="x_jumlah_awal_foot"></field>-->
                     <field name="name"></field>
-                    <field name="x_jumlah_foot"></field>
+                    <!--<field name="x_jumlah_foot"></field>-->
                     <field name="x_keterangan"></field>
+                    <field name="x_department"></field>
                 </tree>
             </field>
         </record>
@@ -25,6 +27,19 @@
             <field name="model">quality.inspection</field>
             <field name="arch" type="xml">
                 <form string="Quality Inspection">
+                    <header>
+                        <button name="action_next"
+                                type="object"
+                                string="Confirm"
+                                class="oe_highlight"
+                                attrs="{'invisible':[('state', '=', '5')]}"/>
+
+                        <button name="action_prev"
+                                type="object"
+                                string="Reset To Previous"
+                                attrs="{'invisible':[('state', '=', '1')]}"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
                     <sheet>
                         <div class="oe_title">
                             <h2><field name="name" placeholder="Name" readonly="1"/></h2>
@@ -45,35 +60,39 @@
                         <!-- Inspection Line -->
                         <notebook>
                             <page string="Analysis and Action" name="analisa_permasalahan">
-                                <field name="quality_inspection_ids">
-                                    <tree editable="bottom">
-                                        <field name="x_category_permasalahan" widget="many2many_tags"></field>
+                                <group>
+                                    <group>
+                                        <!--<field name="x_category_permasalahan" widget="many2many_tags"></field>-->
+                                        <field name="x_category_permasalahan_baru"></field>
+                                        <field name="x_name_issue"></field>
                                         <field name="x_deskripsi_permasalahan"></field>
+                                        <field name="x_repeat"></field>
                                         <field name="x_tanggal_inspeksi"></field>
                                         <field name="x_mesin" widget="many2many_tags"></field>
                                         <field name="x_asal_product"></field>
                                         <field name="x_status_qc"></field>
                                         <field name="x_nama_operator"></field>
-                                        <field name="x_jumlah_awal"></field>
-                                        <field name="x_jumlah_persegi_awal"></field>
+                                        <!--<field name="x_jumlah_awal"></field>-->
+                                        <!--<field name="x_jumlah_persegi_awal"></field>-->
                                         <field name="x_tindakan_perbaikan"></field>
                                         <field name="x_status_akhir"></field>
-                                        <field name="x_jumlah"></field>
-                                        <field name="x_jumlah_persegi"></field>
+                                        <!--<field name="x_jumlah"></field>-->
+                                        <!--<field name="x_jumlah_persegi"></field>-->
                                         <field name="image" widget="image"></field>
-                                        <field name="second_image" widget="image"></field>
-                                    </tree>
-                                </field>
+                                        <!--<field name="second_image" widget="image"></field>-->
+                                        <field name="x_department"></field>
+                                     </group>
+                                </group>
 
                                 <!-- Perhitungan -->
-                                <group class="oe_subtotal_footer" style="margin-left: 10px">
-                                    <field name="x_jumlah_foot"></field>
-                                    <field name="x_jumlah_persegi_foot"/>
-                                </group>
-                                <group class="oe_subtotal_footer" style="margin-right: 20px">
-                                    <field name="x_jumlah_awal_foot"></field>
-                                    <field name="x_jumlah_awal_persegi_foot"></field>
-                                </group>
+                                <!--<group class="oe_subtotal_footer" style="margin-left: 10px">-->
+                                    <!--<field name="x_jumlah_foot"></field>-->
+                                    <!--<field name="x_jumlah_persegi_foot"/>-->
+                                <!--</group>-->
+                                <!--<group class="oe_subtotal_footer" style="margin-right: 20px">-->
+                                    <!--<field name="x_jumlah_awal_foot"></field>-->
+                                    <!--<field name="x_jumlah_awal_persegi_foot"></field>-->
+                                <!--</group>-->
                             </page>
                         </notebook>
                     </sheet>
