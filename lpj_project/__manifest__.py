@@ -29,6 +29,12 @@
         'views/report_cca.xml',
         'views/sequence.xml',
         'views/issue_project.xml',
+        'views/master_sumber.xml',
+        'views/master_question.xml',
+        'views/master_modul.xml',
+        'views/master_problem_categ.xml',
+        # 'views/auto_email_view.xml',
+        'views/menu.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

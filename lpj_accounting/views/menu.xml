@@ -49,6 +49,11 @@
               sequence="116"
               action="payment_list_action"></menuitem>
 
+    <!-- Menghilangkan groups =  group base system, menjadi group accounting -->
+    <record model="ir.ui.menu" id="account.menu_action_account_moves_all">
+      <field name="groups_id" eval="[(6,0,[ref('account.group_account_invoice')])]"/>
+    </record>
+
     <!-- Sub menu down payment -->
     <!--<menuitem name="Down Payment" id="sub_menu_dp"-->
               <!--parent="account.menu_finance_receivables"-->

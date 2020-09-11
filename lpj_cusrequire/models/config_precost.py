@@ -9,13 +9,22 @@ from dateutil.relativedelta import relativedelta
 class ConfigBahan(models.Model):
     _name = 'x.config.bahan'
 
-    name = fields.Many2one('product.template', 'Material Type',
-                                         domain=[('categ_id.sts_bhn_utama.name', '=', 'Bahan Utama')])
+    name = fields.Char('Nama Bahan', compute='cek_name', store=True)
+    x_bahan = fields.Many2one('product.template', 'Material Type',
+                           domain=[('categ_id.sts_bhn_utama.name', '=', 'Bahan Utama')])
     x_kategori_1 = fields.Float(string='Kategori I (200-999)m2')
     x_kategori_2 = fields.Float(string='Kategori II (1000-2499)m2')
     x_kategori_3 = fields.Float(string='Kategori III (>2500)m2')
 
     x_kategori = fields.One2many('x.harga.kategori.bahan', 'x_bahan_id', string='Harga Kategori')
+
+    @api.depends("x_bahan")
+    def cek_name(self):
+        if self.x_bahan:
+            self.env.cr.execute(
+                        "select name from product_template where id = "+ str(self.x_bahan.id))
+            sql = self.env.cr.fetchone()
+            self.name = sql[0]
 
 #
 # class ConfigFinishing(models.Model):

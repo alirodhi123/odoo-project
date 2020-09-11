@@ -72,3 +72,102 @@ class sale_order_line(models.Model):
                          'default_name_second': "Please Request to PDE for Open this Product"
                     }
                }
+
+
+
+#uswa-tambah fungsi action tombol 'move to backward/forward'
+     @api.multi
+     def change_planning_type(self):
+          for row in self:
+               idsq = row.id
+               no_sq = row.x_customer_requirement
+
+               planning_type = row.x_planning_type
+
+               sq_obj = self.env['x.sales.quotation'].search([('name', '=', no_sq)])
+               ok_obj = self.env['mrp.production'].search([('x_product_order_line', '=', idsq)])
+
+               if planning_type == 'forward':
+                    temp = 'backward'
+                    self.x_planning_type = temp
+
+               else:
+                    temp = 'forward'
+                    self.x_planning_type = temp
+
+               if sq_obj:
+                    sq_obj.update({
+                         'x_planning_type': temp,
+                    })
+
+               if ok_obj:
+                    ok_obj.update({
+                         'x_planning_type_ok': temp,
+               })
+
+          if row:
+               return row.popup_sukses_ubah_planning_type()
+
+          return True
+
+     # uswa-tambah fungsi action tombol 'Change Manufacturing Type'
+     @api.multi
+     def change_manufacturing_type(self):
+          for row in self:
+               idsq = row.id
+               no_sq = row.x_customer_requirement
+
+               manufacturing_type = row.x_manufacturing_type
+
+               sq_obj = self.env['x.sales.quotation'].search([('name', '=', no_sq)])
+               ok_obj = self.env['mrp.production'].search([('x_product_order_line', '=', idsq)])
+
+               if manufacturing_type == 'laprint':
+                    temp = 'digital'
+                    self.x_manufacturing_type = temp
+
+               else:
+                    temp = 'laprint'
+                    self.x_manufacturing_type = temp
+
+               if sq_obj:
+                    sq_obj.update({
+                         'x_manufacturing_type': temp,
+                    })
+
+               if ok_obj:
+                    ok_obj.update({
+                         'x_manufacturing_type_ok': temp,
+                    })
+
+          if row:
+               return row.popup_sukses_ubah_manufacturing_type()
+
+          return True
+
+
+# uswa-Funsgi tampilkan pop up pesan berhasil ganti planning type
+     @api.multi
+     def popup_sukses_ubah_planning_type(self):
+        return {
+            'name': 'Success',
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'custom.pop.message',
+            'target': 'new',
+            'context': {'default_name': "Planning Type Backward-Forward Berhasil diubah"}
+        }
+
+   # uswa-Funsgi tampilkan pop up pesan berhasil ganti planning type
+     @api.multi
+     def popup_sukses_ubah_manufacturing_type(self):
+          return {
+             'name': 'Success',
+             'type': 'ir.actions.act_window',
+             'view_type': 'form',
+             'view_mode': 'form',
+             'res_model': 'custom.pop.message',
+             'target': 'new',
+             'context': {'default_name': "Manufacturing Type Laprint/Digital Berhasil diubah"}
+        }

@@ -124,28 +124,36 @@
                 <form string="Cus Requirement Form">
                     <header>
                         <field name="is_mkt" invisible = "1"/>
-                        <field name="is_pde_check" invisible="1"></field>
+                        <!--<field name="is_pde_check" invisible="1"></field>-->
+                        <field name="is_pde_user" invisible="1"></field> <!-- uswa-->
                         <button name="action_next"
                                 type="object"
                                 string="Confirm"
                                 class="oe_highlight"
-                                attrs="{'invisible':['|', '|', ('is_mkt','=',True),('is_pde_check','=',True),('state', '=', '9')]}"/>
+                                attrs="{'invisible':['|', '|', ('is_pde_user','=',False),('state','in',['0','2','3','7']),('state', '=', '9')]}"/>
+                                <!--attrs="{'invisible':['|', '|', ('is_mkt','=',True),('is_pde_check','=',True),('state', '=', '9')]}"/>-->
+
 
                         <button name="action_prev"
                                 type="object"
                                 string="Reset To Previous"
-                                attrs="{'invisible':['|', ('is_mkt','=',True),('is_pde_check','=',True)]}"/>
+                                attrs="{'invisible':['|',('is_pde_user','=',False),('state','in',['0','2','3','7'])]}"/>
+                                <!--attrs="{'invisible':['|', ('is_mkt','=',True),('is_pde_check','=',True)]}"/>-->
+
 
                         <button name="action_next"
                                 type="object"
                                 string="Confirm"
                                 class="oe_highlight"
-                                attrs="{'invisible':['|', '|', ('is_mkt','=',False),('is_pde_check','=',False),('state', '=', '9')]}"/>
+                                attrs="{'invisible':['|', '|', ('is_mkt','=',False),('state','not in',['0','2','3','7']),('state', '=', '9')]}"/>
+                                <!--attrs="{'invisible':['|', '|', ('is_mkt','=',False),('is_pde_check','=',False),('state', '=', '9')]}"/>-->
+
 
                         <button name="action_prev"
                                 type="object"
                                 string="Reset To Previous"
-                                attrs="{'invisible':['|', ('is_mkt','=',False),('is_pde_check','=',False)]}"/>
+                                attrs="{'invisible':['|',('is_mkt','=',False),('state','not in',['0','2','3','7'])]}"/>
+                                <!--attrs="{'invisible':['|', ('is_mkt','=',False),('is_pde_check','=',False)]}"/>-->
 
                         <button name="action_approval_trial"
                                 type="object"
@@ -394,6 +402,7 @@
                     <field name="x_product"></field>
                     <field name="item_description"></field>
                     <field name="x_customer_id"></field>
+                    <field name="x_sq"></field>
                 </search>
             </field>
          </record>

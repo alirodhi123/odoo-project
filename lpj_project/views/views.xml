@@ -1,98 +1,5 @@
 <odoo>
     <data>
-        <!-- Form View -->
-        <record id="dataform_product_template_form_view" model="ir.ui.view">
-            <field name="inherit_id" ref="project.view_task_form2"/>
-            <field name="model">project.task</field>
-            <field name="arch" type="xml">
-                <field name="user_id" position="before">
-                    <field name="create_uid" readonly="True"/>
-                    <field name="x_department" attrs="{'invisible':[('project_id', '!=', 7)]}"/>
-                </field>
-                <field name="project_id" position="before">
-                    <field name="x_name" readonly="True"></field>
-                </field>
-<<<<<<< .mine
-                <field name="tag_ids" position="after">
-                    <field name="x_priority" attrs="{'invisible':[('project_id', '!=', 7)]}"/>
-                    <field name="x_duration" attrs="{'invisible':[('project_id', '!=', 7)]}"/>
-                    <field name="x_sprint" attrs="{'invisible':[('project_id', '!=', 7)]}"/>
-                </field>
-
-                <!--<field name="description" position="before">-->
-                <!---->
-                <!--</field>-->
-
-                <!--<field name="planned_hours" position="replace">-->
-                <!--<field name="planned_hours" string="Initially Planned Hour(s)"/>-->
-                <!--</field>-->
-||||||| .r213
-=======
-                <field name="tag_ids" position="after">
-                    <field name="x_priority" attrs="{'invisible':[('project_id', '!=', 7)]}"/>
-                    <field name="x_duration" attrs="{'invisible':[('project_id', '!=', 7)]}"/>
-                    <field name="x_sprint" attrs="{'invisible':[('project_id', '!=', 7)]}"/>
-                    <field name="x_sprint_ontime_status" attrs="{'invisible':[('project_id', '!=', 7)]}"/>
-                </field>
-
-                <field name="description" position="before">
-                    <field name="x_requirement" attrs="{'invisible':[('project_id', '!=', 7)]}" placeholder="Add an Requiremnt..." />
-                    <field name="x_reason" attrs="{'invisible':[('project_id', '!=', 7)]}" placeholder="Add an your Reason..." />
-                </field>
-
-                <!--<field name="planned_hours" position="replace">-->
-                <!--<field name="planned_hours" string="Initially Planned Hour(s)"/>-->
-                <!--</field>-->
->>>>>>> .r512
-                <page name="description_page" position="after">
-                    <page name="action_task" string="Analysis and Action">
-<<<<<<< .mine
-                        <!--attrs="{'invisible': [('project_id','!=',3)]}"-->
-||||||| .r213
-=======
-                        <!--attrs="{'invisible': [('project_id','!=',3)]}"-->
-
->>>>>>> .r512
-                        <field name="x_project_task_line">
-                            <tree editable="bottom">
-                                <field name="x_category_problem"/>
-                                <field name="x_akar_masalah"/>
-                                <field name="x_task"/>
-                                <field name="x_date_task"/>
-                                <field name="x_users"/>
-                                <field name="x_date_finish"/>
-                                <field name="x_attch_file"/>
-                                <field name="x_status"/>
-                            </tree>
-                        </field>
-                    </page>
-                    <page name="user_story" string="User Stories" attrs="{'invisible':[('project_id', '!=', 7)]}">
-                        <group>
-                            <field name="x_role" />
-                            <field name="x_requirement" />
-                            <field name="x_reason" />
-                            <field name="x_acceptance_criteria" placeholder="Add an Acceptance User Criteria"/>
-                            <field name="x_edge_criteria" placeholder="Add an Edge User Reason..."/>
-                            <field name="x_category_problems" />
-                            <field name="x_description_problems"/>
-                        </group>
-                    </page>
-                </page>
-
-            </field>
-        </record>
-<<<<<<< .mine
-
-        <!--<record id="dataform_product_template_form_view" model="ir.ui.view">-->
-        <!--<field name="inherit_id" ref="project.view_task_form2"/>-->
-        <!--<field name="model">project.task</field>-->
-        <!--<field name="arch" type="xml">-->
-        <!--<page name="Timesheets" position="replace">-->
-        <!--<page name="Timesheets" attrs="{'invisible': [('project_id','=',3)]}"/>-->
-        <!--</page>-->
-        <!--&lt;!&ndash;<page name="extra_info"  position="replace" attrs="{'invisible': 'True'}" />&ndash;&gt;-->
-        <!--</field>-->
-        <!--</record>-->
 
         <!--
             TREE VIEW PROJECT CCA
@@ -138,64 +45,113 @@
 
             </field>
         </record>
-||||||| .r213
-=======
 
-        <!--<record id="dataform_product_template_form_view" model="ir.ui.view">-->
-        <!--<field name="inherit_id" ref="project.view_task_form2"/>-->
-        <!--<field name="model">project.task</field>-->
-        <!--<field name="arch" type="xml">-->
-        <!--<page name="Timesheets" position="replace">-->
-        <!--<page name="Timesheets" attrs="{'invisible': [('project_id','=',3)]}"/>-->
-        <!--</page>-->
-        <!--&lt;!&ndash;<page name="extra_info"  position="replace" attrs="{'invisible': 'True'}" />&ndash;&gt;-->
-        <!--</field>-->
-        <!--</record>-->
-
-        <!--
-            TREE VIEW PROJECT CCA
-         -->
-        <record id="view_task_tree_inherited_2" model="ir.ui.view">
-            <field name="name">project.task.tree.inherited</field>
+        <!-- Form View -->
+        <record id="dataform_product_template_form_view" model="ir.ui.view">
+            <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="model">project.task</field>
-            <field name="inherit_id" ref="project.view_task_tree2"/>
             <field name="arch" type="xml">
-                <tree>
-                    <!--<field name="x_name"/>-->
-                    <!--<field name="name"/>-->
-                    <!--<field name="create_uid"/>-->
-                    <!--<field name="user_id" invisible="context.get('user_invisible', False)"/>-->
-                    <field name="tag_ids"/>
-                    <field name="create_date" type="date"/>
-                    <field name="date_deadline"/>
-                    <field name="message_needaction" invisible="1"/>
-                    <field name="sequence" invisible="not context.get('seq_visible', False)"/>
-                    <field name="date_deadline" invisible="context.get('deadline_visible',True)"/>
-                </tree>
+                <field name="user_id" position="before">
+                    <field name="create_uid" readonly="True"/>
+                    <field name="x_department"/>
+                </field>
 
-                <field name="name" position="before">
+                <field name="user_id" position="after">
+                    <field name="x_department_assign"></field>
+                </field>
+
+                <field name="tag_ids" position="after">
+                    <field name="x_priority" attrs="{'invisible':[('project_id', '!=', 7)]}"/>
+                    <field name="x_duration" attrs="{'invisible':[('project_id', '!=', 7)]}"/>
+                    <field name="x_sprint" attrs="{'invisible':[('project_id', '!=', 7)]}"/>
+		            <field name="x_sprint_late" attrs="{'invisible':[('project_id', '!=', 7)]}"/>
+                </field>
+
+                <!-- PROJECT CCA -->
+                <field name="date_deadline" position="before">
+                    <field name="x_duedate_action_plan" attrs="{'invisible':[('project_id', '!=', 3)]}"></field>
+                </field>
+
+                <field name="date_deadline" position="after">
+                    <field name="x_date_actual_closing_cca" attrs="{'invisible':[('project_id', '!=', 3)]}"></field>
+                    <field name="x_master_sumber" attrs="{'invisible':[('project_id', '!=', 3)]}"
+                           options="{'no_create': True, 'no_create_edit':True}"></field>
+                    <field name="x_problem_category_header" attrs="{'invisible':[('project_id', '!=', 3)]}"
+                           options="{'no_create': True, 'no_create_edit':True}"></field>
+                </field>
+
+                <!-- Replace string deadline menjadi Due date implementasi -->
+                <field name="date_deadline" position="replace">
+                    <field name="date_deadline" string="Due Date Closing CCA"></field>
+                </field>
+
+                <field name="project_id" position="after">
                     <field name="x_name"></field>
                 </field>
 
-                <!--<field name="name" position="after">-->
-                <!--<field name="tag_ids"></field>-->
-                <!--</field>-->
-                <field name="user_id" position="replace">
-                    <field name="user_id" invisible="context.get('user_invisible', False)"/>
-                </field>
-                <field name="stage_id" position="replace">
-                    <field name="x_priority" />
-                    <field name="stage_id" invisible="context.get('set_visible',False)"/>
-                    <!--<field name="date_deadline"></field>-->
-                    <!--<field name="create_date"></field>-->
+                <!-- Menambahkan string sebelum description -->
+                <field name="description" position="before">
+                    <h3>Deskripsi Masalah</h3>
                 </field>
 
-                <field name="project_id" position="replace">
-                    <field name="create_uid"></field>
+                <field name="description" position="after">
+                    <br/>
+                    <h3 attrs="{'invisible': [('project_id', '!=', 3)]}">Harapan dari Perbaikan</h3>
+                    <field name="x_harapan_perbaikan" attrs="{'invisible': [('project_id', '!=', 3)]}"></field>
+                    <h3 attrs="{'invisible': [('project_id', '!=', 3)]}">Analisa Akar Masalah</h3>
+                    <field name="x_analisa_masalah_ids" attrs="{'invisible': [('project_id', '!=', 3)]}">
+                        <tree editable="bottom">
+                            <field name="x_question" options="{'no_create': True, 'no_create_edit':True}"></field>
+                            <field name="x_answer"></field>
+                        </tree>
+                    </field>
                 </field>
 
+                <page name="description_page" position="after">
+                    <page name="action_task" string="Analysis and Action" >
+                        <h3 attrs="{'invisible': [('project_id', '!=', 3)]}">Deskripsi Tindakan Perbaikan</h3>
+                        <field name="x_description_tindakan_perbaikan" type="html" attrs="{'invisible': [('project_id', '!=', 3)]}"></field>
+                        <br/>
+                        <h3>Action Plan</h3>
+                        <field name="x_project_task_line">
+                            <tree editable="bottom">
+                                <field name="x_category_problem" invisible="1"/>
+                                <field name="x_akar_masalah" invisible="1"/>
+                                <field name="x_task"/>
+                                <field name="x_date_task"/>
+                                <field name="x_users"/>
+                                <field name="x_date_finish"/>
+                                <field name="x_note"/>
+                                <field name="x_attch_file" widget="many2many_binary"/>
+                                <field name="x_status"/>
+                            </tree>
+                        </field>
+                        <br/>
+                        <h3 attrs="{'invisible': [('project_id', '!=', 3)]}">Summary</h3>
+                        <field name="x_summary" type="html" attrs="{'invisible': [('project_id', '!=', 3)]}"></field>
+                    </page>
+
+                    <page name="user_story" string="User Stories" attrs="{'invisible':[('project_id', '!=', 7)]}">
+                        <group>
+                            <field name="x_role" />
+                            <field name="x_requirement" />
+                            <field name="x_reason" />
+                            <field name="x_acceptance_criteria" placeholder="Add an Acceptance User Criteria"/>
+                            <field name="x_edge_criteria" placeholder="Add an Edge User Reason..."/>
+                            <field name="x_category_problems" />
+                            <field name="x_description_problems"/>
+                        </group>
+                    </page>
+
+                    <page name="modul_dev" string="Modul Development" attrs="{'invisible':[('project_id', '!=', 7)]}">
+                        <field name="x_modul_dev_ids">
+                            <tree editable="bottom">
+                                <field name="modul_dev_name" options="{'no_create': True, 'no_create_edit':True}"></field>
+                            </tree>
+                        </field>
+                    </page>
+                </page>
             </field>
         </record>
->>>>>>> .r512
     </data>
 </odoo>

@@ -8,10 +8,13 @@
             <field name="model">asset.helpdesk</field>
             <field name="arch" type="xml">
                 <tree string="Helpdesk Assets">
-                    <field name="asset_number"/>
                     <field name="name"/>
-                    <field name="description"/>
-                    <field name="user_id"/>
+                    <field name="kategori_asset"/>
+                    <field name="status_asset"/>
+                    <field name="manufaktur_asset"/>
+                    <field name="serial_number"/>
+                    <field name="tipe_asset"/>
+                    <field name="model_asset"/>
                 </tree>
             </field>
         </record>
@@ -23,49 +26,40 @@
         <field name="model">asset.helpdesk</field>
         <field name="arch" type="xml">
             <form string="New Assets">
-                <!--<header>-->
-                    <!--<field name="maintenance_state_id" widget="statusbar" clickable="True" groups="asset.group_mro_user"/>-->
-                <!--</header>-->
                 <sheet>
-                    <div class="oe_right oe_button_box" style="width: 300px;" name="buttons"></div>
+                    <div class="oe_button_box" name="button_box">
+
+                        <!--uswa- Tambahan button Maintenance-->
+                        <button name="action_view_ticket_asset_helpdesk" type="object" class="oe_inline oe_stat_button" icon="fa-cogs">
+                            <field string="Ticket" name="ticket_assethelpdesk_count" widget="statinfo"/>
+                        </button>
+                        <!--uswa-end here-->
+                    </div>
                     <field name="image_medium" widget="image" class="oe_avatar oe_left"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
                                 <field name="name"/>
                             </h1>
-                            <!--<field name="category_ids" widget="many2many_tags" placeholder="Tags..."/>-->
+                            <field name="kategori_asset" placeholder="Choose Category ..."/>
                         </div>
-                    <!--<group>-->
-                        <!--<field name="property_stock_asset" domain="[('usage','=','asset')]"/>-->
-                    <!--</group>-->
                     <group>
                         <group>
-                            <field name="asset_number"/>
-                            <field name="model"/>
-                            <field name="serial"/>
+                            <field name="tipe_asset"/>
+                            <field name="manufaktur_asset"/>
+                            <field name="model_asset"/>
+                            <field name="serial_number"/>
+                            <field name="tgl_kedatangan_asset"/>
                         </group>
                         <group>
-                            <field name="description"/>
+                            <field name="status_asset"/>
                             <field name="user_id"/>
+                            <field name="user_dept_id"/>
+                            <field name="description"/>
+                            <!--<field name="technician_id"/>-->
+                            <!--<field name="technician_dept_id"/>-->
                         </group>
                     </group>
-                    <!--<notebook>-->
-                        <!--<page name="info" string="Warranty">-->
-                            <!--<group> &lt;!&ndash; string="Warranty"> &ndash;&gt;-->
-                                <!--<group>-->
-                                    <!--<field name="manufacturer_id"/>-->
-                                    <!--<field name="start_date"/>-->
-                                    <!--<field name="warranty_start_date"/>-->
-                                <!--</group>-->
-                                <!--<group>-->
-                                    <!--<field name="vendor_id"/>-->
-                                    <!--<field name="purchase_date"/>-->
-                                    <!--<field name="warranty_end_date"/>-->
-                                    <!--</group>-->
-                                <!--</group>-->
-                        <!--</page>-->
-                    <!--</notebook>-->
                 </sheet>
                 <div class="oe_chatter">
                     <!--<field name="message_follower_ids" widget="mail_followers"/>-->

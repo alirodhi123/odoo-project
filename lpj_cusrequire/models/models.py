@@ -170,6 +170,9 @@ class prod_requirement(models.Model):
     is_mkt = fields.Boolean(string="check mkt", compute="is_mkt_act")
     is_pde_check = fields.Boolean(string="check pde", compute='is_pde')
 
+    # uswa tambah ini
+    is_pde_user = fields.Boolean(string="check pde", compute='is_pde_act')
+
     @api.one
     def is_mkt_act(self):
         res_user = self.env['res.users'].search([('id', '=', self._uid)])
@@ -178,11 +181,25 @@ class prod_requirement(models.Model):
         else:
             self.is_mkt = False
 
+    @api.one
+    def is_pde_act(self):
+        res_user = self.env['res.users'].search([('id', '=', self._uid)])
+        if res_user.has_group('lpj_product.group_pde_user'):
+            self.is_pde_user = True
+
+        else:
+            self.is_pde_user = False
+
+
+
     # State untuk PDE button (Confirm dan Reset To Previous)
     @api.one
     def is_pde(self):
         if self.state == 'cancel':
             pass
+        # uswa-tambah ini
+        # elif (fafiru?)
+        #     self.is_mkt = True
         else:
             state = int(self.state)
             if state == 7:

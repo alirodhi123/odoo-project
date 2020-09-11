@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+
+        <menuitem name="Master Sumber" id="project_master_sumber" parent="project.menu_project_config"
+                  action="master_sumber_action" sequence="110"/>
+
+        <menuitem name="Master Question" id="project_master_question" parent="project.menu_project_config"
+                  action="master_question_action" sequence="111"/>
+
+        <menuitem name="Master Modul" id="project_master_modul" parent="project.menu_project_config"
+                  action="master_modul_dev_action" sequence="112"/>
+
+        <menuitem name="Master Problem Category" id="project_master_problem_categ" parent="project.menu_project_config"
+                  action="master_problem_categ_action" sequence="113"/>
+
+    </data>
+</odoo>

@@ -23,7 +23,7 @@
             <field name="arch" type="xml">
                 <field name="description" position="after">
                     <field name="x_no_ok" ></field> <!-- Uswa-Tambahin attr -->
-                    <field name="x_no_so" attrs="{'invisible': [('x_no_so', '=', False)]}"></field> <!-- Uswa-Tambahin field x_no_so dan attr -->
+                    <field name="x_no_so" ></field> <!-- Uswa-Tambahin field x_no_so -->
                 </field>
             </field>
         </record>

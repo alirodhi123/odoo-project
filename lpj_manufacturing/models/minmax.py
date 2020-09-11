@@ -3,6 +3,9 @@ import subprocess
 
 from odoo import models, fields, api
 import odoo.addons.decimal_precision as dp
+from datetime import date
+from dateutil.relativedelta import relativedelta
+from datetime import datetime, time
 
 class sq(models.Model):
     _inherit = 'x.cusrequirement'
@@ -16,7 +19,8 @@ class minmax_mo(models.Model):
      def _default_id(self):
          return self.env['sale.order.line'].browse(self._context.get('active_id'))
 
-     x_type_mo = fields.Selection([('stc', 'Sticker'), ('ink', 'Tinta Campuran'), ('plate', 'Plate'),('diecut', 'Diecut')], string='Type MO', required=True)
+     # uswa-tambah selection 'trial dan buffer'
+     x_type_mo = fields.Selection([('stc', 'Sticker'), ('ink', 'Tinta Campuran'), ('plate', 'Plate'),('diecut', 'Diecut'),('trial', 'Trial'),('buffer', 'Buffer')], string='Type MO', required=True)
      # customer = fields.Many2one('res.partner', string='Customer', related = 'order.partner_id')
      customer_code = fields.Char(string="Kode Customer", compute='get_kode_customer')
      categ_id = fields.Many2one(readonly = True, related = 'product_id.product_tmpl_id.categ_id')
@@ -69,6 +73,14 @@ class minmax_mo(models.Model):
      x_gram_stc = fields.Float(string='Berat Stc', store=True, compute='calculate_pcs_to_gram')
      x_gram_per_pcs = fields.Float(string='Berat per Pcs', compute='berat_per_pcs')
 
+     # Print lot
+     x_flag_print_lot = fields.Boolean(string="Flag Print Lot", default=False)
+     x_flag_tgl_print_lot = fields.Date(string="Tanggal Print Lot", readonly=True)
+
+     # uswa-tambah field untuk nampung format barcode ok dan expnya
+     # x_format_barcode = fields.Char(string='format barcode')
+     # x_expdate_barcode = fields.Datetime(string='exp barcode')
+
 
      # ORDER KERJA
      # Ubah product sesuai dengan product yang ada di order line (Berdasarkan Open SO yang di klik
@@ -116,6 +128,13 @@ class minmax_mo(models.Model):
 
      @api.multi
      def action_next(self):
+          flag_print_lot = self.x_flag_print_lot
+
+          # Jika belum pernah di print
+          if flag_print_lot == False:
+               self.x_flag_print_lot = True
+               self.x_flag_tgl_print_lot = date.today()
+
           return {
                'name': 'Go to website',
                'res_model': 'ir.actions.act_url',
@@ -124,6 +143,48 @@ class minmax_mo(models.Model):
                # 'url': 'http://192.168.2.40:8086/world.php?jumlah='+ self.jml_lot
                # 'url': 'http://192.168.1.8:8081/Lot?id=1&jumlah=' + self.jml_lot +'&name='+ self.name
           }
+
+# uswa-tambah fungsi ini untuk print barcose via odoo di ok
+     @api.multi
+     def action_print_barcode_ok(self):
+          flag_print_lot = self.x_flag_print_lot
+
+          self.jml_lot
+          self.x_kode_awal
+          self.x_kode_akhir
+          self.name
+          self.jml_print
+          self.categ_id.name
+          self.customer_code
+          self.date_planned_start
+
+          # Jika belum pernah di print
+          if flag_print_lot == False:
+               self.x_flag_print_lot = True
+               self.x_flag_tgl_print_lot = date.today()
+
+
+          jml_lotsj = self.jml_lot
+          tgl_planned = self.date_planned_start
+
+          if jml_lotsj > 0:
+               temp = self.name
+               ok = temp.split('-')[2]
+
+          if tgl_planned:
+               date_format = "%Y-%m-%d %H:%M:%S"
+               six_months_after = datetime.strptime(str(tgl_planned), date_format) + relativedelta(months=6)
+               self.x_expdate_barcode = six_months_after
+
+               mth_exp = six_months_after
+               temp = mth_exp.month
+
+               self.x_format_barcode = ok+temp
+
+
+          return self.env['report'].get_action(self, 'lpj_manufacturing.report_generate_barcode_ok')
+
+
 
      # Get one2many x_layout_product_ids (REPORT)
      @api.one
@@ -142,11 +203,11 @@ class minmax_mo(models.Model):
                variable = o.x_jumlah
                jarak_druk = o.x_druk
 
-               if type == "across":
+               if type == "across" or type == "acrossdigital":
                     self.x_width = variable
 
                # get value arround (REPORT)
-               elif type == "arround":
+               elif type == "arround" or type == "arrounddigital":
                     self.x_jarak_druk = jarak_druk  # Satuan mm
 
 
@@ -186,7 +247,7 @@ class minmax_mo(models.Model):
                jarak_druk = o.x_druk
                isi_druk = o.x_number
                # Jika type product accross maka ambil isi druk
-               if type == "across":
+               if type == "across" or type == "acrossdigital":
                     self.x_isi_druk = isi_druk # Get isi druk dari accross
                else:
                     self.x_jarak_druk_product = jarak_druk # Get jarak druk dari arround
@@ -221,7 +282,7 @@ class minmax_mo(models.Model):
           product_product = self.env['product.product'].search([('id', '=', id)])
           if product_product:
                for row in product_product.x_layout_plong_ids:
-                    if row.x_plong_type == 'across':
+                    if row.x_plong_type == 'across' or row.x_plong_type == 'acrossdigital':
                          across_number = row.x_plong_number
                          self.x_across_number = across_number
                     else:
@@ -269,7 +330,7 @@ class minmax_mo(models.Model):
           for product in self.product_id:
                for line in product.x_layout_product_ids:
                     type = line.x_type
-                    if type == 'arround':
+                    if type == 'arround' or type == 'arrounddigital':
                          size_arround = line.x_size
                          space_arround = line.x_space
                          self.x_arround_druk = size_arround + space_arround
@@ -294,7 +355,7 @@ class minmax_mo(models.Model):
                for product in self.product_id:
                     for line in product.x_layout_product_ids:
                          type = line.x_type
-                         if type == 'arround':
+                         if type == 'arround' or type == 'arrounddigital':
                               std_afalan_arround += line.x_std_afalan
                               ref_lebaran_arround =  (arround_number * arround_druk) + std_afalan_arround
 
@@ -345,7 +406,7 @@ class minmax_mo(models.Model):
                for product in self.product_id:
                     for line in product.x_layout_product_ids:
                          type = line.x_type
-                         if type == 'arround':
+                         if type == 'arround' or type == 'arrounddigital':
                               std_afalan_arround += line.x_std_afalan
                               ref_lebaran_arround =  (arround_number * arround_druk) + std_afalan_arround
 

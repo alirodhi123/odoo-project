@@ -377,7 +377,11 @@ class packing_roll_direction(models.Model):
 class layout_product(models.Model):
     _name = 'x.layout.product'
 
-    x_type = fields.Selection([('across', 'Across'), ('arround', 'Arround')], string='Type')
+    # uswa-tambahin selection arroung digital dan cross digital
+    x_type = fields.Selection([('across', 'Across'), ('arround', 'Arround'), ('acrossdigital',
+                                'Across Digital'), ('arrounddigital', 'Arround Digital')], string='Type')
+    #ini kode orinya
+    # x_type = fields.Selection([('across', 'Across'), ('arround', 'Arround')], string='Type')
     x_size = fields.Float('Ukuran (mm)')
     x_druk = fields.Float('Jarak Druk (mm)', compute='_calcdruk')
     x_space = fields.Float('Space (mm)')
@@ -399,7 +403,12 @@ class layout_product(models.Model):
 class layout_plong(models.Model):
     _name = 'x.layout.plong'
 
-    x_plong_type = fields.Selection([('across', 'Across'), ('arround', 'Arround')], string='Type')
+    # uswa-tambahin selection arroung digital dan cross digital
+    x_plong_type = fields.Selection([('across', 'Across'), ('arround', 'Arround'), ('acrossdigital',
+                                'Across Digital'),('arrounddigital', 'Arround Digital')], string='Type')
+
+    # ini kode orinya
+    # x_plong_type = fields.Selection([('across', 'Across'), ('arround', 'Arround')], string='Type')
     x_plong_size = fields.Float('Ukuran (mm)')
     x_plong_druk = fields.Float('Jarak Druk (mm)', compute='_hitungdruk')
     x_plong_space = fields.Float('Space (mm)')

@@ -28,7 +28,12 @@ class HelpdeskTicket(models.Model):
 
     # uswa-tambah 'parts_list_ids'
     parts_list_ids = fields.One2many('parts.helpdesk.line', 'helpdesk_parts_id', string="Parts")
+    # tambahan toggle button parts count
+    parts_count = fields.Integer(string="Parts", compute='_compute_parts_count')
 
+    # uswa-tambah ini untuk relasi antara asset dan ticket
+    assets_helpdesk_ids = fields.Many2one('asset.helpdesk', string='Asset Id')
+    # end here
 
     name = fields.Char(string='Ticket', track_visibility='always', required=True)
     description = fields.Text('Private Note')
@@ -85,13 +90,15 @@ class HelpdeskTicket(models.Model):
     total_pengerjaan = fields.Integer(string="Total Duration", compute='total_duration')
     x_request_id = fields.Many2one('res.users', string='Request By', readonly=True, index=True, track_visibility='onchange',
                                 default=lambda self: self.env.user)
-    procurement_group_id = fields.Many2one('procurement.group', 'Procurement group', copy=False)
+    x_due_date_finish = fields.Date(string="Due Date Finish", required=True)
+    add_part = fields.Char(string="Add Parts")
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         """ This function sets partner email address based on partner
         """
         self.email_from = self.partner_id.email
+
 
     @api.multi
     def copy(self, default=None):
@@ -167,14 +174,10 @@ class HelpdeskTicket(models.Model):
                     'partner_id': partner_id,
                 })
                 del vals['contact_name']
-        # if partner_id:
-        #     vals.update({
-        #         'message_follower_ids': [(4, partner_id)]
-        #         })
 
         context = dict(self.env.context)
         context.update({
-            'mail_create_nosubscribe': True,
+            'mail_create_nosubscribe': True
         })
         # self.message_subscribe([partner_id])
         return super(HelpdeskTicket, self.with_context(context)).create(vals)
@@ -213,136 +216,82 @@ class HelpdeskTicket(models.Model):
     # Action button request
     @api.multi
     def request(self):
-        return self.update({'state': '2'})
+        return self.update({
+            'state': '2',
+            'start_date': date.today(),
+        })
+
+
+    # uswa-tambah koding ini untuk action pas toggle icon parts
+    @api.multi
+    def action_view_parts(self):
+        action = self.env.ref('stock.stock_picking_action_picking_type').read()[0]
+        action['domain'] = [('origin', '=', self.no_ticket)]
+        action['context'] = {}
+        return action
+
+    # Uswa-Parts count from id [WH/INT/xxxxx]
+    @api.multi
+    def _compute_parts_count(self):
+        hasil = 0
+        for o in self:
+            parts_count_obj = self.env['stock.picking'].search([('origin', '=', o.no_ticket)])
+            if parts_count_obj.ids:
+                # hasil += 1
+                 hasil = len(parts_count_obj.ids)
+
+            o.parts_count = hasil
+
+
+    #uswa-tambah ini buat manggil form internal transfer
+    @api.multi
+    def action_calling_internaltransfer(self):
+        ac = self.env['ir.model.data'].xmlid_to_res_id('stock_account.view_picking_inherit_form2',raise_if_not_found=True)
+        for row in self:
+            no_ticket = row.no_ticket
+            id = row.id
+
+        result = {
+            'name': 'Drafts Tickets to Solved',
+            'view_type': 'form',
+            'res_model': 'stock.picking',
+            'view_id': ac,
+            'context': {
+                'default_origin': no_ticket,
+                'default_location_id': 15,
+                'default_location_dest_id': 19,
+                'default_picking_type_id': 5,
+                'default_id_ticket_helpdesk': id,
+                # 'default_scrapped': True,
+                # 'default_move_lines': new_parts_lines,
+            },
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'target': 'current',
+
+        }
+        return result
+
+
 
     # Action button take it ticket
     @api.multi
     def takeit_new(self):
 
         # kode ali ori
-        # return \
-        # self.update({
-        #     'state': '3',
-        #     'start_date': date.today()
-        # })
-
-        # uswa-tambah koding ini
-        stock_move_obj = self.env['stock.move']
-        ac = self.env['ir.model.data'].xmlid_to_res_id('stock.view_picking_form', raise_if_not_found=True)
-        new_parts_lines = []
-
-        for row in self:
-            no_ticket = row.no_ticket
-            list_ids = row.parts_list_ids
-
-            if list_ids:
-                for line in list_ids:
-                    uom = line.parts_uom
-                    product = line.parts2_id
-
-                    values = {}
-                    values['product_id'] = line.parts2_id.id
-                    values['product_uom_qty'] = line.parts_qty
-                    values['product_uom'] = uom.id
-                    new_parts_lines.append((0, 0, values))
-
-                return stock_move_obj.create({
-                    'name': no_ticket,
-                    'origin': no_ticket,
-                    'location_id': 15,
-                    'location_dest_id': 19,
-                    'picking_type_id': 5,
-                    'product_id': product.id,
-                    'product_uom': uom.id,
-                    'move_lines': new_parts_lines
-                })
-
-            # result = {
-            #     'name': 'Drafts Tickets to Solved',
-            #     'view_type': 'form',
-            #     'res_model': 'stock.picking',
-            #     'view_id': ac,
-            #     'context': {
-            #         'default_origin': no_ticket,
-            #         'default_location_id': 15,
-            #         'default_location_dest_id': 22,
-            #         'default_picking_type_id': 5,
-            #         'default_scrapped': True,
-            #         'default_move_lines': new_parts_lines,
-            #     },
-            #     'type': 'ir.actions.act_window',
-            #     'view_mode': 'form',
-            #     'target': 'current',
-            #
-            # }
-
-
+         return self.update({
+            'state': '3',
+        })
 
 
     # Action button solved
     @api.multi
     def solved(self):
-        # uswa- tambah ini
-        # get parts_id and parts_qty
-        # for order in self:
-        #     line_parts_ids = []
-        #     line_parts_qty = []
-        #     if order.parts_list_ids:
-        #         for a_parts in order.parts_list_ids:
-        #             line_parts_ids += [a_parts.parts2_id]
-        #             line_parts_qty += [a_parts.parts_qty]
-        #
-        #
-        # self.force_parts_reservation()
-        # # odoo 7
-        # wf_service = netsvc.LocalService("workflow")
-        # for order in self:
-        #     wf_service.trg_validate(self.env.user.id, 'mro.order', order.id, 'solved', self.env.cr)
-        # # return True
-        #
-        #
-        # # odoo 10
-        # records = self.env['mro.order'].browse(ids)
-        # for order in self:
-        #     records.signal_workflow('solved')
-
-        # wf_service = netsvc.LocalService('workflow')
-        # wf_service.trg_validate(uid, 'account.invoice', id, 'invoice_cancel', cr)
-        #
-        # records = self.env['account.invoice'].browse(ids)
-        # records.signal_workflow('invoice_cancel')
-
     # kode ali ori
         return self.update({
             'state': '4',
             'finish_date': date.today()
         })
-
-        # Action button solved
-
-    # uswa-tambah ini
-    # def _get_available_parts(self):
-    #     for order in self:
-    #         line_ids = []
-    #         available_line_ids = []
-    #         done_line_ids = []
-    #         if order.procurement_group_id:
-    #             for procurement in order.procurement_group_id.procurement_ids:
-    #                 line_ids += [move.id for move in procurement.move_ids if
-    #                              move.location_dest_id.id == order.asset_id.property_stock_asset.id]
-    #                 available_line_ids += [move.id for move in procurement.move_ids if
-    #                                        move.location_dest_id.id == order.asset_id.property_stock_asset.id and move.state == 'assigned']
-    #                 done_line_ids += [move.id for move in procurement.move_ids if
-    #                                   move.location_dest_id.id == order.asset_id.property_stock_asset.id and move.state == 'done']
-    #         order.parts_ready_lines = line_ids
-    #         order.parts_move_lines = available_line_ids
-    #         order.parts_moved_lines = done_line_ids
-    #
-    # parts_list_ids = fields.One2many('parts.helpdesk.line', 'helpdesk_parts_id', string="Parts")
-    #
-    # parts_ready_lines = fields.One2many('stock.move', compute='_get_available_parts')
-    # parts_move_lines = fields.One2many('stock.move', compute='_get_available_parts')
-    # parts_moved_lines = fields.One2many('stock.move', compute='_get_available_parts')
 
     # uswa-tambah ini
     def force_parts_reservation(self):

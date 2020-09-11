@@ -66,6 +66,12 @@
                             <field name="active" widget="boolean_button"
                                 options='{"terminology": "archive"}'/>
                         </button>
+
+                        <!--uswa- Tambhan button Parts-->
+                        <button name="action_view_parts" type="object" class="oe_stat_button" icon="fa-list">
+                         <field string="Parts Used" name="parts_count" widget="statinfo"/>
+                        </button>
+                        <!--uswa-end here-->
                     </div>
                     <field name="kanban_state" class="oe_inline" widget="kanban_state_selection"/>
                     <div class="oe_title">
@@ -77,11 +83,19 @@
                             <field name="no_ticket"/>
                             <field name="category_ticket" options="{'no_create': True, 'no_create_edit':True}"/>
                             <field name="type_ticket"/>
+                            <label for="add_part"></label>
+                            <div class="o_row">
+                                <!--uswa-tambah ini-->
+                                <button name="action_calling_internaltransfer" type="object" string="Add Parts" class="oe_highlight"/>
+                            </div>
+
+                            <!--end here-->
                             <!--<field name="contact_name" attrs="{'invisible': [('partner_id', '!=', False)]}"/>
                             <field name="email_from"/> -->
                         </group>
                         <group>
                             <field name="user_id"/>
+                            <field name="x_due_date_finish"/>
                             <field name="start_date"/>
                             <field name="finish_date"/>
                             <field name="verification_date"/>
@@ -99,32 +113,11 @@
                         <page string="Detail Problem">
                             <field name="category_masalah_ids">
                                 <tree editable="bottom">
-                                    <!--<field name="categ_id" options="{'no_create': True, 'no_create_edit':True}"></field>-->
+                                    <field name="categ_id" options="{'no_create': True, 'no_create_edit':True}"></field>
                                     <field name="problem_description"></field>
                                 </tree>
                             </field>
                         </page>
-
-                        <!--uswa-tambah page 'Parts'-->
-                        <page string="Parts">
-                            <field name="parts_list_ids">
-                                <tree editable="bottom">
-                                    <field name="parts2_id" options="{'no_create': True, 'no_create_edit':True}"></field>
-                                    <field name="parts_qty"></field>
-                                    <field name="parts_uom" groups="product.group_uom"></field>
-                                    <field name="parts_desc"></field>
-                                </tree>
-                            </field>
-                        </page>
-                         <!--<group string="Available Parts">-->
-                             <!--<field name="parts_ready_lines" nolabel="1" readonly="1">-->
-                                 <!--<tree string="Available Parts">-->
-                                     <!--<field name="product_id" string="Parts"/>-->
-                                     <!--<field name="product_qty"/>-->
-                                     <!--<field name="product_uom" groups="product.group_uom"/>-->
-                                 <!--</tree>-->
-                             <!--</field>-->
-                         <!--</group>-->
                     </notebook>
                 </sheet>
 
@@ -150,6 +143,9 @@
                     <field name="user_id"/>
                     <field name="start_date"/>
                     <field name="finish_date"/>
+                    <field name="selisih_date"/>
+                    <field name="duration_verification_date"/>
+                    <field name="total_pengerjaan"/>
                     <field name="state"/>
                     <!--<field name="stage_id" widget="selection" readonly="1"/> -->
                 </tree>
@@ -411,4 +407,6 @@
                 </p>
             </field>
         </record>
+
+
 </odoo>

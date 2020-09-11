@@ -372,6 +372,34 @@ class stock_line(models.Model):
                data.x_total_berat_stc = total
 
 
+     # uswa-tambah fungsi button (name = todo_to_done) buat move qty dati field 'To Do' ke 'Done'
+     @api.multi
+     def todo_to_done(self):
+          self.ensure_one()
+          self.name = "New name"
+
+          for row in self:
+               a_list_lot = row.pack_lot_ids
+
+               if a_list_lot:
+                    for lot in a_list_lot:
+                         lot.qty = lot.qty_todo
+                         # lot.qty_todo = 0
+
+          return {
+               "type": "ir.actions.do_nothing",
+          }
+
+
+     # uswa- tambah fungsi button (name = print_popup) buat print data di popup lot
+     def print_popup(self):
+          # self.write({'is_delivery': True})
+          return self.env['report'].get_action(self, 'lpj_inventory.report_delivery_lot_popup')
+
+
+
+
+
 class sstock_inventory_lot(models.Model):
      _inherit = 'stock.inventory.line'
 

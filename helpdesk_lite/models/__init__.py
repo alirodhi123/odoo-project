@@ -9,5 +9,3 @@ from . import res_config
 from . import helpdesk_categ_problem
 from . import helpdesk_assets
 from . import helpdesk_parts
-# from . import stock_move
-

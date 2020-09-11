@@ -70,6 +70,8 @@
                                 <field name="jml_print"/>
                                 <field name="customer_code"/>
                                 <field name="categ_id"/>
+                                <field name="x_flag_tgl_print_lot"></field>
+                                <field name="x_flag_print_lot" invisible="1"></field>
                                 <button name="action_next" type="object" string="Print All" class="oe_highlight"/>
                                 <!--<button name="action_" type="object" string="Print Specific code" class="oe_highlight" attrs="{'invisible': [('x_type_print', '=', 'all')]}"/>-->
                             </group>

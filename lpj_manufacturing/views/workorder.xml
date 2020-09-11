@@ -37,13 +37,6 @@
                         options="{'reload_on_button': true}"
                         attrs="{'invisible': [('state', '=', 'done')]}">
                     </button>
-
-                    <button class="oe_highlight"
-                        string="Test"
-                        name="check_qty_wip_header"
-                        type="object"
-                        help="calls python function">
-                    </button>
                 </button>
 
                 <field name="quantity" position="after">
@@ -74,6 +67,16 @@
                 <!-- Menambahkan field category process -->
                 <field name="is_produced" position="after">
                     <field name="x_kategori_proses"></field>
+                    <label for="x_change_qty_produced" groups="base.group_no_one"></label>
+                    <div class="o_row">
+                        <field name="x_change_qty_produced" groups="base.group_no_one"></field>
+                        <button name="update_qty_produced"
+                                string="Update qty"
+                                type="object"
+                                class="oe_highlight"
+                                groups="base.group_no_one">
+                        </button>
+                    </div>
                 </field>
 
             </field>

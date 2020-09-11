@@ -20,7 +20,7 @@
                     <field name="x_tgl_produksi"></field>
                 </field>
 
-                <!-- Menambahkan button OK turun -->
+                <!-- Menambahkan button OK turun --> <!-- uswa- tambah 'not in', ('stc', 'trial', 'buffer') -->
                 <button name="popup_message_pr" position="after">
                     <button class="oe_highlight"
                             name="production"
@@ -30,7 +30,7 @@
                             groups="mrp.group_mrp_user"
                             attrs="{'invisible': ['|', '|', ('state', 'in', ('done', 'cancel', 'progress')),
                                                         ('x_flag_produksi', '=', True),
-                                                        ('x_type_mo', '!=', 'stc')]}">
+                                                        ('x_type_mo', 'not in', ('stc', 'trial', 'buffer'))]}">
                     </button>
                     <field name="x_flag_produksi" invisible="1"></field>
                     <field name="x_type_mo" invisible="1"></field>
@@ -45,7 +45,9 @@
             <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
             <field name="arch" type="xml">
                 <field name="routing_id" position="after">
-                    <field name="production_id" attrs="{'invisible': ['|', ('x_type_mo', '=', 'stc'),('x_type_mo', '=', False)]}"></field>
+                    <!--uswa-tambah case di invisible ('x_type_mo', '=', 'trial'),('x_type_mo', '=', 'buffer')-->
+                    <field name="production_id" attrs="{'invisible': ['|','|','|', ('x_type_mo', '=', 'stc'),('x_type_mo', '=', 'trial'),('x_type_mo', '=', 'buffer'),('x_type_mo', '=', False)]}"></field>
+                    <!--<field name="production_id" attrs="{'invisible': ['|', ('x_type_mo', '=', 'stc'),('x_type_mo', '=', False)]}"></field>-->
                     <field name="panjang_bahan_bu" invisible="1"></field>
                     <field name="panjang_bahan_max" invisible="1"></field>
                     <field name="x_tampungan_bu" invisible="1"></field>
@@ -75,6 +77,13 @@
                 <field name="date_planned_finished" position="replace">
                     <field name="date_planned_finished"></field>
                 </field>
+
+                 <xpath expr="/form/sheet/notebook/page/field[@name='move_raw_ids']/tree/button[@name='split_move_lot']"
+                       position="before">
+                    <field name="write_date" string="Update On" readonly="1"></field>
+                    <field name="write_uid" string="Update By" readonly="1"></field>
+                </xpath>
+
 
                 <!--
                     Menambahkan domain pada product yang ada di OK

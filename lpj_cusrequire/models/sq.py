@@ -62,10 +62,14 @@ class x_sq(models.Model):
     x_is_salemanager = fields.Boolean(string="check field apakah sales manager", compute="cek_sales_manager")
     x_price_low = fields.Float('Price Low', digits=dp.get_precision('Prroduct Price'))
     x_price_high = fields.Float('Price High', digits=dp.get_precision('Prroduct Price'))
-    x_price_fix = fields.Float('Price Approve', digits=dp.get_precision('Prroduct Price'))
+    x_price_low_digital = fields.Float('Price Low', digits=dp.get_precision('Prroduct Price'))
+    x_price_high_digital = fields.Float('Price High', digits=dp.get_precision('Prroduct Price'))
+    x_price_fix = fields.Float('Price Approve', digits=dp.get_precision('Prroduct Price'),track_visibility='always')
+    x_price_fix_odoo = fields.Float('Price Approve Odoo', digits=dp.get_precision('Prroduct Price'), track_visibility='always')
     x_hpp = fields.Float('HPP', readonly=True, digits=dp.get_precision('Prroduct Price'))
     x_harga_repeat = fields.Float(readonly=True, string='Harga Repeat')
     x_req_dk = fields.Datetime(string='Request Duedate Kirim',track_visibility='always', required = True)
+    # x_req_dk_pertama = fields.Datetime(string='Request Duedate Kirim Pertama', track_visibility='always', required=True)
     x_req_dk_marketing = fields.Datetime(string='Request Duedate Kirim Marketing', invisible = True)
     x_tgl_request = fields.Datetime(string='Tanggal Request', readonly = True)
     x_flag_reqdk = fields.Boolean(string='Sudah Direquest dk ?', default = False)
@@ -84,10 +88,10 @@ class x_sq(models.Model):
     x_planning_type = fields.Selection([('forward', 'Forward Planning'), ('backward', 'Backward Planning')],
                                        default='forward', string='Planning Type',
                                        track_visibility='always', required=True)
-    x_harga_renego = fields.Float('Harga SQ', track_visibility='always', digits=dp.get_precision('Prroduct Price'))
+    x_harga_renego = fields.Float('Harga SQ', digits=dp.get_precision('Prroduct Price'))
     x_state_renego = fields.Selection(
-        [('1', 'Draft'), ('2', 'Precost'), ('3', 'Approval GM'), ('4', 'Pricing GM'), ('5', 'Approval SPV'),
-         ('6', 'Approve'), ('7', 'Reject'), ('8', 'Dibawah MOQ')], track_visibility='always', default='1')
+        [('1', 'Draft'), ('2', 'Precost'), ('5', 'Approval SPV'), ('3', 'Approval GM'),
+         ('6', 'Approve'), ('7', 'Reject'), ('8', 'Dibawah MOQ')], default='1')
     x_range_price_sq = fields.One2many('x.range.price.sq', 'x_sq')
     x_history_sq = fields.One2many('x.history.sq', 'x_sq')
     x_summary_precosting = fields.One2many('x.summary.precosting', 'x_sq', string=" ")
@@ -132,6 +136,28 @@ class x_sq(models.Model):
     x_cost_m2_high = fields.Float(string='Cost/m2 High')
 
     x_note_moq = fields.Text(string= ' ', default='Item ini DIBAWAH MOQ m2, Silahkan Minta Harga Digital Ke Tim Digital')
+
+    # @api.model
+    # def duedate_kirim(self):
+    #     self.env.cr.execute(
+    #         "select id, x_tgl_request, x_status_dk from x_sales_quotation where x_tgl_request is not null")
+    #     sql = self.env.cr.fetchall()
+    #     for o in sql:
+    #         id = o[0]
+    #         if o[1]:
+    #             if o[2] == 'approve' or o[2] == 'reject':
+    #                 a = datetime.now()
+    #
+    #
+    #             else:
+    #                 date_format = "%Y-%m-%d %H:%M:%S"
+    #                 tgl_req = o[1]
+    #                 batas_tgl = datetime.strptime(str(tgl_req), date_format) + relativedelta(minutes=5)
+    #                 tgl_default = datetime.strptime(str(tgl_req), date_format) + relativedelta(days=7)
+    #                 if batas_tgl < datetime.now():
+    #                     self.env.cr.execute(
+    #                         "UPDATE x_sales_quotation SET x_flag_appdk = 't', x_status_dk= 'approve', x_harga_renego = 500, x_req_dk='" +
+    #                         str(tgl_default) + "'  WHERE id = '" + str(id) + "'")
 
     @api.one
     def get_hpp(self):
@@ -225,6 +251,7 @@ class x_sq(models.Model):
                 'x_item': self.item_description,
                 'x_qty': self.x_qty,
                 'x_tgl_kirim': self.x_req_dk,
+                # 'x_tgl_kirim_pertama': self.x_req_dk_pertama,
                 'x_mesin': self.x_mrpwordkcenter_id,
                 'x_manufacturing_type': self.x_manufacturing_type,
                 'x_planning_type': self.x_planning_type,
@@ -238,6 +265,7 @@ class x_sq(models.Model):
                 'x_item': self.item_description,
                 'x_qty': self.x_qty,
                 'x_tgl_kirim': self.x_req_dk,
+                # 'x_tgl_kirim_pertama': self.x_req_dk_pertama,
                 'x_mesin': self.x_mrpwordkcenter_id,
                 'x_manufacturing_type': self.x_manufacturing_type,
                 'x_planning_type': self.x_planning_type,
@@ -377,40 +405,62 @@ class x_sq(models.Model):
         x_id = result.id
         feat_default = 12
         x_prod = result.x_product.id
+        feat = result.x_ids_feature
+        bool_feat = False
 
-        if x_prod:
-            result.env.cr.execute(
-                "select quot.id sq_id, x_feature_cost_precost_id feature_id from x_sales_quotation quot join x_feature_cost_precost_x_sales_quotation_rel rel on rel.x_sales_quotation_id = quot.id where "
-                "x_product = '" + str(
-                    x_prod) + "'and quot.id = (select max(id) from x_sales_quotation where id <> (select max(id) from x_sales_quotation where x_product = '"+str(
-                    x_prod)+"') and x_product = '" + str(
-                    x_prod) + "')")
-            sql = result.env.cr.fetchall()
-            if sql:
-                if x_id:
-                    result.env.cr.execute(
-                        "delete from x_feature_cost_precost_x_sales_quotation_rel where x_sales_quotation_id = '" + str(
-                            x_id) + "'")
-                    for row in sql:
-                        result.env.cr.execute(
-                            "INSERT INTO x_feature_cost_precost_x_sales_quotation_rel(x_sales_quotation_id, x_feature_cost_precost_id) VALUES ('" + str(
-                                x_id) + "','" + str(row[1]) + "');")
-
-            else:
-                if x_id:
-                    result.env.cr.execute(
-                        "delete from x_feature_cost_precost_x_sales_quotation_rel where x_sales_quotation_id = '" + str(
-                            x_id) + "'")
-                    result.env.cr.execute(
-                        "INSERT INTO x_feature_cost_precost_x_sales_quotation_rel(x_sales_quotation_id, x_feature_cost_precost_id) VALUES ('" + str(
-                            x_id) + "','" + str(feat_default) + "');")
-        else:
-            result.env.cr.execute(
-                "delete from x_feature_cost_precost_x_sales_quotation_rel where x_sales_quotation_id = '" + str(
-                    x_id) + "'")
+        for x in feat:
+            if feat_default == x[0].id:
+                bool_feat = True
+        if bool_feat == False:
             result.env.cr.execute(
                 "INSERT INTO x_feature_cost_precost_x_sales_quotation_rel(x_sales_quotation_id, x_feature_cost_precost_id) VALUES ('" + str(
                     x_id) + "','" + str(feat_default) + "');")
+
+        # if x_prod:
+        #     result.env.cr.execute(
+        #         "select quot.id sq_id, x_feature_cost_precost_id feature_id from x_sales_quotation quot join x_feature_cost_precost_x_sales_quotation_rel rel on rel.x_sales_quotation_id = quot.id where "
+        #         "x_product = '" + str(
+        #             x_prod) + "'and quot.id = (select max(id) from x_sales_quotation where id <> (select max(id) from x_sales_quotation where x_product = '"+str(
+        #             x_prod)+"') and x_product = '" + str(
+        #             x_prod) + "')")
+        #     sql = result.env.cr.fetchall()
+        #     if sql:
+                # if x_id:
+                    # result.env.cr.execute(
+                    #     "delete from x_feature_cost_precost_x_sales_quotation_rel where x_sales_quotation_id = '" + str(
+                    #         x_id) + "'")
+                    # for row in sql:
+                    #     for x in feat:
+                    #         if row[1] == x[0].id:
+                    #             bool_feat = True
+                    #     if bool_feat == False:
+                    #         result.env.cr.execute(
+                    #             "INSERT INTO x_feature_cost_precost_x_sales_quotation_rel(x_sales_quotation_id, x_feature_cost_precost_id) VALUES ('" + str(
+                    #                 x_id) + "','" + str(row[1]) + "');")
+
+            # else:
+            #     if x_id:
+                    # result.env.cr.execute(
+                    #     "delete from x_feature_cost_precost_x_sales_quotation_rel where x_sales_quotation_id = '" + str(
+                    #         x_id) + "'")
+                    # for x in feat:
+                    #     if feat_default == x[0].id:
+                    #         bool_feat = True
+                    # if bool_feat == False:
+                    #     result.env.cr.execute(
+                    #         "INSERT INTO x_feature_cost_precost_x_sales_quotation_rel(x_sales_quotation_id, x_feature_cost_precost_id) VALUES ('" + str(
+                    #             x_id) + "','" + str(feat_default) + "');")
+        # else:
+            # result.env.cr.execute(
+            #     "delete from x_feature_cost_precost_x_sales_quotation_rel where x_sales_quotation_id = '" + str(
+            #         x_id) + "'")
+            # for x in feat:
+            #     if feat_default == x[0].id:
+            #         bool_feat = True
+            # if bool_feat == False:
+            #     result.env.cr.execute(
+            #         "INSERT INTO x_feature_cost_precost_x_sales_quotation_rel(x_sales_quotation_id, x_feature_cost_precost_id) VALUES ('" + str(
+            #             x_id) + "','" + str(feat_default) + "');")
         return result
 
 
@@ -419,6 +469,7 @@ class x_sq(models.Model):
         x_id = self._origin.id
         feat_default = 12
         x_prod = self.x_product.id
+        feat = []
         if self.x_repeat_order == True:
             if self.x_product:
                 self.env.cr.execute("select quot.id sq_id, x_feature_cost_precost_id feature_id from x_sales_quotation quot join x_feature_cost_precost_x_sales_quotation_rel rel on rel.x_sales_quotation_id = quot.id where "
@@ -428,19 +479,26 @@ class x_sq(models.Model):
                 x_prod) + "')")
                 sql = self.env.cr.fetchall()
                 if sql:
-                    if x_id:
-                        self.env.cr.execute("delete from x_feature_cost_precost_x_sales_quotation_rel where x_sales_quotation_id = '" + str(x_id) + "'")
-                        for row in sql:
-                            self.env.cr.execute("INSERT INTO x_feature_cost_precost_x_sales_quotation_rel(x_sales_quotation_id, x_feature_cost_precost_id) VALUES ('" + str(x_id) + "','" + str(row[1]) + "');")
+                    # if x_id:
+                        # self.env.cr.execute("delete from x_feature_cost_precost_x_sales_quotation_rel where x_sales_quotation_id = '" + str(x_id) + "'")
+                        # for row in sql:
+                        #     feat.append((row[1]))
+                            # self.env.cr.execute("INSERT INTO x_feature_cost_precost_x_sales_quotation_rel(x_sales_quotation_id, x_feature_cost_precost_id) VALUES ('" + str(x_id) + "','" + str(row[1]) + "');")
+                    # else:
+                    for row2 in sql:
+                        feat.append((row2[1]))
 
                 else:
-                    if x_id:
-                        self.env.cr.execute(
-                            "delete from x_feature_cost_precost_x_sales_quotation_rel where x_sales_quotation_id = '" + str(
-                                x_id) + "'")
-                        self.env.cr.execute(
-                            "INSERT INTO x_feature_cost_precost_x_sales_quotation_rel(x_sales_quotation_id, x_feature_cost_precost_id) VALUES ('" + str(
-                                x_id) + "','" + str(feat_default) + "');")
+                    # if x_id:
+                    #     feat.append((feat_default))
+                        # self.env.cr.execute(
+                        #     "delete from x_feature_cost_precost_x_sales_quotation_rel where x_sales_quotation_id = '" + str(
+                        #         x_id) + "'")
+                        # self.env.cr.execute(
+                        #     "INSERT INTO x_feature_cost_precost_x_sales_quotation_rel(x_sales_quotation_id, x_feature_cost_precost_id) VALUES ('" + str(
+                        #         x_id) + "','" + str(feat_default) + "');")
+                    # else:
+                    feat.append((feat_default))
 
                 self.env.cr.execute("select x_material_type_id, x_length, x_width, x_varnish, x_special_color,"
                                     " x_ink_coverage, x_mrpwordkcenter_id, x_lamination, x_category_foil,x_material_type_id2,x_numbers_of_colors,x_numbers_of_colors2, x_product_type_precost from x_sales_quotation where "
@@ -449,12 +507,14 @@ class x_sq(models.Model):
                     self.x_product.id) + "')")
                 z = self.env.cr.fetchone()
                 if z:
+
+                    self.x_ids_feature = feat
                     self.x_material_type_id = z[0]
                     if z[9]:
                         self.x_material_type_id2 = z[9]
                     else:
                         self.env.cr.execute("select id from x_config_bahan "
-                                            "where name = '" + str(z[0]) + "'")
+                                            "where x_bahan = '" + str(z[0]) + "'")
 
                         z2 = self.env.cr.fetchone()
                         if z2:
@@ -753,5 +813,12 @@ class history_sq_pending(models.Model):
     x_cost_m2 = fields.Float(string = 'Price/m2')
     x_profit = fields.Float(string='Profit Harga')
     x_sq_pending = fields.Many2one('x.sales.quotation', string='SQ PENDING')
+
+# class config_default_duedate(models.Model):
+#     _name = 'x.config.default.duedate'
+#
+#     name = fields.Char(string = 'Kategori')
+#     x_day = fields.Integer(string='Hari')
+
 
 

@@ -64,6 +64,18 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="x_amount_total">
+            <field name="name">status.job.form</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
+            <field name="arch" type="xml">
+                <field name="planned_revenue" position="after">
+                    <field name="x_total"></field>
+                    <!--<field name="x_amount_total_rep"></field>-->
+                </field>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="x_stype_activity">
             <field name="name">type.activity.form</field>
             <field name="model">crm.activity</field>
@@ -138,6 +150,7 @@
                                 <field name="x_so"/>
                                 <field name="x_status_so"/>
                                 <field name="x_harga_so"/>
+                                <!--<field name="x_harga_so2"/>-->
                                 <button class="oe_highlight"
                                     string="Create SQ"
                                     name="crm_sq"
@@ -169,6 +182,7 @@
                                 <field name="x_so"/>
                                 <field name="x_status_so"/>
                                 <field name="x_harga_so"/>
+                                <!--<field name="x_harga_so2"/>-->
                                 <button class="oe_highlight"
                                     string="Create SQ"
                                     name="crm_sq"
@@ -209,6 +223,7 @@
                                         <field name="x_contact" string = "PIC yang ditemui" placeholder="Nama Yang Ditemui"/>
                                         <field name="x_contact_dept" string = "Dept yang ditemui" placeholder="e.g. Purchasing"/>
                                         <field name="x_contact_phone" string = "Contact yang ditemui" placeholder="e.g. 08100080000"/>
+                                        <field name="body" string = "Deskripsi"/>
                                     </tree>
                                 </field>
 
@@ -282,7 +297,7 @@
                                         <field name="x_contact" string = "PIC yang ditemui" placeholder="Nama Yang Ditemui" readonly="1"/>
                                         <field name="x_contact_dept" string = "Dept yang ditemui" placeholder="e.g. Purchasing" readonly="1"/>
                                         <field name="x_contact_phone" string = "Contact yang ditemui" placeholder="e.g. 08100080000" readonly="1"/>
-
+                                        <field name="body" string = "Deskripsi"/>
                                     </tree>
                                 </field>
 
@@ -334,6 +349,7 @@
                                         <field name="x_contact" string = "PIC yang ditemui" placeholder="Nama Yang Ditemui"/>
                                         <field name="x_contact_dept" string = "Dept yang ditemui" placeholder="e.g. Purchasing"/>
                                         <field name="x_contact_phone" string = "Contact yang ditemui" placeholder="e.g. 08100080000"/>
+                                        <field name="body" string = "Deskripsi"/>
 
                                     </tree>
                                 </field>
@@ -352,6 +368,30 @@
 
                     </page>
                 </notebook>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="mail_message_activity">
+            <field name="name">mail.message.activity</field>
+            <field name="model">mail.message</field>
+            <field name="inherit_id" ref="mail.view_message_form"/>
+            <field name="arch" type="xml">
+                <field name="parent_id" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="model" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="res_id" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <field name="message_type" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
+                <!--<field name="record_name" position="after">-->
+                    <!--<field name="subtype_id"/>-->
+                <!--</field>-->
             </field>
         </record>
 

@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 import subprocess
 from datetime import datetime
-
+from odoo.exceptions import UserError
 from dateutil.relativedelta import relativedelta
-
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 import odoo.addons.decimal_precision as dp
 
 
@@ -38,6 +37,20 @@ class mrp_production(models.Model):
      x_qtytoproduce_temp = fields.Float()
      x_is_user_scm = fields.Boolean(default=False, compute='is_get_user')
 
+
+    # Fungsi ketika save OK
+    # -uswa-tambah ini
+     @api.model
+     def create(self, vals):
+
+         type_mo = vals['x_type_mo']
+         sale_order = vals['order']
+
+         if type_mo == 'stc' and not sale_order:
+             raise UserError(_(
+                 'Please Insert SO Number to Continue Saving, Otherwise You Can Choose Type MO : Trial to Create OK Sticker without SO Number'))
+
+         return super(mrp_production, self).create(vals)
 
      # WORKORDER
      # Fungsi ambil field finish date yang paling lama
@@ -110,6 +123,7 @@ class mrp_production(models.Model):
                  manufacturing.update({'x_is_administrator': True})
                  pass
 
+     # Button turun produksi
      @api.multi
      def production(self):
          for production in self:
@@ -284,6 +298,60 @@ class mrp_production(models.Model):
                  self.x_is_user_scm = True
              else:
                  self.x_is_user_scm = False
+
+     # Fungsi cek qty ketika klik POST INVENTORY
+     # Qty cetak >= qty packing maka error message
+     @api.multi
+     def cek_qty_cetak_wo(self):
+         for production in self:
+             type_mo = production.x_type_mo
+             id_cetak_wo = 0
+             id_packing_wo = 0
+             qty_produced_wo_cetak = 0
+             qty_produced_wo_packing = 0
+             production_id = production.id
+
+             if type_mo == 'stc':
+                 workorder_obj = production.env['mrp.workorder'].search([('production_id', '=', production_id)])
+                 if workorder_obj:
+                     # Cari id cetak
+                     self.env.cr.execute("select id from mrp_workorder where id = "
+                                            "(select MIN(id) from mrp_workorder where production_id = '" + str(production_id) + "')")
+
+                     cetak_id = self.env.cr.fetchone()
+                     if cetak_id:
+                         id_cetak_wo = cetak_id[0]
+
+                     # Cari id Packing
+                     self.env.cr.execute("select id from mrp_workorder where id = "
+                                         "(select MAX(id) from mrp_workorder where production_id = '" + str(production_id) + "')")
+
+                     packing_id = self.env.cr.fetchone()
+                     if packing_id:
+                         id_packing_wo = packing_id[0]
+
+                     for row in workorder_obj:
+                         if row.id == id_cetak_wo:
+                            qty_produced_wo_cetak = row.qty_produced
+                         elif row.id == id_packing_wo:
+                             qty_produced_wo_packing = row.qty_produced
+                         else:
+                             pass
+
+                     if qty_produced_wo_packing > qty_produced_wo_cetak or qty_produced_wo_packing <= 0:
+                         raise UserError(_(
+                             'Quantity printing can not be less than quantity packing'))
+
+     # INHERITE BUTTON POST INVENTORY
+     @api.multi
+     def post_inventory(self):
+         # FUNCTION CEK QTY CETAK DAN PACKING
+         self.cek_qty_cetak_wo()
+
+         res = super(mrp_production, self).post_inventory()
+         return res
+
+
 
 
 

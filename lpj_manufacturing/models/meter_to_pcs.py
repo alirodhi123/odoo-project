@@ -38,6 +38,7 @@ class sale_custom(models.Model):
      x_berat_per_lot = fields.Float(string="Berat per Lot", required=True, help="Quantity ini dihasilkan dari berat per pcs * qty per lot")
      x_berat_per_pcs = fields.Float(string="Berat per Pcs", compute='compute_berat_pcs', store=True, digits=(12,4))
      x_qty_sisa_produksi = fields.Float(string="Qty Sisa", readonly=True)
+     x_change_qty_produced = fields.Float(string="Update qty produced", default=0.0, help="For update qty produce")
 
 
      @api.onchange('x_qty_meter')
@@ -255,6 +256,14 @@ class sale_custom(models.Model):
 
                  raise UserError(_(
                      'Quantity in WIP is not enough, please check the quantity on hand of : ' + nama + ''))
+
+     # Update qty produced di WO
+     @api.multi
+     def update_qty_produced(self):
+         for workorder in self:
+             update_qty_produced = workorder.x_change_qty_produced
+
+             workorder.update({'qty_produced': update_qty_produced})
 
 
 class lot_operation(models.Model):

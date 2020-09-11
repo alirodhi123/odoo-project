@@ -60,6 +60,12 @@ class approval_duedate_kirim(models.Model):
 
                          row.x_quantity_m2 = (lenght_m * width_m * qty) / 0.75
 
+                    else:
+                        lenght_m = o.x_length / 1000
+                        width_m = o.x_width / 1000
+
+                        row.x_quantity_m2 = (lenght_m * width_m * qty) / 0.75
+
 
 class config_default_duedate(models.Model):
     _name = 'x.config.default.duedate'

@@ -1,0 +1,55 @@
+<odoo>
+    <data>
+
+        <!--Membuat tampilan tree-->
+        <record model="ir.ui.view" id="master_sumber_tree">
+          <field name="name">Master Sumber</field>
+          <field name="model">x.master.sumber</field>
+          <field name="arch" type="xml">
+              <tree string="List Category">
+                <field name="name"></field>
+              </tree>
+          </field>
+        </record>
+
+        <!-- Membuat tampilan form -->
+        <record model="ir.ui.view" id="master_sumber_form">
+        <field name="name">Master Sumber Form</field>
+        <field name="model">x.master.sumber</field>
+        <field name="arch" type="xml">
+          <form string="New Master Sumber">
+            <sheet>
+              <group>
+                <group>
+                  <field name="name"></field>
+                </group>
+              </group>
+            </sheet>
+          </form>
+        </field>
+        </record>
+
+      <!-- Filter untuk kuitansi -->
+        <record model="ir.ui.view" id="master_sumber_search">
+          <field name="name">Master Sumber Search</field>
+          <field name="model">x.master.sumber</field>
+          <field name="arch" type="xml">
+             <search>
+                 <field name="name"/>
+             </search>
+          </field>
+        </record>
+
+        <!-- ### Membuat Action/Event Object ### -->
+        <record model="ir.actions.act_window" id="master_sumber_action">
+          <field name="name">Create Master Sumber</field>
+          <field name="res_model">x.master.sumber</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Create a new master sumber..</p>
+          </field>
+        </record>
+
+    </data>
+</odoo>

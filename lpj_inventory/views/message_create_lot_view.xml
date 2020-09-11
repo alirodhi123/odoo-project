@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+        <!-- Message block pengiriman -->
+         <record id="pop_message_create_lot_form" model="ir.ui.view">
+            <field name="name">Message Create Lot</field>
+            <field name="model">message.create.lot</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="name" readonly="1"/> <br/>
+                    <footer>
+                       <button string="Oke" class="oe_highlight" special="cancel"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+    </data>
+</odoo>

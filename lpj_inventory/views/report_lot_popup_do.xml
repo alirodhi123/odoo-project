@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <data>
+
+        <report
+            string="Lot/Serial Number Details"
+            id="action_report_delivery_lot_popup"
+            model="stock.pack.operation"
+            report_type="qweb-pdf"
+            name="lpj_inventory.report_delivery_lot_popup"
+            file="lpj_inventory.report_delivery_lot_popup"
+        />
+
+        <record id="paperformat_lotpopup" model="report.paperformat">
+            <field name="name">European A4 low margin</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">4</field>
+            <field name="margin_bottom">4</field>
+            <field name="margin_left">4</field>
+            <field name="margin_right">4</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field> <!-- Jika ingin header muncul ubah nilai - 0 -->
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="lpj_inventory.action_report_delivery_lot_popup" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="lpj_inventory.paperformat_lotpopup" />
+        </record>
+
+        <template id="report_delivery_lotdetail_custom">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o"/>
+                <div class="page">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="text-center">
+                                <h4>LOT / Serial Number Details</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Untuk garis horizontal-->
+                    <div class="row zero_min_height">
+                        <div class="col-xs-12">
+                            <div style="border-bottom: 1px solid black;"/>
+                        </div>
+                    </div>
+
+
+                    <!-- ISI SESUAI KEBUTUHAN-->
+                    <!--Data Header-->
+                     <div class="row">
+                        <div class="col-xs-12">
+                            <table >
+                                <tr>
+                                    <td style="padding-top: 5px; padding-right: 50px; padding-bottom: 5px;"><b>No Picking</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px;">:</td>
+                                    <td style="padding-bottom: 5px;"><span t-field="o.picking_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-right: 50px; padding-bottom: 5px;"><b>Product</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px;">:</td>
+                                    <td style="padding-bottom: 5px;"><span t-field="o.product_id"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-right: 50px; padding-bottom: 5px;"><b>Berat STC(Kg)</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px;">:</td>
+                                    <td style="padding-bottom: 5px;"><span t-field="o.x_total_berat_stc"></span></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-right: 50px; padding-bottom: 5px;"><b>Done</b></td>
+                                    <td style="padding-right: 10px; padding-bottom: 5px;">:</td>
+                                    <td style="padding-bottom: 5px;"><span t-field="o.qty_done"/> of <span t-field="o.product_qty"/> <span t-field="o.product_uom_id"/> </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- list lot/serial number -->
+                     <div class="row">
+                        <div class="col-xs-12">
+                            <table style="border: 1px solid; width: 100%;">
+                               <tr>
+                                   <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px;">Lot/Serial Number</th>
+                                   <th class="text-center" style="border: 1px solid; width: 40%; padding: 5px;">Berat Lot per(Kg)</th>
+                                   <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px;">To Do</th>
+                                   <th class="text-center" style="border: 1px solid; width: 20%; padding: 5px;">Done</th>
+                               </tr>
+
+                                <tr t-foreach="o.pack_lot_ids" t-as="line">
+<!--                                   <tr t-foreach="line.invoice_line_ids" t-as="row">-->
+                                       <td  style="border: 1px solid; width: 20%; padding: 5px; vertical-align: middle;">
+                                           <span t-field="line.lot_id"></span>
+                                       </td>
+                                       <td class="text-right" style="border: 1px solid; width: 40%; padding: 5px; vertical-align: middle;">
+                                           <span t-field="line.x_berat_per_lot"></span>
+                                       </td>
+                                       <td class="text-right" style="border: 1px solid; width: 20%; padding: 5px; vertical-align: middle;">
+                                           <span t-field="line.qty_todo"></span>
+                                       </td>
+                                       <td class="text-right" style="border: 1px solid; width: 20%; padding: 5px; vertical-align: middle;">
+                                            <span t-field="line.qty"></span>
+                                       </td>
+                                </tr>
+
+                           </table>
+                        </div> <!-- list lot/serial number -->
+                    </div>
+
+                </div> <!-- Tutup page -->
+            </t>
+        </template>
+
+        <template id="report_delivery_lot_popup">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="lpj_inventory.report_delivery_lotdetail_custom"/>
+            </t>
+        </template>
+
+    </data>
+</odoo>

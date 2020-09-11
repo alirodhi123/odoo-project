@@ -46,7 +46,7 @@ class res_partner(models.Model):
     jalan = fields.Char(string="Jalan")
     x_block_pengiriman = fields.Selection([('block', 'Block'), ('open', 'Open')], default='open', string="Block Pengiriman")
     x_kebutuhan_pengiriman_ids = fields.Many2many('x.kebutuhan.pengiriman', string="Kebutuhan Pengiriman")
-    is_berikat = fields.Char('berikat')
+    # is_berikat = fields.Char('berikat')
 
     # Cek apakah user login adalah marketing
     @api.one

@@ -45,6 +45,8 @@
                 <!-- Note -->
                 <xpath expr="//field[@name='note']" position="replace">
                     <field name="note" groups="sales_team.group_sale_manager,sales_team.group_sale_salesman"/>
+                    <field name="x_kebutuhan_pengiriman_ids" widget="many2many_tags"/>
+
                 </xpath>
             </field>
         </record>

@@ -26,3 +26,4 @@ class StockOperationLotInherit(models.Model):
                     hasil_kg = berat_per_pcs_lot / 1000 # dari gram dijadikan Kg
 
                 row.x_berat_per_lot = done * hasil_kg
+

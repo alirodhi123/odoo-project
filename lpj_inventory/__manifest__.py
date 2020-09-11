@@ -35,6 +35,8 @@
         'views/stock_report_view_inherite.xml',
         'views/stock_pack_operation_lot_view.xml',
         'views/message_block_pengiriman_view.xml',
+        'views/message_create_lot_view.xml',
+        'views/report_lot_popup_do.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

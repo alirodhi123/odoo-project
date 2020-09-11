@@ -20,7 +20,7 @@ class x_crm(models.Model):
     x_type_company = fields.Char(string = 'Company Type')
     x_estimated_product = fields.One2many('x.estimated.product.crm','x_crm_lead')
     x_is_qualified = fields.Boolean(string = 'status qualified', default = True)
-    x_status_job = fields.Selection([('repeat', 'Repeat'), ('new', 'New')], string='Status Job')
+    x_status_job = fields.Selection([('repeat', 'Repeat'), ('new', 'New')], string='Status Job', required=True)
     x_cs_lead = fields.Many2one('res.users',string = 'Customer Services')
     x_partner = fields.Many2one('res.partner', related = 'partner_id')
     x_status_lead = fields.Many2one('x.lead.status', string='Lead Status', required=True)
@@ -38,6 +38,29 @@ class x_crm(models.Model):
 
     # Menjumlahkan untaxed amount, taxes, amount total
 
+
+
+
+
+    x_untaxed_amount = fields.Monetary(string='Untaxed Amount', compute='_compute_amount', store=True)
+    x_tax_amount = fields.Monetary(string='Taxes', compute='_compute_amount', store=True)
+    x_amount_total = fields.Monetary(string='Total', compute='_compute_amount', store=True)
+    x_untaxed_amount_rep = fields.Monetary(string='Untaxed Amount', compute='_compute_amount_rep', store=True)
+    x_tax_amount_rep = fields.Monetary(string='Taxes', compute='_compute_amount_rep', store=True)
+    x_amount_total_rep = fields.Monetary(string='Total', compute='_compute_amount_rep', store=True)
+    x_total = fields.Float(string='Realization', compute='_get_sum')
+
+    @api.depends('x_amount_total', 'x_amount_total_rep')
+    def _get_sum(self):
+
+        for rec in self:
+            rec.x_total = rec.x_amount_total + rec.x_amount_total_rep
+
+    # @api.onchange('stage_id')
+    # def status_customer(self):
+    #     self.partner_id.x_status_cust = "ABC"
+    #     # self.env.cr.execute("select pipeline_customer ('" + str(self.partner_id.id) + "')")
+
     @api.one
     @api.depends('x_estimated_product.x_harga_so')
     def _compute_amount(self):
@@ -45,17 +68,17 @@ class x_crm(models.Model):
         taxes = 0
         amount_total = 0
 
-
         for m in self.x_estimated_product:
             amount_untaxed += m.x_harga_so
-            taxes += m.x_harga_so*0.1
+            taxes += m.x_harga_so * 0.1
 
-        amount_total = amount_untaxed+taxes
+        amount_total = amount_untaxed + taxes
 
         self.x_untaxed_amount = amount_untaxed
         self.x_tax_amount = taxes
         self.x_amount_total = amount_total
 
+    @api.one
     @api.depends('x_repeat_product.x_harga_so')
     def _compute_amount_rep(self):
         amount_untaxed_rep = 0
@@ -63,27 +86,15 @@ class x_crm(models.Model):
         amount_total_rep = 0
 
         for m in self.x_repeat_product:
-            amount_untaxed_rep += m.x_harga_so
-            taxes_rep += m.x_harga_so * 0.1
+            if m:
+                amount_untaxed_rep += m.x_harga_so
+                taxes_rep += m.x_harga_so * 0.1
 
         amount_total_rep = amount_untaxed_rep + taxes_rep
 
         self.x_untaxed_amount_rep = amount_untaxed_rep
         self.x_tax_amount_rep = taxes_rep
         self.x_amount_total_rep = amount_total_rep
-
-
-
-    x_untaxed_amount = fields.Monetary(string='Untaxed Amount', compute='_compute_amount', readonly=True)
-    x_tax_amount = fields.Monetary(string='Taxes', compute='_compute_amount', readonly=True)
-    x_amount_total = fields.Monetary(string='Total', compute='_compute_amount', readonly=True)
-    x_untaxed_amount_rep = fields.Monetary(string='Untaxed Amount', compute='_compute_amount_rep', readonly=True)
-    x_tax_amount_rep = fields.Monetary(string='Taxes', compute='_compute_amount_rep', readonly=True)
-    x_amount_total_rep = fields.Monetary(string='Total', compute='_compute_amount_rep', readonly=True)
-    # @api.onchange('stage_id')
-    # def status_customer(self):
-    #     self.partner_id.x_status_cust = "ABC"
-    #     # self.env.cr.execute("select pipeline_customer ('" + str(self.partner_id.id) + "')")
 
     @api.multi
     def is_qualified(self):
@@ -195,8 +206,11 @@ class product_repeat(models.Model):
     x_sq = fields.Many2one('x.sales.quotation', string='SQ', compute='get_id_sq')
     x_status_sq = fields.Selection(related = 'x_sq.x_status_cr', readonly=True, string='Status SQ')
     x_so = fields.Many2one('sale.order', string='SO', compute='get_id_sq')
+    x_sol = fields.Many2one('sale.order.line', string='SOL', compute='get_id_sq')
     x_status_so = fields.Selection(related = 'x_so.state', readonly=True, string='Status SO')
-    x_harga_so = fields.Integer(string='Harga SO', compute='get_id_sq')
+    x_harga_so = fields.Monetary(string='Harga SO', compute='get_id_sq', store=True)
+    x_harga_so2 = fields.Monetary(string='Harga SO2', related='x_sol.price_subtotal')
+    currency_id = fields.Many2one('res.currency')
 
     @api.multi
     def crm_sq(self):
@@ -285,13 +299,14 @@ class product_repeat(models.Model):
             if sql:
                 self.x_sq = sql[0]
                 quot_id = self.x_sq.id
-                self.env.cr.execute("select so.id, sol.price_subtotal, so.state from x_sales_quotation quot "
+                self.env.cr.execute("select so.id, sol.price_subtotal, so.state,sol.id from x_sales_quotation quot "
                                     "LEFT JOIN sale_order_line sol on quot.name = sol.x_customer_requirement "
                                     "LEFT JOIN sale_order so on sol.order_id = so.id "
-                                    "where quot.id = '" + str(quot_id) + "'")
+                                    "where quot.id = '" + str(quot_id) + "' order by so.id desc limit 1")
                 sql_so = self.env.cr.fetchone()
                 if sql_so:
                     self.x_so = sql_so[0]
+                    self.x_sol = sql_so[3]
                     if sql_so[2] == 'done':
                         self.x_harga_so = sql_so[1]
 
@@ -306,8 +321,11 @@ class estimated_product(models.Model):
     x_sq = fields.Many2one('x.sales.quotation', string='SQ', compute='get_id_sq')
     x_status_sq = fields.Selection(related = 'x_sq.x_status_cr', readonly=True, string='Status SQ')
     x_so = fields.Many2one('sale.order', string='SO', compute='get_id_sq')
-    x_status_so = fields.Selection(related = 'x_so.state', readonly=True, string='Status SO')
-    x_harga_so = fields.Integer(string='Harga SO', compute='get_id_sq')
+    x_sol = fields.Many2one('sale.order.line', string='SOL', compute='get_id_sq')
+    x_status_so = fields.Selection(related='x_so.state', readonly=True, string='Status SO')
+    x_harga_so = fields.Monetary(string='Harga SO', compute='get_id_sq', store=True)
+    x_harga_so2 = fields.Monetary(string='Harga SO2', related='x_sol.price_subtotal')
+    currency_id = fields.Many2one('res.currency')
 
 
 
@@ -393,13 +411,14 @@ class estimated_product(models.Model):
             if sql:
                 self.x_sq = sql[0]
                 quot_id = self.x_sq.id
-                self.env.cr.execute("select so.id, sol.price_subtotal, so.state from x_sales_quotation quot "
-                                         "LEFT JOIN sale_order_line sol on quot.name = sol.x_customer_requirement "
-                                         "LEFT JOIN sale_order so on sol.order_id = so.id "
-                                    "where quot.id = '" + str(quot_id) + "'")
+                self.env.cr.execute("select so.id, sol.price_subtotal, so.state,sol.id from x_sales_quotation quot "
+                                    "LEFT JOIN sale_order_line sol on quot.name = sol.x_customer_requirement "
+                                    "LEFT JOIN sale_order so on sol.order_id = so.id "
+                                    "where quot.id = '" + str(quot_id) + "' order by so.id desc limit 1")
                 sql_so = self.env.cr.fetchone()
                 if sql_so:
                     self.x_so = sql_so[0]
+                    self.x_sol = sql_so[3]
                     if sql_so[2] == 'done':
                         self.x_harga_so = sql_so[1]
 

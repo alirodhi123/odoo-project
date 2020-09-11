@@ -30,17 +30,17 @@
 
                     <!--<button name="act_req_dk" type="object" string="Request" class="oe_highlight" attrs="{'invisible':['|','|',('x_status_cr','=','reject'),('x_flag_reqdk','=',True),('x_flag_appdk','=',True)]}"/>-->
                     <!--<button name="act_approve" type="object" string="Approve" class="oe_highlight" attrs="{'invisible':['|', '|','|',('x_status_cr','=','approve'), ('x_status_cr','=','reject'),('x_status_cr','=','done'),('x_is_salemanager', '=', False)]}"/>-->
-                    <!--<button name="action_confirm_dir"-->
-                                <!--type="object"-->
-                                <!--string="Confirm"-->
-                                <!--class="oe_highlight"-->
-                                <!--attrs="{'invisible':[('x_state_renego', '!=', '3')]}"/>-->
-                    <button name="action_pricing"
+                    <button name="action_confirm_dir"
                                 type="object"
                                 string="Confirm"
                                 class="oe_highlight"
-                                groups="base.group_system"
                                 attrs="{'invisible':[('x_state_renego', '!=', '3')]}"/>
+                    <!--<button name="action_pricing"-->
+                                <!--type="object"-->
+                                <!--string="Confirm"-->
+                                <!--class="oe_highlight"-->
+                                <!--groups="base.group_system"-->
+                                <!--attrs="{'invisible':[('x_state_renego', '!=', '3')]}"/>-->
                     <button name="act_reject" type="object" string="Reject" class="oe_highlight" attrs="{'invisible':['|',('x_status_cr','=','reject'),('x_status_cr','=','done')]}"/>
 
                 </tree>

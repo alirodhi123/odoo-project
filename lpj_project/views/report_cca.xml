@@ -37,9 +37,8 @@
                     <t t-foreach="docs" t-as="o">
                         <div class="page">
                             <div class="row">
-                                <div class="col-sm-12">
-                                    <h4 class="text-center">CORRECTION AND CORRECTIVE ACTION</h4>
-                                    <h5 class="text-center">PERMINTAAN KOREKSI DAN TINDAKAN PERBAIKAN</h5>
+                                <div class="col-xs-3">
+                                    <img t-if="res_company.logo" t-att-src="'data:image/png;base64,%s' %res_company.logo" style="width: 168%"/>
                                 </div>
                             </div>
 
@@ -50,8 +49,15 @@
                                 </div>
                             </div>
 
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h4 class="text-center">CORRECTION AND CORRECTIVE ACTION</h4>
+                                    <h5 class="text-center">PERMINTAAN KOREKSI DAN TINDAKAN PERBAIKAN</h5>
+                                </div>
+                            </div>
+
                             <!-- Row information -->
-                            <div class="row" style="margin-top: 50px;">
+                            <div class="row" style="margin-top: 15px;">
                                 <div class="col-xs-6">
                                     <p><b>Requestor / Auditor</b></p>
                                     <table>
@@ -89,6 +95,16 @@
                                                 <p t-field="o.create_uid"></p>
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td style="padding-right: 35px; padding-bottom:8px;">
+                                                <b>Dept</b>
+                                            </td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td>
+                                                <p t-field="o.x_department"></p>
+                                            </td>
+                                        </tr>
+
                                     </table>
                                 </div>
 
@@ -110,11 +126,49 @@
                                         </tr>
                                         <tr>
                                             <td style="padding-right: 35px; padding-bottom:8px;">
-                                                <b>Deadline</b>
+                                                <b>Dept</b>
+                                            </td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td>
+                                                <p>
+                                                    <span t-field="o.x_department_assign"></span>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-right: 35px; padding-bottom:8px;">
+                                                <b>Due Date Action Plan</b>
+                                            </td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td>
+                                                <p t-field="o.x_duedate_action_plan"></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-right: 35px; padding-bottom:8px;">
+                                                <b>Due Date Closing CCA</b>
                                             </td>
                                             <td style="padding-right: 10px">:</td>
                                             <td>
                                                 <p t-field="o.date_deadline"></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-right: 35px; padding-bottom:8px;">
+                                                <b>Date Actual Closing CCA</b>
+                                            </td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td>
+                                                <p t-field="o.x_date_actual_closing_cca"></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding-right: 35px; padding-bottom:8px;">
+                                                <b>Sumber</b>
+                                            </td>
+                                            <td style="padding-right: 10px">:</td>
+                                            <td>
+                                                <p t-field="o.x_master_sumber"></p>
                                             </td>
                                         </tr>
                                         <tr>
@@ -124,7 +178,7 @@
                                             <td style="padding-right: 10px">:</td>
                                             <td>
                                                 <t t-foreach="o.tag_ids" t-as="tag">
-                                                    <ul>
+                                                    <ul style="list-style: none; margin: 0 auto; margin-left: -39px;">
                                                         <li>
                                                             <span t-field="tag.name"></span>
                                                         </li>
@@ -170,6 +224,8 @@
                             <!-- Row Analisa akar masalah -->
                             <div class="row" style="margin-top: 25px;">
                                 <div class="col-xs-12">
+                                    <p><b>Harapan dari Perbaikan</b></p>
+                                    <p t-field="o.x_harapan_perbaikan"></p>
                                     <p>
                                         <b>Analisa Akar Masalah</b>
                                     </p>
@@ -177,56 +233,280 @@
                                         <thead style="display: table-header-group; page-break-inside: avoid">
                                             <tr style="background-color:lightgray;">
                                                 <td class="text-center" style="border: 1px solid black; padding: 1px;">
-                                                    <strong>Category</strong>
+                                                    <strong>Question</strong>
                                                 </td>
                                                 <td class="text-center" style="border: 1px solid black; padding: 1px;">
-                                                    <strong>Akar Masalah</strong>
-                                                </td>
-                                                <td class="text-center" style="border: 1px solid black; padding: 1px;">
-                                                    <strong>Action</strong>
-                                                </td>
-                                                <td class="text-center" style="border: 1px solid black; padding: 1px;">
-                                                    <strong>Due Date</strong>
-                                                </td>
-                                                <td class="text-center" style="border: 1px solid black; padding: 1px;">
-                                                    <strong>Finish Date</strong>
-                                                </td>
-                                                <td class="text-center" style="border: 1px solid black; padding: 1px;">
-                                                    <strong>PIC</strong>
-                                                </td>
-                                                <td class="text-center" style="border: 1px solid black; padding: 1px;">
-                                                    <strong>Status</strong>
+                                                    <strong>Answer</strong>
                                                 </td>
                                             </tr>
                                         </thead>
                                         <tbody style="margin-top: 15px; padding-top: 50px; display: table-row-group">
-                                            <tr style="page-break-inside: avoid" t-foreach="o.x_project_task_line" t-as="row">
-                                                <td class="text-center" style="border: 1px solid black; padding: 1px; vertical-align: middle;">
-                                                    <span t-field="row.x_category_problem"/>
+                                            <tr style="page-break-inside: avoid" t-foreach="o.x_analisa_masalah_ids" t-as="row">
+                                                <td style="border: 1px solid black; padding: 2px; vertical-align: middle;">
+                                                    <p style="text-align: justify" t-field="row.x_question"/>
                                                 </td>
-                                                <td style="border: 1px solid black; padding: 5px;">
-                                                    <p style="text-align: justify" t-field="row.x_akar_masalah"/>
-                                                </td>
-                                                <td style="border: 1px solid black; padding: 5px;">
-                                                    <p style="text-align: justify" t-field="row.x_task"/>
-                                                </td>
-                                                <td class="text-center" style="border: 1px solid black; padding: 1px; vertical-align: middle;">
-                                                    <span t-field="row.x_date_task"/>
-                                                </td>
-                                                <td class="text-center" style="border: 1px solid black; padding: 1px; vertical-align: middle;">
-                                                    <span t-field="row.x_date_finish"/>
-                                                </td>
-                                                <td class="text-center" style="border: 1px solid black; padding: 1px; vertical-align: middle;">
-                                                    <span t-field="row.x_users"/>
-                                                </td>
-                                                <td class="text-center" style="border: 1px solid black; padding: 1px; vertical-align: middle;">
-                                                    <span t-field="row.x_status"/>
+                                                <td style="border: 1px solid black; padding: 2px; vertical-align: middle;">
+                                                    <p style="text-align: justify" t-field="row.x_answer"/>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
+                            </div> <!-- Tutup tabel analisa akar masalah -->
+
+                            <!-- Kolom Tanda tangan -->
+                            <!--
+                            <div class="row">
+                                <div class="col-xs-12" style="width: 100%; margin-top: 20px;">
+                                    <table style="border: 1px solid; width: 100%;">
+                                        <tr>
+                                            <th class="text-center" style="border: 1px solid; width: 15%; padding: 5px">Auditor</th>
+                                            <th class="text-center" style="border: 1px solid; width: 15%; padding: 5px">Auditee</th>
+                                            <th class="text-center" style="border: 1px solid; width: 15%; padding: 5px">Coordinator CCA</th>
+                                            <th class="text-center" style="width: 40%; padding: 5px"></th>
+                                            <th class="text-center" style="border: 1px solid; width: 15%; padding: 5px">Approved Direktur</th>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid; padding-top: 90px;"></td>
+                                            <td style="border: 1px solid; padding-top: 90px;"></td>
+                                            <td style="border: 1px solid; padding-top: 90px;"></td>
+                                            <td style="padding-top: 90px;"></td>
+                                            <td style="border: 1px solid; padding-top: 90px;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid; padding-top: 20px;"></td>
+                                            <td style="border: 1px solid; padding-top: 20px;"></td>
+                                            <td style="border: 1px solid; padding-top: 20px;"></td>
+                                            <td style="padding-top: 20px;"></td>
+                                            <td style="border: 1px solid; padding-top: 20px;"></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div> --> <!-- Tutup kolom tanda tangan -->
+
+                            <!--
+                            <div class="row">
+                                <div class="col-xs-12" style="position: fixed; width: 100%; bottom: -1350px;">
+                                    <table style="border: 1px solid; width: 100%;">
+                                        <tr>
+                                            <th class="text-center" style="border: 1px solid; width: 15%; padding: 5px">Auditor</th>
+                                            <th class="text-center" style="border: 1px solid; width: 15%; padding: 5px">Auditee</th>
+                                            <th class="text-center" style="border: 1px solid; width: 15%; padding: 5px">Coordinator CCA</th>
+                                            <th class="text-center" style="width: 40%; padding: 5px"></th>
+                                            <th class="text-center" style="border: 1px solid; width: 15%; padding: 5px">Approved Direktur</th>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid; padding-top: 90px;"></td>
+                                            <td style="border: 1px solid; padding-top: 90px;"></td>
+                                            <td style="border: 1px solid; padding-top: 90px;"></td>
+                                            <td style="padding-top: 90px;"></td>
+                                            <td style="border: 1px solid; padding-top: 90px;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid; padding-top: 20px;"></td>
+                                            <td style="border: 1px solid; padding-top: 20px;"></td>
+                                            <td style="border: 1px solid; padding-top: 20px;"></td>
+                                            <td style="padding-top: 20px;"></td>
+                                            <td style="border: 1px solid; padding-top: 20px;"></td>
+                                        </tr>
+                                    </table>
+                                </div>
                             </div>
+                            -->
+
+                            <!-- Page break -->
+                            <p style="page-break-before:always;">   </p>
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <img t-if="res_company.logo" t-att-src="'data:image/png;base64,%s' %res_company.logo" style="width: 168%"/>
+                                </div>
+                            </div>
+
+                            <!-- Row garis horizontal -->
+                            <div class="row zero_min_height">
+                                <div class="col-xs-12">
+                                    <div style="border-bottom: 1px solid black;"/>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h4 class="text-center">CORRECTION AND CORRECTIVE ACTION</h4>
+                                    <h5 class="text-center">PERMINTAAN KOREKSI DAN TINDAKAN PERBAIKAN</h5>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top: 15px">
+                                <div class="col-xs-12">
+                                    <p>
+                                        <b>Tindakan Perbaikan</b>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12">
+                                     <table class="table table-bordered" style="border: 1px solid black;">
+                                        <thead style="display: table-header-group">
+                                            <tr style="background-color:lightgray; page-break-inside: avoid">
+                                                <th class="text-center" style="border: 1px solid black;">
+                                                    Deskripsi
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                         <tbody style="display: table-row-group;">
+                                             <tr style="page-break-inside: avoid">
+                                                <td style="border: 1px solid black; padding: 5px; height: 300px;">
+                                                    <p t-field="o.x_description_tindakan_perbaikan"></p>
+                                                </td>
+                                            </tr>
+                                         </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+
+
+                            <t t-if="o.x_project_task_line">
+                                <!-- Row Analisa akar masalah -->
+                                <div class="row" style="margin-top: 25px;">
+                                    <div class="col-xs-12">
+                                        <p>
+                                            <b>Action Plan</b>
+                                        </p>
+                                        <table class="table table-bordered" style="border: 1px solid black;">
+                                            <thead style="display: table-header-group; page-break-inside: avoid">
+                                                <tr style="background-color:lightgray;">
+                                                    <td class="text-center" style="border: 1px solid black; padding: 1px;">
+                                                        <strong>Action</strong>
+                                                    </td>
+                                                    <td class="text-center" style="border: 1px solid black; padding: 1px;">
+                                                        <strong>Due Date</strong>
+                                                    </td>
+                                                    <td class="text-center" style="border: 1px solid black; padding: 1px;">
+                                                        <strong>Finish Date</strong>
+                                                    </td>
+                                                    <td class="text-center" style="border: 1px solid black; padding: 1px;">
+                                                        <strong>Note</strong>
+                                                    </td>
+                                                    <td class="text-center" style="border: 1px solid black; padding: 1px;">
+                                                        <strong>PIC</strong>
+                                                    </td>
+                                                    <td class="text-center" style="border: 1px solid black; padding: 1px;">
+                                                        <strong>Status</strong>
+                                                    </td>
+                                                </tr>
+                                            </thead>
+                                            <tbody style="margin-top: 15px; padding-top: 50px; display: table-row-group">
+                                                <tr style="page-break-inside: avoid" t-foreach="o.x_project_task_line" t-as="row">
+                                                    <td style="border: 1px solid black; padding: 2px;">
+                                                        <p style="text-align: justify" t-field="row.x_task"/>
+                                                    </td>
+                                                    <td class="text-center" style="border: 1px solid black; padding: 1px; vertical-align: middle;">
+                                                        <span t-field="row.x_date_task"/>
+                                                    </td>
+                                                    <td class="text-center" style="border: 1px solid black; padding: 1px; vertical-align: middle;">
+                                                        <span t-field="row.x_date_finish"/>
+                                                    </td>
+                                                    <td class="text-center" style="border: 1px solid black; padding: 1px; vertical-align: middle;">
+                                                        <span t-field="row.x_note"/>
+                                                    </td>
+                                                    <td style="border: 1px solid black; padding: 1px; vertical-align: middle;">
+                                                        <span t-field="row.x_users"/>
+                                                    </td>
+                                                    <td class="text-center" style="border: 1px solid black; padding: 1px; vertical-align: middle;">
+                                                        <span t-field="row.x_status"/>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div> <!-- Tutup tabel analisa akar masalah -->
+                            </t>
+
+                            <!-- field summary -->
+                            <div class="row">
+                                <div class="col-xs-12">
+                                     <table class="table table-bordered" style="border: 1px solid black;">
+                                        <thead style="display: table-header-group">
+                                            <tr style="background-color:lightgray; page-break-inside: avoid">
+                                                <th class="text-center" style="border: 1px solid black;">
+                                                    Summary
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                         <tbody style="display: table-row-group;">
+                                             <tr style="page-break-inside: avoid">
+                                                <td style="border: 1px solid black; padding: 5px; height: 300px;">
+                                                    <p t-field="o.x_summary"></p>
+                                                </td>
+                                            </tr>
+                                         </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- Tutup field summary -->
+
+                            <!-- Kolom Tanda tangan -->
+                            <div class="row">
+                                <div class="col-xs-12" style="width: 100%; margin-top: 20px;">
+                                    <table style="border: 1px solid; width: 100%;">
+                                        <tr>
+                                            <th class="text-center" style="border: 1px solid; width: 15%; padding: 5px">Auditor</th>
+                                            <th class="text-center" style="border: 1px solid; width: 15%; padding: 5px">Auditee</th>
+                                            <th class="text-center" style="border: 1px solid; width: 15%; padding: 5px">Coordinator CCA</th>
+                                            <th class="text-center" style="width: 40%; padding: 5px"></th>
+                                            <th class="text-center" style="border: 1px solid; width: 15%; padding: 5px">Approved Direktur</th>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid; padding-top: 90px;"></td>
+                                            <td style="border: 1px solid; padding-top: 90px;"></td>
+                                            <td style="border: 1px solid; padding-top: 90px;"></td>
+                                            <td style="padding-top: 90px;"></td>
+                                            <td style="border: 1px solid; padding-top: 90px;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid; padding-top: 20px;"></td>
+                                            <td style="border: 1px solid; padding-top: 20px;"></td>
+                                            <td style="border: 1px solid; padding-top: 20px;"></td>
+                                            <td style="padding-top: 20px;"></td>
+                                            <td style="border: 1px solid; padding-top: 20px;"></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div> <!-- Tutup kolom tanda tangan -->
+
+                            <!--
+                            <div class="row">
+                                <div class="col-xs-12" style="position: fixed; width: 100%; bottom: -2710px;">
+                                    <table style="border: 1px solid; width: 100%;">
+                                        <tr>
+                                            <th class="text-center" style="border: 1px solid; width: 15%; padding: 5px">Auditor</th>
+                                            <th class="text-center" style="border: 1px solid; width: 15%; padding: 5px">Auditee</th>
+                                            <th class="text-center" style="border: 1px solid; width: 15%; padding: 5px">Coordinator CCA</th>
+                                            <th class="text-center" style="width: 40%; padding: 5px"></th>
+                                            <th class="text-center" style="border: 1px solid; width: 15%; padding: 5px">Approved Direktur</th>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid; padding-top: 90px;"></td>
+                                            <td style="border: 1px solid; padding-top: 90px;"></td>
+                                            <td style="border: 1px solid; padding-top: 90px;"></td>
+                                            <td style="padding-top: 90px;"></td>
+                                            <td style="border: 1px solid; padding-top: 90px;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid; padding-top: 20px;"></td>
+                                            <td style="border: 1px solid; padding-top: 20px;"></td>
+                                            <td style="border: 1px solid; padding-top: 20px;"></td>
+                                            <td style="padding-top: 20px;"></td>
+                                            <td style="border: 1px solid; padding-top: 20px;"></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            -->
+
                         </div> <!-- Tutup Page -->
                     </t>
                 </t>

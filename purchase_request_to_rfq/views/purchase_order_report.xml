@@ -114,7 +114,8 @@
                                         <th class="text-right"><strong>Qty(m2)</strong></th>
                                         <th class="text-right"><strong>Harga(m2)</strong></th>
                                         <th class="text-right"><strong>Unit Price</strong></th>
-                                        <th class="text-right"><strong>Last Price</strong></th>
+                                        <!--uswa-hilangkan ini sesaui permintaan mba novrinda (07/09/2020)-->
+                                        <!--<th class="text-right"><strong>Last Price</strong></th>-->
                                         <th class="text-right"><strong>Net Price</strong></th>
                                     </tr>
                                 </thead>
@@ -146,15 +147,16 @@
                                         <td class="text-right">
                                             <span t-field="line.price_unit" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
                                         </td>
-                                        <td class="text-right">
-                                            <span t-field="line.x_last_price" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
-                                        </td>
+                                        <!--uswa-hilangkan ini sesaui permintaan mba novrinda (07/09/2020)-->
+                                        <!--<td class="text-right">-->
+                                            <!--<span t-field="line.x_last_price" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>-->
+                                        <!--</td>-->
                                         <td class="text-right">
                                             <span t-field="line.price_subtotal" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
                                         </td>
 
                                         <t t-set="i" t-value="i+1"/>
-                                    </tr>
+                                    </tr>-
                                 </tbody>
                             </table>
 

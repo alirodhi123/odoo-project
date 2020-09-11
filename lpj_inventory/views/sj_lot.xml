@@ -9,13 +9,32 @@
                     <field name="x_qty_akhir"/>
                     <field name="x_jml_print"/>
                     <field name="x_berat_per_lot_lot"/>
-                    <field name="x_berat_per_pcs_lot"/>
-                    <button name="action_master" type="object" string="Create Lot" class="oe_highlight"/>
-                </xpath>
+                    <field name="x_is_admin" invisible="1"/>
 
+                    <!--uswa - tambah attrs-->
+                    <field name="x_berat_per_pcs_lot" attrs="{'readonly':[('x_is_admin','=',False)]}"/>
+                    <!--<field name="x_berat_per_pcs_lot"/>-->
+                    <button name="action_master" type="object" string="Create Lot" class="oe_highlight"/>
+                    <button name="create_lot_barcode" type="object" string="Create Lot2" class="oe_highlight"/>
+                </xpath>
             </field>
         </record>
 
+           <!-- uswa-tambah ini, buat inherit/replace tombol 'Create Lot' di line  -->
+        <record model="ir.ui.view" id="create_lot_barcode_inherit_view">
+           <field name="name">create.lot.barcode.inherit</field>
+           <field name="model">stock.picking</field>
+           <field name="inherit_id" ref="stock.view_picking_form"/>
+           <field name="arch" type="xml">
+               <xpath expr="//field[@name='pack_operation_product_ids']/tree/field[@name='qty_done']" position="after">
+                    <button class="oe_highlight"
+                            name="create_lot_barcode"
+                            string="Create Lot_"
+                            type="object"
+                            help="calls python function"/>
+               </xpath>
+           </field>
+        </record>
     </data>
 </odoo>
 

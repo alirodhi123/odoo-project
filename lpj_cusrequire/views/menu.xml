@@ -58,12 +58,13 @@
 
         <!-- <menuitem id="stage_menu" parent="approval_odoo_menu" name="Stage"
             action="stage_list_action"/> -->
-        
+
 
         <menuitem name="Sale Order" id="menu_sale_order"
                   parent="sales_team.menu_sales" sequence="15"/>
 
         <menuitem name="Config Master Precost" id="menu_config_new"
+                  groups="base.group_system"
                   parent="sales_team.menu_base_partner"/>
 
         <menuitem id="config_kategori" name="Config Kategori"

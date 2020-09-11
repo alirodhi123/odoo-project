@@ -57,5 +57,33 @@
                </form>
             </field>
         </record>
+
+        <!-- uswa-Model(sale.order.py) popup untuk notif move forward/backward-->
+         <record id="pop_message_ok_planning_type_view_form" model="ir.ui.view">
+            <field name="name">custom.pop.message.form</field>
+            <field name="model">custom.pop.message</field>
+            <field name="arch" type="xml">
+                <form string="Custom POP Message">
+                    <field name="name" readonly="1"/>
+                    <footer>
+                       <button string="Oke" class="oe_highlight" special="cancel"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <!-- uswa-Model(sale.order.py) popup untuk notif change laprint/digital-->
+         <record id="pop_message_ok_manufacturing_type_view_form" model="ir.ui.view">
+            <field name="name">custom.pop.message.form</field>
+            <field name="model">custom.pop.message</field>
+            <field name="arch" type="xml">
+                <form string="Custom POP Message">
+                    <field name="name" readonly="1"/>
+                    <footer>
+                       <button string="Oke" class="oe_highlight" special="cancel"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
     </data>
 </odoo>

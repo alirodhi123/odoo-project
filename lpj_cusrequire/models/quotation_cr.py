@@ -162,6 +162,8 @@ class sales_order(models.Model):
     x_product_double = fields.Boolean(compute='check_product_double')
     manufacturing_count = fields.Integer(string="Manufctring", compute='_compute_manufacturing_count')
     x_status_so = fields.Selection([('open', 'Open'), ('close', 'Closed')], default='open', string="Status SO")
+    x_kebutuhan_pengiriman_ids = fields.Many2many('x.kebutuhan.pengiriman', string="Kebutuhan Pengiriman",
+                                                  related='partner_id.x_kebutuhan_pengiriman_ids')
 
     # tambahan toggle button purchase Uswa
     purchase_request_count = fields.Integer(string="Purchase", compute='_compute_purchase_request_count')

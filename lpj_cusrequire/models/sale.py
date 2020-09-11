@@ -65,6 +65,7 @@ class MultiQuotations(models.Model):
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all', track_visibility='always')
     note = fields.Text('Terms and conditions', default=_default_note)
 
+
     @api.multi
     def write(self, values):
         i = 0
@@ -227,6 +228,7 @@ class SaleOrder(models.Model):
     is_multiquotation = fields.Boolean(string='Enable multi-Quotation', readonly=True)
     multiquotation_note = fields.Text(string='Quotation Note', help="Report footer Note", default='Decision is yours, choose the best.')
     multi_order_lines = fields.One2many('multi.quotations', 'multi_order_id', string='Order Lines', copy=True)
+
 
 
 class MultiQuotationOrderLine(models.Model):

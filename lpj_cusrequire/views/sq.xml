@@ -24,11 +24,11 @@
 
                     <!--<button name="act_req_dk" type="object" string="Request" class="oe_highlight" attrs="{'invisible':['|','|',('x_status_cr','=','reject'),('x_flag_reqdk','=',True),('x_flag_appdk','=',True)]}"/>-->
                     <!--<button name="act_approve" type="object" string="Approve" class="oe_highlight" attrs="{'invisible':['|', '|','|',('x_status_cr','=','approve'), ('x_status_cr','=','reject'),('x_status_cr','=','done'),('x_is_salemanager', '=', False)]}"/>-->
-                    <button name="reset_precosting"
-                                type="object"
-                                string="Set to Draft"
-                                class="oe_highlight"
-                                attrs="{'invisible':[('x_state_renego', 'not in', ('2','4','5', '6'))]}"/>
+                    <!--<button name="reset_precosting"-->
+                                <!--type="object"-->
+                                <!--string="Set to Draft"-->
+                                <!--class="oe_highlight"-->
+                                <!--attrs="{'invisible':[('x_state_renego', 'not in', ('2','4','5', '6'))]}"/>-->
                     <button name="action_confirm_spv"
                                 type="object"
                                 string="Confirm"
@@ -58,19 +58,19 @@
                                 class="oe_highlight"
                                 attrs="{'invisible':[('x_state_renego', 'not in', ('2','4','5', '6'))]}"/>
 
-                        <!--<button name="action_confirm_dir"-->
-                                <!--type="object"-->
-                                <!--string="Confirm"-->
-                                <!--class="oe_highlight"-->
-                                <!--groups="base.group_system"-->
-                                <!--attrs="{'invisible':[('x_state_renego', '!=', '3')]}"/>-->
-
-                        <button name="action_pricing"
+                        <button name="action_confirm_dir"
                                 type="object"
                                 string="Confirm"
                                 class="oe_highlight"
                                 groups="base.group_system"
                                 attrs="{'invisible':[('x_state_renego', '!=', '3')]}"/>
+
+                        <!--<button name="action_pricing"-->
+                                <!--type="object"-->
+                                <!--string="Confirm"-->
+                                <!--class="oe_highlight"-->
+                                <!--groups="base.group_system"-->
+                                <!--attrs="{'invisible':[('x_state_renego', '!=', '3')]}"/>-->
 
                         <button name="action_confirm_pricing"
                                 type="object"
@@ -100,9 +100,11 @@
 
                         <button name="reset_precosting"
                                 type="object"
-                                string="Reset"
+                                string="Set to Draft"
                                 class="oe_highlight"
-                                groups="base.group_system"/>
+                                />
+                                <!--groups="base.group_system"-->
+
 
                     </header>
 
@@ -266,12 +268,17 @@
                                             <field name="x_ids_feature" widget="many2many_checkboxes" attrs="{'readonly':[('x_state_renego', '!=', '1')]}"/>
                                         </group>
 
-                                    <!--<group string="Estimated Process" invisible="1">-->
+                                    <group string="Precost 2.0">
                                         <!--<field name="x_mrpwordkcenter_id" string = "Prime Machine" invisible="1"/>-->
-                                        <!--<field name="x_lamination" attrs="{'readonly':[('x_state_renego', '!=', '1')]}" />-->
-                                        <!--<field name="x_category_foil" attrs="{'readonly':[('x_state_renego', '!=', '1')]}"/>-->
+                                        <field name="x_material_type_id" attrs="{'readonly':[('x_state_renego', '!=', '1')]}"/>
+                                        <field name="x_numbers_of_colors" attrs="{'readonly':[('x_state_renego', '!=', '1')]}"/>
+                                        <field name="x_varnish" attrs="{'readonly':[('x_state_renego', '!=', '1')]}"/>
+                                        <field name="x_special_color" attrs="{'readonly':[('x_state_renego', '!=', '1')]}"/>
+                                        <field name="x_ink_coverage" attrs="{'readonly':[('x_state_renego', '!=', '1')]}"/>
+                                        <field name="x_lamination" attrs="{'readonly':[('x_state_renego', '!=', '1')]}" />
+                                        <field name="x_category_foil" attrs="{'readonly':[('x_state_renego', '!=', '1')]}"/>
 
-                                    <!--</group>-->
+                                    </group>
                                 </group>
                             </page>
                             <page string="Price" id="page_price" groups="sales_team.group_sale_manager,sales_team.group_sale_salesman">
@@ -286,7 +293,10 @@
                                         <field name="compute_field" invisible="1"/>
                                         <field name="x_price_low" attrs="{'invisible':[('x_state_renego','=','8')]}"/>
                                         <field name="x_price_high" attrs="{'invisible':[('x_state_renego','=','8')]}"/>
+                                        <field name="x_price_low_digital" attrs="{'invisible':[('x_state_renego','!=','8')]}"/>
+                                        <field name="x_price_high_digital" attrs="{'invisible':[('x_state_renego','!=','8')]}"/>
                                         <field name="x_price_fix" />
+                                        <field name="x_price_fix_odoo" groups="base.group_system"/>
                                         <field name="x_harga_repeat" domain="[('order_id','=', x_order)]" attrs="{'invisible':[('x_repeat_order','!=',True)]}"/>
                                         <!--<field name="x_hpp"/>-->
                                     </group>

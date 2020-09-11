@@ -15,6 +15,19 @@
                      <field name="x_m_qty"></field>
                      <field name="x_confirmation_date_so"></field>
                      <field name="x_note_so_tree"></field>
+                     <!--uswa-tambah 'x_planning_type' dan button 'move to backward' -->
+                     <field name="x_planning_type"></field>
+                     <button name="change_planning_type"
+                             string="Change Planning"
+                             type="object"
+                             help="calls python function"/>
+
+                       <!--uswa-tambah 'x_manufacturing_type' dan button 'move to backward' -->
+                     <field name="x_manufacturing_type"></field>
+                     <button name="change_manufacturing_type"
+                             string="Change Manufacture"
+                             type="object"
+                             help="calls python function"/>
                      <field name="x_status_product"></field>
                      <field name="x_reason_dont_need_ok"></field>
 

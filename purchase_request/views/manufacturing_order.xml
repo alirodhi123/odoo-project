@@ -7,6 +7,7 @@
             <field name="inherit_id" ref="mrp.mrp_production_tree_view"></field>
             <field name="arch" type="xml">
                 <tree>
+                    <!--uswa- tambahin type_MO in trial,buffer-->
                     <button class="oe_highlight"
                             name="popup_message_pr"
                             string="Create PR"
@@ -15,7 +16,7 @@
                             target="new"
                             attrs="{'invisible': ['|', '|', ('is_responsible', '=', True),
                                                         ('state', 'not in', ('confirmed', 'planned', 'progress')),
-                                                        ('x_type_mo', '!=', 'stc')]}">
+                                                        ('x_type_mo','not in', ('stc', 'trial', 'buffer'))]}">
                     </button>
                     <field name="is_responsible" invisible="1"></field>
                     <field name="x_type_mo" invisible="1"></field>

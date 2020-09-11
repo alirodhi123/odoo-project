@@ -13,9 +13,13 @@
                 <xpath expr="//field[@name='min_date']" position="after">
                     <field name="x_status_pengiriman" attrs="{'invisible': [('picking_type_id', '!=', 4)]}"></field>
                     <field name="x_tkr_guling"  attrs="{'invisible': [('picking_type_id', '!=', 4)]}"/>
+
+                    <!--uswa-tambah ini untuk internaltransfer part di helpdesk-->
                     <field name="id_ticket_helpdesk" readonly="1" attrs="{'invisible': [('picking_type_id', '!=', 5)]}"></field>
+
+
                 </xpath>
-                
+
                 <!-- Stock pack operation -->
                 <field name="qty_done" position="after">
                     <field name="x_total_berat_stc"></field>
@@ -190,13 +194,11 @@
 
                     <t t-elif="partner_id.parent_id != null">
                         <field name="x_kebutuhan_pengiriman_ids2" string="Kebutuhan Pengiriman" widget="many2many_tags" readonly="1"></field>
-
                     </t>
-                    <t t-if="partner_id.parent_id == null">
 
+                    <t t-elif="partner_id.parent_id == null">
                         <field name="x_kebutuhan_pengiriman_ids" string="Kebutuhan Pengiriman" widget="many2many_tags" readonly="1"></field>
                     </t>
-                    <!--<br/>-->
 
                 </field>
 
@@ -227,6 +229,11 @@
                 <field name="picking_type_id" position="after">
                     <field name="x_no_sj_internal" attrs="{'invisible': [('picking_type_id', '!=', 4)]}"></field>
                 </field>
+
+                <!-- Inherit button force availability -->
+                <button name="force_assign" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </button>
             </field>
         </record>
 

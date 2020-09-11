@@ -15,7 +15,23 @@
                 <field name="lot_id" position="after">
                     <field name="x_berat_per_lot"></field>
                </field>
+
+                <!--uswa- tambah button 'Move to Done' dan 'Print' -->
+                <button name="save" position="before">
+            		<button name="todo_to_done"
+                            type="object"
+                            string="Move to Done"
+                            class="oe_highlight"/>
+            	</button>
+                <button name="save" position="after">
+            		<button name="print_popup"
+                            type="object"
+                            string="Print"
+                            class="oe_highlight pull-right"/>
+            	</button>
+
             </field>
+
         </record>
 
     </data>
